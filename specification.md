@@ -68,7 +68,7 @@ The full round runs for the full 72 hours of the competition, so submissions mus
 残りの仕様は以下を参照のこと．
 
 - 完全な仕様は[「λ男」ゲームのルール](#the-lambda-man-game-rules)にある．
-- 採点方法の詳細は[解答の採点方法](#scoring)にある．
+- 得点方法の詳細は[得点方法](#scoring)にある．
 - 幽霊AIのマイクロコントローラについては[マイクロコントローラ](#ghost-cpu-ghc)にある．
 - 「λ男」AIにつかわれているプロセッサについては[プロセッサ](#lambda-man-cpu)にある．
 - 解答の提出方法の詳細は[提出方法](#submission-procedure)にある．
