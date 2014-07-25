@@ -95,7 +95,7 @@ If you find any discrepancies between this specification document and the refere
 
 A Lambda-Man lives in a two-dimensional maze made up of walls, and must eat as many pills as he can, while avoiding the ghosts who chase him. Lambda-Man has three lives, and if a ghost catches Lambda-Man, then he loses a life. When there are no more Lambda-Man lives, the game is over. When all the pills are eaten, Lambda-Man has completed the level.
 
-「λ男」は壁にかこまれた2次元迷図上で活動し，追い掛けてくる幽霊を回避しつつ，食えるだけの錠剤を食わなければならない．「λ男」には3体生きていて，幽霊に掴まるとその1体は失なわれる．「λ男」がすべてなくなった時点でゲームオーバーである．錠剤をすべて食べれば「λ男」はそのレベルを完遂したことになる．
+「λ男」は壁にかこまれた2次元迷図上で活動し，追い掛けてくる幽霊を回避しつつ，食えるだけの錠剤を食わなければならない．「λ男」には命が3つあって，幽霊に掴まると命を1つは失なう．「λ男」の命がすべてなくなった時点でゲームオーバーである．錠剤をすべて食べれば「λ男」はそのレベルを完遂したことになる．
 
 In addition to pills, a Lambda-Man may also eat power pills. These gives every Lambda-Man the ability to eat ghosts for a short period of time.
 
@@ -129,22 +129,27 @@ The world is entirely deterministic, and runs on a tick-by-tick basis.
 
 1. All Lambda-Man and ghost moves scheduled for this tick take place. (Note that Lambda-Man and the ghosts do not move every tick, only every few ticks; see the ticks section below.)<br>
 すべての「λ男」と幽霊はこの刻みに併せて移動する．（「λ男」と幽霊はすべての刻みで動くわけではなく，何刻みかごとに動くことに注意せよ．）
-
 2. Next, any actions (fright mode deactivating, fruit appearing/disappearing) take place.<br>
 つぎに，すべてのアクション（飛行モードの解除，果実の出現/消滅）がここで起こる．
 
 3. Next, we check if Lambda-Man is occupying the same square as pills, power pills, or fruit:<br>
 つぎに，「λ男」が錠剤，スーパー錠剤，果実と同じセルにあるかをチェックする．<br>
     1. If Lambda-Man occupies a square with a pill, the pill is eaten by Lambda-Man and removed from the game.<br>
-    「λ男」が錠剤と同じセルにあれば，「λ男」は錠剤を食べ，錠剤はゲームから消える．
-    2. If Lambda-Man occupies a square with a power pill, the power pill is eaten by Lambda-Man, removed from the game, and fright mode is immediately activated, allowing Lambda-Man to eat ghosts.
-    3. If Lambda-Man occupies a square with a fruit, the fruit is eaten by Lambda-Man, and removed from the game.
-4. Next, if one or more visible ghosts are on the same square as Lambda-Man, then depending on whether or not fright mode is active, Lambda-Man either loses a life or eats the ghost(s). See below for details.
-5. Next, if all the ordinary pills (ie not power pills) have been eaten, then Lambda-Man wins and the game is over.
-6. Next, if the number of Lambda-Man lives is 0, then Lambda-Man loses and the game is over.
-7. Finally, the tick counter is incremented.
+    「λ男」が錠剤と同じセルにあれば，「λ男」は錠剤を食べ，錠剤はゲームからなくなる．
+    2. If Lambda-Man occupies a square with a power pill, the power pill is eaten by Lambda-Man, removed from the game, and fright mode is immediately activated, allowing Lambda-Man to eat ghosts.<br>
+    「λ男」がパワー錠剤と同じセルにあれば，「λ男」は錠剤を食べ，パワー錠剤はゲームからなくなる．
+    3. If Lambda-Man occupies a square with a fruit, the fruit is eaten by Lambda-Man, and removed from the game.<br>
+    「λ男」が果実と同じセルにあれば，「λ男」は錠剤を食べ，果実はゲームからなくなる．
+4. Next, if one or more visible ghosts are on the same square as Lambda-Man, then depending on whether or not fright mode is active, Lambda-Man either loses a life or eats the ghost(s). See below for details.<br>
+つぎに，1つあるいは複数の幽霊が「λ男」と同じセルにあれば，幽霊モードが有効かどうかによって，「λ男」が命を1つ失うか，幽霊を食うかのどちらかになる．詳細は後述．
+5. Next, if all the ordinary pills (ie not power pills) have been eaten, then Lambda-Man wins and the game is over.<br>
+つぎに，通常の錠剤（すなわちパワー錠剤ではない）がすべて食べつくされたら，「λ男」の勝利で，ゲームは終了．
+6. Next, if the number of Lambda-Man lives is 0, then Lambda-Man loses and the game is over.<br>
+つぎに，「λ男」の命の数が0なら，「λ男」の負けでゲームは終了．
+7. Finally, the tick counter is incremented.<br>
+最後に時刻刻みが1つ進む．
 
-## Losing a life
+## 命を1つ失うとき
 
 If at the end of a tick Lambda-Man is in the same square as a visible ghost and fright mode is not active then Lambda-Man loses a life. In this case, Lambda-Man and all the ghosts are immediately returned to their starting positions and starting directions (so that at the beginning of the next tick, Lambda-Man and the ghosts are in their starting positions).
 
@@ -243,11 +248,14 @@ Ghosts can only move into an adjacent square that is not occupied by a wall. At 
 
 Consequently, a ghost can only choose its direction at a junction and cannot choose to turn back on itself. A junction is a square which has at least three adjacent squares with no walls. For example, the following are all junctions.
 
+```
  # #     # #             # #     # # 
 ## ##    # ##   #####   ## #    ## ##
   =      #=       =       =#      =  
 #####    # ##   ## ##   ## #    ## ##
          # #     # #     # #     # # 
+```
+
 When a ghost encounters a bend, it is forced to continue around the bend. When a ghost encounters a dead end, it is forced to turn around.
 
 When a ghost chooses an illegal move (or no move at all) at a junction, it is forced to continue in its previous direction if this is legal, and if not, then the first legal direction out of up, right, down, and left, in that order.
@@ -1360,5 +1368,3 @@ Your submission file (.zip or .tar.gz) should have the following format:
 Subdirectory solution that contains your solution file: lambdaman.gcc.
 
 Subdirectory code with the source code you wrote to help you prepare your solution and any auxiliary material that can be helpful to the judges to build your code. You should include a README file here with any documentation/description of your solution that you wish to share with the judges.
-
-Site proudly generated by Hakyll using Haskell
