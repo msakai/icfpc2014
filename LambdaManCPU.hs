@@ -53,8 +53,20 @@ data HeapObj
 
 data Frame
   = Frame
-  { fparent  :: Maybe Frame
-  , fentries :: Array Int Value
+  { frameParent  :: Maybe Frame
+  , frameEntries :: Array Int Value
   }
   deriving (Eq)
 
+data ContFrame
+  = ContJoin InstAddr -- ^ TAG_JOIN
+  | ContRet InstAddr  -- ^ TAG_RET
+  | ContStop -- ^ TAG_STOP
+
+data Machine
+  = Machine
+  { mC :: IORef Int -- ^ %c: control register (program counter / instruction pointer)
+  , mS :: IORef [Value] -- ^ %s: data stack register
+  , mD :: IORef [ContFrame] -- ^ %d: control stack register
+  , mE :: IORef Frame -- ^ %e: environment frame register
+  }
