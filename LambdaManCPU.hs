@@ -39,18 +39,34 @@ data Inst
   | ST Int Int -- ^ store to environment
   | DBUG -- ^ printf debugging
   | BRK -- ^ breakpoint debugging
-
+  deriving (Eq, Ord, Show)
 
 data Value
   = VInt Int32
   | VPtr HeapObj
+  deriving (Eq)
 
 data HeapObj
   = HCons{ car :: IORef Value, cdr :: IORef Value }
   | HClosure InstAddr Frame
+  deriving (Eq)
 
 data Frame
   = Frame
-  { fparent  :: Maybe Frame
-  , fentries :: Array Int Value
+  { frameParent  :: Maybe Frame
+  , frameEntries :: Array Int Value
+  }
+  deriving (Eq)
+
+data ContFrame
+  = ContJoin InstAddr -- ^ TAG_JOIN
+  | ContRet InstAddr  -- ^ TAG_RET
+  | ContStop -- ^ TAG_STOP
+
+data Machine
+  = Machine
+  { mC :: IORef Int -- ^ %c: control register (program counter / instruction pointer)
+  , mS :: IORef [Value] -- ^ %s: data stack register
+  , mD :: IORef [ContFrame] -- ^ %d: control stack register
+  , mE :: IORef Frame -- ^ %e: environment frame register
   }
