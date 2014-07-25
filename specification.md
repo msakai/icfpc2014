@@ -4,60 +4,115 @@
 
 # イントロダクション
 
-For this year's ICFP programming contest we thought it would be fun to do a bit of '80s software and hardware archaeology. We just so happen (via friends of friends and bankruptcy asset sales) to have got our hands on a bunch of internal documents from LamCo. Back in the '80s, LamCo were a failed manufacturer of arcade games. You've probably never heard of them because they never managed to get a product out and were beaten by their better known rivals.
+For this year's ICFP programming contest we thought it would be fun to do a bit of '80s software and hardware archaeology. 
+We just so happen (via friends of friends and bankruptcy asset sales) to have got our hands on a bunch of internal documents from LamCo. 
+Back in the '80s, LamCo were a failed manufacturer of arcade games. 
+You've probably never heard of them because they never managed to get a product out and were beaten by their better known rivals.
 
-今年のICFPプログラミングコンテストでは，80年代のソフトウェアとハードウェアの考古学を楽しんでもらいたいと考えた．たまたま，(友達の友達や破綻資産売却を通じて)LamCo社の内部資料を山を手にいれた．80年代に遡ると，LamCo社はアーケードゲームの製造に失敗した．
+今年のICFPプログラミングコンテストでは，80年代のソフトウェアとハードウェアの考古学を楽しんでもらいたいと考えた．
+たまたま，(友達の友達や破綻資産売却を通じて)LamCo社の内部資料を山を手にいれた．
+80年代に遡ると，LamCo社はアーケードゲームの製造に失敗した．
 製品を商品にすることができず，有名なライバル社に叩きのめされたために彼らのことに聞き及ぶことはなかったと思う．
 
-What we've found from the cache of documents is that they had some rather interesting technology. We also found that they had a spectacularly dysfunctional development process marked by bitter internal rivalries, which we suspect goes a long way to explain their failed projects.
+What we've found from the cache of documents is that they had some rather interesting technology.
+We also found that they had a spectacularly dysfunctional development process marked by bitter internal rivalries, which we suspect goes a long way to explain their failed projects.
 
-隠匿書類から満つかったのは，彼等の少々興味深い技術であった．また，彼等は開発過程でひどい内部抗争から派手に機能不全に陥いった．結局それが原因だろうと踏んでいる．
+隠匿書類から満つかったのは，彼等の少々興味深い技術であった．
+また，彼等は開発過程でひどい内部抗争から派手に機能不全に陥いった．
+結局それが原因だろうとにらんでいる．
 
 So the contest task involves delving into LamCo's quirky old software and hardware technology, reconstructing the arcade hardware in simulation, and writing software for the arcade platform to play the game—and to play it better than your rivals!
 
-そこでコンテストの課題は，LamCo社の妙な古いソフトウェアとハードウェア技術を精査し，シミュレーションでアーケードハードウェアを再構築することであり，そのアーケードプラットフォームのソフトウェアを書いて，ゲームを遊べるようにし，君のライバルよりも上手くプレイしることである．
+そこでコンテストの課題は，LamCo社の妙な古いソフトウェアとハードウェア技術を精査し，シミュレーションでアーケードハードウェアを再構築することであり，そのアーケードプラットフォームのソフトウェアを書いて，ゲームを遊べるようにし，君のライバルよりも上手くプレイすることである．
 
 ## あかされない歴史
 
-LamCo were building an arcade game where you control a little character called "Lambda-Man" who runs around in a maze eating pills and evading ghosts. The game bears a striking resemblance to another well known arcade game. We don't know exactly why they ended up being so similar, though we rather suspect LamCo of stealing ideas from their more successful rival. We don't know exactly why they ended up being so similar, though we rather suspect LamCo of stealing ideas from their more successful rival. For reasons best known to themselves, LamCo decided to make a two player version of their game where two Lambda-Man characters battle it out to swipe the most pills from under the noses of the ghosts. Because they also wanted to have a one player mode they found that they needed an AI to play the opposing Lambda-Man. This and the usual pressure to meet tight deadlines led to a catastrophic decision by The Management to force two rival engineering teams to work together on the project. The Management got one team to work on the ghost AIs and game mechanics and another team to work on the Lambda-Man AI. The Management claimed this was because they wanted to be proactive not reactive with their blue-sky thinking on this mission critical project, and believed this to be a win-win situation, harvesting low-hanging fruit with client focused deliverables. Because of time pressure and The Management, each team was allowed to use their favourite technology stack and the plan was to integrate it all together at the end. The ghost and game mechanics team were led by engineers who seemed to believe that 8-bit microprocessors are the be all and end all of computing. The Lambda-Man AI team were led by engineers obsessed with LISP and all its arcanery.
+LamCo were building an arcade game where you control a little character called "Lambda-Man" who runs around in a maze eating pills and evading ghosts. 
+The game bears a striking resemblance to another well known arcade game.
+We don't know exactly why they ended up being so similar, though we rather suspect LamCo of stealing ideas from their more successful rival. 
+We don't know exactly why they ended up being so similar, though we rather suspect LamCo of stealing ideas from their more successful rival.
+For reasons best known to themselves, LamCo decided to make a two player version of their game where two Lambda-Man characters battle it out to swipe the most pills from under the noses of the ghosts. 
+Because they also wanted to have a one player mode they found that they needed an AI to play the opposing Lambda-Man. 
+This and the usual pressure to meet tight deadlines led to a catastrophic decision by The Management to force two rival engineering teams to work together on the project.
+The Management got one team to work on the ghost AIs and game mechanics and another team to work on the Lambda-Man AI.
+The Management claimed this was because they wanted to be proactive not reactive with their blue-sky thinking on this mission critical project, and believed this to be a win-win situation, harvesting low-hanging fruit with client focused deliverables.
+Because of time pressure and The Management, each team was allowed to use their favourite technology stack and the plan was to integrate it all together at the end.
+The ghost and game mechanics team were led by engineers who seemed to believe that 8-bit microprocessors are the be all and end all of computing. 
+The Lambda-Man AI team were led by engineers obsessed with LISP and all its arcanery.
 
-LamCo社が構築しようとしていたアーケードゲームでは「λ男」という小さなキャラを制御するようになっていた．このキャラは迷路の中を錠剤を食いながら幽霊から逃げまわるというものである．このゲームは有名なアーケードゲームに酷似している．なんでそんなに似たものを作ろうとしたのかは知るよしもないが，LamCoは自分達よりも成功しているライバルからアイデアを盗んだのではなかと思う．彼等自身がいちばんよく承知している理由により，LamCoは2人であそぶゲームにしようと決めたのだ．2つの「λ男」キャラが幽霊の鼻先で殆どの錠剤を根そぎにする戦いを繰り広げるというものである．彼等には一人であそぶためには仇の「λ男」用AIが必要なことが判っていた．このことときつい締切がライバル関係にあった2つの技術チームを一緒に仕事させることを強要するという経営陣の破局的決定を招いた．経営陣は一方のチームに幽霊のAIとゲームの機構を担当させ，もう一方のチームには「λ男」のAIを担当させた．経営陣が言うには，このミッションクリティカルなプロジェクトに対する能天気な考えは先見の明のあるものだったのである．彼等はウィンウィンになると信じて疑わず，クライアントに簡単に届けられる成果があがるものと信じていたのである．時間に追われ，経営陣に攻められ，どちらのチームも自分達の好む技術を使うことを許されて，計画ではそれらを最後に全部統合する予定であった．幽霊-ゲーム機構チームは8ビットマイクロプロセッサがすべてであると信じるようなエンジニアが率いていた．「λ男」AIチームはLISPにとりつかれたエンジニアに率いられていた．
+LamCo社が構築しようとしていたアーケードゲームではλマンという小さなキャラを制御するようになっていた．
+このキャラは迷路の中を錠剤を食いながら幽霊から逃げまわるというものである．
+このゲームは有名なアーケードゲームに酷似している．
+なんでそんなに似たものを作ろうとしたのかは知るよしもないが，LamCoは自分達よりも成功しているライバルからアイデアを盗んだのではなかと思う．
+彼等自身がいちばんよく承知している理由により，LamCoは2人であそぶゲームにしようと決めたのだ．
+2つのλマンキャラが幽霊の鼻先で殆どの錠剤を根そぎにする戦いを繰り広げるというものである．
+彼等には一人であそぶためには仇のλマン用AIが必要なことが判っていた．
+このことときつい締切がライバル関係にあった2つの技術チームを一緒に仕事させることを強要するという経営陣の破局的決定を招いた．
+経営陣は一方のチームに幽霊のAIとゲームの機構を担当させ，もう一方のチームにはλマンのAIを担当させた．
+経営陣が言うには，このミッションクリティカルなプロジェクトに対する能天気な考えは先見の明のあるものだったのである．
+彼等はウィンウィンになると信じて疑わず，クライアントに簡単に届けられる成果があがるものと信じていたのである．
+時間に追われ，経営陣に攻められ，どちらのチームも自分達の好む技術を使うことを許されて，計画ではそれらを最後に全部統合する予定であった．
+幽霊-ゲーム機構チームは8ビットマイクロプロセッサがすべてであると信じるようなエンジニアが率いていた．
+λマンAIチームはLISPにとりつかれたエンジニアに率いられていた．
 
+Of course the end product ended up reflecting the teams that had built it.
+The main motherboard had several 8-bit microcontrollers to implement the ghost AIs and the game mechanics. 
+It also had a customised coprocessor for running the Lambda-Man AI.
+The software also reflected the different teams' philosophies: the ghost AIs and game mechanics were written directly in assembly while the Lambda-Man AI was written in some dialect of LISP.
 
-Of course the end product ended up reflecting the teams that had built it. The main motherboard had several 8-bit microcontrollers to implement the ghost AIs and the game mechanics. It also had a customised coprocessor for running the Lambda-Man AI. The software also reflected the different teams' philosophies: the ghost AIs and game mechanics were written directly in assembly while the Lambda-Man AI was written in some dialect of LISP.
+もちろん，最終成果物はそれを組んだチームを反映したものになった．
+マザーボードは数台の8ビットマイクロコントローラを積んでおり，これを用いて幽霊とゲーム機構を実装していた．
+またλマンAIを走らせる専用のコプロセッサも積んでいた．
+ソフトウェアもそれぞれのチームの哲学を反映したものであった．
+幽霊AIとゲーム機構はアセンブリ言語で直接書かれており，λマンAIはLISPのとある方言で書かれていた．
 
-もちろん，最終成果物はそれを組んだチームを反映したものになった．マザーボードは数台の8ビットマイクロコントローラを積んでおり，これを用いて幽霊とゲーム機構を実装していた．また「λ男」AIを走らせる専用のコプロセッサも積んでいた．ソフトウェアもそれぞれのチームの哲学を反映したものであった．幽霊AIとゲーム機構はアセンブリ言語で直接書かれており，「λ男」AIはLISPのとある方言で書かれていた．
+We don't know exactly why the project failed.
+It could have been schedule slippage from integrating the different technologies, infighting between the two teams, the horrendous bill of materials or all of the above.
+But surely not The Management. 
+All we know for sure is that the project was ultimately cancelled and LamCo filed for bankruptcy.
 
-We don't know exactly why the project failed. It could have been schedule slippage from integrating the different technologies, infighting between the two teams, the horrendous bill of materials or all of the above. But surely not The Management. All we know for sure is that the project was ultimately cancelled and LamCo filed for bankruptcy.
-
-このプロジェクトが失敗した本当の原因はよくわからない．スケジュール遅延の原因は，異なる技術を統合することによるもの，2つのチームのいがみあい，材料のすざまじい高騰，あるいは，その全部かもしれない．経営陣のせいではないだろう．確かなことはプロジェクトは完全は消滅し，LamCo社は経営破綻したということである．
+このプロジェクトが失敗した本当の原因はよくわからない．
+スケジュール遅延の原因は，異なる技術を統合することによるもの，2つのチームのいがみあい，材料のすざまじい高騰，あるいは，その全部かもしれない．
+経営陣のせいではないだろう．
+確かなことはプロジェクトは完全は消滅し，LamCo社は経営破綻したということである．
 
 ## 課題の概要
 
-見つかった技術者のノートによれば，プロジェクトが消滅するまでには，ハードウェアもソフトウェアもなんとか動くところまで来ていた．残念なことに元々のソフトウェアを回復することはできないが，ハードウェアのデザインノート詳細にわかっている．
+見つかった技術者のノートによれば，プロジェクトが消滅するまでには，ハードウェアもソフトウェアもなんとか動くところまで来ていた．
+残念なことに元々のソフトウェアを回復することはできないが，ハードウェアのデザインノート詳細にわかっている．
 
-これまでに我々（つまり審査員）はこのアーケードハードウェアのソフトウェアでのシミュレーションを終えている．君の仕事はこのハードウェア上で走るソフトウェアを書くことである．
+これまでに我々（つまり審査員）はこのアーケードハードウェアのソフトウェアでのシミュレーションを終えている．
+君の仕事はこのハードウェア上で走るソフトウェアを書くことである．
 
 ## ライトニングラウンド概要
 
 For the lightning round we will play the "classic" version of the game where it is just a single Lambda-Man against the ghosts.
 
-ライトニングラウンドでは「クラシック」版でプレイする．1人の「λ男」と幽霊たちが対戦する．
+ライトニングラウンドでは「クラシック」版でプレイする．1人のλマンと幽霊たちが対戦する．
 
-Your challenge is is to write an AI for the Lambda-Man. It will play against ghost AIs supplied by the judges and in mazes supplied by the judges.
-「λ男」AIを書いてもらいたい．「λ男」は審査員が用意した迷図で審査員が用意した幽霊AIと戦う．
+Your challenge is is to write an AI for the Lambda-Man. 
+It will play against ghost AIs supplied by the judges and in mazes supplied by the judges.
+
+λマンAIを書いてもらいたい．
+λマンは審査員が用意した迷図で審査員が用意した幽霊AIと戦う．
 
 You will be supplied with several of the mazes and with the assembly code for a few (not very smart) ghost AIs.
+
 いくつかの迷図とあまり賢くない幽霊AIのアセンブリコードをいくつかを君に提供する．
 
 The lightning round runs for the first 24 hours of the competition, so submissions must be in before 12:00 UTC 26/07/2014.
-ライトニングラウンドは最初の24時間である．したがって，提出期限は12:00 UTC 26/07/2014である．
+
+ライトニングラウンドは最初の24時間である．
+したがって，提出期限は12:00 UTC 26/07/2014である．
 
 ## 本番ラウンド概要
 
-The full round will be broadly the same as the lightning round, but with a twist. The details will be made available at the end of the lightning round. Check the front page for the link once the lightning round has closed.
+The full round will be broadly the same as the lightning round, but with a twist.
+The details will be made available at the end of the lightning round. 
+Check the front page for the link once the lightning round has closed.
 
-本番ラウンドもライトニングラウンドとほぼ同じだが，ちょっとひねってある．詳細についてはライトニングラウンドが終了したときにあかされる．ライトニングラウンド終了したらすぐにトップページのリンクをチェックすること．
+本番ラウンドもライトニングラウンドとほぼ同じだが，ちょっとひねってある．詳細についてはライトニングラウンドが終了したときにあかされる．
+ライトニングラウンド終了したらすぐにトップページのリンクをチェックすること．
 
 The full round runs for the full 72 hours of the competition, so submissions must be in before 12:00 UTC 28/07/2014.
 
@@ -67,17 +122,17 @@ The full round runs for the full 72 hours of the competition, so submissions mus
 
 残りの仕様は以下を参照のこと．
 
-- 完全な仕様は[「λ男」ゲームのルール](#the-lambda-man-game-rules)にある．
+- 完全な仕様は[λマンゲームのルール](#the-lambda-man-game-rules)にある．
 - 得点方法の詳細は[得点方法](#scoring)にある．
 - 幽霊AIのマイクロコントローラについては[マイクロコントローラ](#ghost-cpu-ghc)にある．
-- 「λ男」AIにつかわれているプロセッサについては[プロセッサ](#lambda-man-cpu)にある．
+- λマンAIにつかわれているプロセッサについては[プロセッサ](#lambda-man-cpu)にある．
 - 解答の提出方法の詳細は[提出方法](#submission-procedure)にある．
 
 ## 参考資料
 
 To help you get started we are providing a reference implementation of the game rules and the Lambda-Man processor.
 
-ゲームルールと「λ男」プロセッサの参考実装を用意してある．
+ゲームルールとλマンプロセッサの参考実装を用意してある．
 
 - [http://icfpcontest.org/reference.html](http://icfpcontest.org/reference.html)
 
@@ -89,21 +144,23 @@ If you find any discrepancies between this specification document and the refere
 
 この仕様と参考実装(その他)との間に食い違いがある場合はすぐに審査員に知らせてください！
 
-# <a name="the-lambda-man-game-rules">「λ男」ゲームのルール</a>
+# <a name="the-lambda-man-game-rules">λマンゲームのルール</a>
 
 ## 目的
 
-A Lambda-Man lives in a two-dimensional maze made up of walls, and must eat as many pills as he can, while avoiding the ghosts who chase him. Lambda-Man has three lives, and if a ghost catches Lambda-Man, then he loses a life. When there are no more Lambda-Man lives, the game is over. When all the pills are eaten, Lambda-Man has completed the level.
+A Lambda-Man lives in a two-dimensional maze made up of walls, and must eat as many pills as he can, while avoiding the ghosts who chase him. 
+Lambda-Man has three lives, and if a ghost catches Lambda-Man, then he loses a life.
+When there are no more Lambda-Man lives, the game is over. When all the pills are eaten, Lambda-Man has completed the level.
 
-「λ男」は壁にかこまれた2次元迷図上で活動し，追い掛けてくる幽霊を回避しつつ，食えるだけの錠剤を食わなければならない．「λ男」には命が3つあって，幽霊に掴まると命を1つは失なう．「λ男」の命がすべてなくなった時点でゲームオーバーである．錠剤をすべて食べれば「λ男」はそのレベルを完遂したことになる．
+λマンは壁にかこまれた2次元迷図上で活動し，追い掛けてくる幽霊を回避しつつ，食えるだけの錠剤を食わなければならない．λマンには命が3つあって，幽霊に掴まると命を1つは失なう．λマンの命がすべてなくなった時点でゲームオーバーである．錠剤をすべて食べればλマンはそのレベルを完遂したことになる．
 
 In addition to pills, a Lambda-Man may also eat power pills. These gives every Lambda-Man the ability to eat ghosts for a short period of time.
 
-錠剤以外に，「λ男」はパワー錠剤も食う．パワー錠剤を食うと「λ男」は短時間だけ幽霊を食う能力を得る．
+錠剤以外に，λマンはパワー錠剤も食う．パワー錠剤を食うとλマンは短時間だけ幽霊を食う能力を得る．
 
 Bonus points are awarded for eating the fruit, which appears after a specific period of time at a specific location on the map before disappearing.
 
-果物を食えばボーナスポイントが付く．果物は定まった時間ごと？に地図上の特定の位置に現れる．
+フルーツを食えばボーナスポイントが付く．フルーツは定まった時間ごと？に地図上の特定の位置に現れる．
 
 By convention, the following symbols are used to represent the various elements of the game:
 
@@ -115,8 +172,8 @@ By convention, the following symbols are used to represent the various elements 
 |    \#	    |      壁     |
 |    \.	    |     錠剤    |
 |    o      |  パワー錠剤 |
-|    %      |     果物    |
-|    \\	    |   「λ男」  |
+|    %      |     フルーツ    |
+|    \\	    |   λマン    |
 |    =      |     幽霊    |
 
 ## 機構
@@ -128,24 +185,24 @@ The world is entirely deterministic, and runs on a tick-by-tick basis.
 時の刻みごとに，
 
 1. All Lambda-Man and ghost moves scheduled for this tick take place. (Note that Lambda-Man and the ghosts do not move every tick, only every few ticks; see the ticks section below.)<br>
-すべての「λ男」と幽霊はこの刻みに併せて移動する．（「λ男」と幽霊はすべての刻みで動くわけではなく，何刻みかごとに動くことに注意せよ．）
+すべてのλマンと幽霊はこの刻みに併せて移動する．（λマンと幽霊はすべての刻みで動くわけではなく，何刻みかごとに動くことに注意せよ．）
 2. Next, any actions (fright mode deactivating, fruit appearing/disappearing) take place.<br>
-つぎに，すべてのアクション（飛行モードの解除，果実の出現/消滅）がここで起こる．
+つぎに，すべてのアクション（飛行モードの解除，フルーツの出現/消滅）がここで起こる．
 
 3. Next, we check if Lambda-Man is occupying the same square as pills, power pills, or fruit:<br>
-つぎに，「λ男」が錠剤，スーパー錠剤，果実と同じセルにあるかをチェックする．<br>
+つぎに，λマンが錠剤，スーパー錠剤，フルーツと同じセルにあるかをチェックする．<br>
     1. If Lambda-Man occupies a square with a pill, the pill is eaten by Lambda-Man and removed from the game.<br>
-    「λ男」が錠剤と同じセルにあれば，「λ男」は錠剤を食べ，錠剤はゲームからなくなる．
+    λマンが錠剤と同じセルにあれば，λマンは錠剤を食べ，錠剤はゲームからなくなる．
     2. If Lambda-Man occupies a square with a power pill, the power pill is eaten by Lambda-Man, removed from the game, and fright mode is immediately activated, allowing Lambda-Man to eat ghosts.<br>
-    「λ男」がパワー錠剤と同じセルにあれば，「λ男」は錠剤を食べ，パワー錠剤はゲームからなくなる．
+    λマンがパワー錠剤と同じセルにあれば，λマンは錠剤を食べ，パワー錠剤はゲームからなくなる．
     3. If Lambda-Man occupies a square with a fruit, the fruit is eaten by Lambda-Man, and removed from the game.<br>
-    「λ男」が果実と同じセルにあれば，「λ男」は錠剤を食べ，果実はゲームからなくなる．
+    λマンがフルーツと同じセルにあれば，λマンは錠剤を食べ，フルーツはゲームからなくなる．
 4. Next, if one or more visible ghosts are on the same square as Lambda-Man, then depending on whether or not fright mode is active, Lambda-Man either loses a life or eats the ghost(s). See below for details.<br>
-つぎに，1つあるいは複数の幽霊が「λ男」と同じセルにあれば，幽霊モードが有効かどうかによって，「λ男」が命を1つ失うか，幽霊を食うかのどちらかになる．詳細は後述．
+つぎに，1つあるいは複数の幽霊がλマンと同じセルにあれば，幽霊モードが有効かどうかによって，λマンが命を1つ失うか，幽霊を食うかのどちらかになる．詳細は後述．
 5. Next, if all the ordinary pills (ie not power pills) have been eaten, then Lambda-Man wins and the game is over.<br>
-つぎに，通常の錠剤（すなわちパワー錠剤ではない）がすべて食べつくされたら，「λ男」の勝利で，ゲームは終了．
+つぎに，通常の錠剤（すなわちパワー錠剤ではない）がすべて食べつくされたら，λマンの勝利で，ゲームは終了．
 6. Next, if the number of Lambda-Man lives is 0, then Lambda-Man loses and the game is over.<br>
-つぎに，「λ男」の命の数が0なら，「λ男」の負けでゲームは終了．
+つぎに，λマンの命の数が0なら，λマンの負けでゲームは終了．
 7. Finally, the tick counter is incremented.<br>
 最後に時刻刻みが1つ進む．
 
@@ -153,13 +210,13 @@ The world is entirely deterministic, and runs on a tick-by-tick basis.
 
 If at the end of a tick Lambda-Man is in the same square as a visible ghost and fright mode is not active then Lambda-Man loses a life. In this case, Lambda-Man and all the ghosts are immediately returned to their starting positions and starting directions (so that at the beginning of the next tick, Lambda-Man and the ghosts are in their starting positions).
 
-チクの最後で「λ男」が見えている幽霊と同じセルにいて，飛行モードが有効になっていなければ，「λ男」は命を1つ失う．この場合，「λ男」およびすべての幽霊はただちにスタート地点に戻りその向きもスタート時点と同じ向きになる（したがって，次のチクの開始点では「λ男」および幽霊はスタート地点にいる）．
+チクの最後でλマンが見えている幽霊と同じセルにいて，飛行モードが有効になっていなければ，λマンは命を1つ失う．この場合，λマンおよびすべての幽霊はただちにスタート地点に戻りその向きもスタート時点と同じ向きになる（したがって，次のチクの開始点ではλマンおよび幽霊はスタート地点にいる）．
 
 ## パワー錠剤
 
 When a power pill is eaten, all ghosts turn around and move in the opposite direction to their previous move, and fright mode is enabled. While in fright mode, if a ghost occupies the same square as a Lambda-Man, the ghost is eaten. When a ghost is eaten, it is returned to its starting position and starting direction, and is invisible until fright mode expires. While invisible, the ghost can neither eat nor be eaten.
 
-パワー錠剤を食うと，すべての幽霊は反転して反対方向に向き直前の位置に移動し，飛行モードが有効になる．飛行モードが有効な間に幽霊と同じセルを「λ男」が占めれば，幽霊は食われる．幽霊は食われたら，スタート地点に戻り，スタート時点での方向を向く．そうして飛行モードが切れるまで見えなくなる．見えないあいだは幽霊は，食いも食われもしない．
+パワー錠剤を食うと，すべての幽霊は反転して反対方向に向き直前の位置に移動し，飛行モードが有効になる．飛行モードが有効な間に幽霊と同じセルをλマンが占めれば，幽霊は食われる．幽霊は食われたら，スタート地点に戻り，スタート時点での方向を向く．そうして飛行モードが切れるまで見えなくなる．見えないあいだは幽霊は，食いも食われもしない．
 
 If a power pill is eaten during fright mode, the fright mode tick count is reset.
 
@@ -173,13 +230,22 @@ When fright mode expires, all ghosts become visible.
 
 The aim of the game is to achieve the highest score, which is the sum of all the scores achieved on all levels. Points are awarded as follows.
 
-Each pill eaten is worth 10 points.
+このゲームの目的は最高点を獲得することである．すべてのレベルでのすべての得点の和を最高にすることである．
+得点は以下のようにして獲得する．
+
+Each pill eaten is worth 10 points
+
+錠剤1個が10点．
 
 Each power pill eaten is worth 50 points.
 
+パワー錠剤が50点．
+
 Each fruit eaten is worth points depending on its flavour. The flavour of a fruit is determined by the level as described below:
 
-|  Level  |   Flavour  |  Points  |
+フルーツはその風味によって得点がことなる．フルーツはレベルで風味がちがい，それは以下のようになっている．
+
+|  レベル |   風味     |  得点    |
 |:--------|:-----------|---------:|
 |  1	  |   Cherry   |  100     |
 |  2      | Strawberry |  300     |
@@ -197,56 +263,102 @@ Each fruit eaten is worth points depending on its flavour. The flavour of a frui
 
 The level of a map is determined by its area. Given a map of size mapWidth * mapHeight, the level is the number which satisfies:
 
+地図のレベルはその面積できまる．mapWidth * mapHeightの大きさの地図だとすると，そのレベルは以下を満す．
+
 ```
 100 * (level - 1) < mapWidth * mapHeight <= 100 * level
 ```
 
 For example, a map of size 15 * 18 = 270 is a level 3 map, since 200 < 270 <= 300.
 
-While in fright mode, the first ghost eaten is worth 200 points. Each subsequent ghost eaten until another power-pill is eaten is worth double the previous one, up to a limit of 1600 points:
+たとえば，15 * 18 = 270のサイズだとすると，これはレベル3の地図である．200 < 270 <= 300 だからである．
 
-Number of ghosts eaten	Points
-First	200
-Second	400
-Third	800
-Fourth	1600
-Fifth and subsequent	1600
+While in fright mode, the first ghost eaten is worth 200 points. 
+Each subsequent ghost eaten until another power-pill is eaten is worth double the previous one, up to a limit of 1600 points:
+
+飛行モードの間に最初に幽霊を食うと200点である．
+ひきつづき次のパワー錠剤を食うまでに幽霊を食うごとに得点は前の得点の2倍になり，上限は1600点である．
+
+| 食った幽霊         | 得点 |
+|:-------------------|-----:|
+| 1匹目              |   200|
+| 2匹目              |   400|
+| 3匹目              |   800|
+| 4匹目およびそれ以降|  1600|
+
 If Lambda-Man manages to eat all of the pills on a level, he is awarded with a bonus: his score is multiplied by the remaining lives plus one. For example, if the Lambda-Man is on his last life, the score is doubled.
 
-Ticks
+λマンが1つのレベルで錠剤をすべて食えば，ボーナスで，得点が残りの命の数に1を加えたものかけたものになる．
+たとえば，1つしか命がのこっていなければ，得点が倍になるということである．
+
+## 時の刻み
 
 The world runs tick-by-tick. The Ultimate Tick Clock (UTC) gives the current tick time, and is counted from 1 at the beginning of each game. A game runs until the End Of Lives (EOL), which happens either when Lambda-Man runs out of lives, or if a particular UTC is reached, whereupon lives are set to 0:
 
-Event	UTC
-End Of Lives	127 * mapWidth * mapHeight * 16
-Two fruits appear on every level, at a fixed UTC. The second fruit will appear whether or not the first fruit was eaten.
+世界は時の刻みで走る．
+Ultimate Tick Clock (UTC)は現在のチク時刻である．
+各ゲームの開始時に1から始まる．
+ゲームはEnd Of Lives (EOL)までで，EOLはλマンが命を使い切ったとき，もしくは，ある定まったUTCが来て命が0にセットされたときである．
 
-Event	UTC
-Fruit 1 appears	127 * 200
-Fruit 2 appears	127 * 400
+| イベント | UTC                             |
+|:---------|:--------------------------------|
+|  EOL     | 127 * mapWidth * mapHeight * 16 |
+
+各レベルでフルーツは2つ現れる．特定のUTCで，1つ目のフルーツが出現する．
+2つめのフルーツが現れかどうかは1つ目のフルーツが食われたかどうかによる．
+
+| イベント | UTC                             |
+|:---------|:--------------------------------|
+| フルーツ1| 127 * 200 に出現                |
+| フルーツ2| 127 * 400 に出現                |
+
 Each fruit remains in the game until either it is eaten, or it expires at a fixed UTC.
 
-Event	UTC
-Fruit 1 expires	127 * 280
-Fruit 2 expires	127 * 480
+それぞれのフルーツは食われてしまうか，特定の時刻が来れば期限切れになって消える．
+
+| イベント | UTC                             |
+|:---------|:--------------------------------|
+| フルーツ1| 期限切れ 127 * 280              |
+| フルーツ2| 期限切れ 127 * 480              |
+
 Each power pill eaten triggers fright mode, which expires after a fixed duration counted from when the last power pill is eaten.
 
-Event	Ticks duration
-Fright mode duration	127 * 20
+それぞれのパワー錠剤を食うと飛行モードに以降する．
+飛行モードは，最近に食ったパワー錠剤を食った時点から一定の期間がたてば効力が消える．
+
+| イベント       | チク期間                        |
+|:---------------|:--------------------------------|
+| 飛行モード期間 | 127 * 20                        |
+
 The Lambda-Man and ghosts move at different speeds. Lambda-Man moves slower when he is eating, and the ghosts move slower when they are in fright mode. All moves are at regular intervals, based on their ticks per move value which is described below. For example, the first Lambda-Man move occurs at tick 127, the second at tick 254, and so on.
 
-Event	Ticks per move
-Lambda-Man	127
-Lambda-Man (eating)	137
-Ghost AI 1	130
-Ghost AI 2	132
-Ghost AI 3	134
-Ghost AI 4	136
-Ghost AI 1 (fright)	195
-Ghost AI 2 (fright)	198
-Ghost AI 3 (fright)	201
-Ghost AI 4 (fright)	204
-Movement
+λマンと幽霊の移動速度は異なる．λマンは食っているときは遅く，幽霊は飛行モードのときに移動が遅くなる．
+すべての移動は一定の間隔でおこり，移動のチクは以下のとおり．
+たとえば，λマンは最初移動は127チクに起こり，次は154チクに移動する．
+
+| イベント             | UTC    |
+|:---------------------|:-------|
+| λマン               | 127    |
+| λマン(食ってるとき) | 137    |
+| 幽霊 0               | 130    |
+| 幽霊 1               | 132    |
+| 幽霊 2               | 134    |
+| 幽霊 3               | 136    |
+| 幽霊 0 (飛行モード)  | 195    |
+| 幽霊 1 (飛行モード)  | 198    |
+| 幽霊 2 (飛行モード)  | 201    |
+| 幽霊 3 (飛行モード)  | 204    |
+
+On a tick when Lambda-Man or a ghost is scheduled to move, their next move is scheduled for the appropriate number of ticks in the future, depending on their current state. For example if Lambda-Man moves into a square with a pill then the next tick on which he will move will be his previous scheduled tick number plus 137.
+
+λマンあるいは幽霊が移動するチクカウントにおいて次の移動のチクカウントが設定される．
+これはそのときの状態に依存する．
+たとえば，λマンが錠剤のあるセルにいたら次の移動はその直前の移動に設定されたチクカウントに137を加えた時刻である．
+
+幽霊が5体以上いるときには，チクカウントは循環的に割り当てられる．つまり幽霊4は幽霊0と同じ設定になる．
+λマンや幽霊のチク設定が再設定されるイベントや条件は他にはない（フライトモードに入るとき，幽霊が食われるとき，λマンが食われるときでも再設定されることはない）．
+
+## 移動
 
 The Lambda-Man can move into any adjacent square that is not occupied by a wall. An adjacent square is one that is up, down, left, or right of another.
 
