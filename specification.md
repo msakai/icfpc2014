@@ -415,35 +415,59 @@ Your overall score in the lightning round is the sum of your individual scores o
 
 Maps are rectangular. Map x and y coordinates are indexed from 0. The top left corner is (0,0), so increasing x-coordinates are to the right, and increasing y-coordinates are down.
 
+地図は長方形で，x 方向，y 方向ともに 0 から番号が付く．
+左上の角が(0,0)である．したがって，x 方向は右へいくほど番号が多きくなり，y方向は下えいくほど番号が大きくなる．
 
 Maps are like mazes: they consist of corridors 1-square wide, without open spaces. More formally: there are no 2x2 areas consisting only of non-wall squares.
 
+地図は迷図のようになっており，1つの正方形のセル幅の通路で構成されており，それより広い場所はない．
+より形式的にいうと，壁を含まないセルの2×2の空間はない．
+
 Maps have walls around the edges.
+
+地図の周辺は壁がぐるりと回っている．
 
 Every pill in a map is accessible.
 
+地図にあるすべての錠剤は到達可能である．
+
 The maps vary in size and in the number of ghosts and power pills. Easy maps will be smaller, with fewer ghosts and a higher density of power pills. Harder maps will be larger, with more ghosts and a lower density of power pills. The maximum map size is 256 by 256.
 
-Ghosts and ghost programs
+地図のサイズ，幽霊の数，パワー錠剤の数は地図ごとに変る．
+簡単な地図ほど，小さく，幽霊の数は少く，パワー錠剤の密度は高い．
+難しい地図ほど，大きく，幽霊の数は多く，パワー錠剤の密度は低い．
+最大の地図サイズは 256 × 256 である．
+
+## 幽霊と幽霊のプログラム
 
 Ghost AI programs are assigned to ghosts in each map. If there are more ghosts in a map than then are ghost AI programs in use then the AI programs are assigned to the ghosts cyclically.
 
+幽霊AIプログラムはそれぞれの地図ごとに幽霊に割り当てられている．
+AIプログラムの数以上の幽霊がいる地図ではAIプログラムを循環的に割り当てる．
+
 For example, if a map has 4 ghosts and there are 2 AI programs then they are assigned as follows:
 
-Ghost	AI Program
-ghost 1	program 1
-ghost 2	program 2
-ghost 3	program 1
-ghost 4	program 2
+たとえば，幽霊が4体，AIが2つの場合の割あては以下のとおり
+
+| 幽霊     | AI プログラム |
+|:---------|:--------------|
+| ghost 1  | program 1     |
+| ghost 2  | program 2     |
+| ghost 3  | program 1     |
+| ghost 4  | program 2     |
+
 The order of ghosts is in increasing order of their starting coordinates, where (x1, y1) is considered smaller than (x2, y2) if y1 < y2' or if y1 = y2' and x1 < x2'.
+幽霊の順番は出発の座標の大小できまります．
 
 The system allows at most 4 ghost programs (but more than 4 ghosts).
+このシステムでは高々4つの幽霊プログラムしか使いませんが幽霊は5体以上です．
 
-GHost CPU (GHC)
+# GHost CPU (GHC)
 
 The GHost CPU (GHC) is a conventional 8-bit microcontroller. Each ghost is run by a separate GHC. Although we found a complete copy of the CPU manual, it is quite terse in parts, as it assumes the conventions of the day. For those of you who (because of age or youth) do not remember the 1980s, we have tried to explain some of these conventions.
+GHost 
 
-GHC State
+## GHC State
 
 Each register holds an 8-bit unsigned integer (between 0 and 255 inclusive). There are 2 separate memories: a data memory and a code memory, each with 256 locations (numbered from 0 to 255 inclusive). Hence the contents of a register can be interpreted directly as a data memory address, the contents of a data memory location, or a code memory address. The GHC performs all arithmetic modulo 256, so 255 + 1 = 0.
 
