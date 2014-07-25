@@ -95,7 +95,7 @@ If you find any discrepancies between this specification document and the refere
 
 A Lambda-Man lives in a two-dimensional maze made up of walls, and must eat as many pills as he can, while avoiding the ghosts who chase him. Lambda-Man has three lives, and if a ghost catches Lambda-Man, then he loses a life. When there are no more Lambda-Man lives, the game is over. When all the pills are eaten, Lambda-Man has completed the level.
 
-「λ男」は壁にかこまれた2次元迷図上で活動し，追い掛けてくる幽霊を回避しつつ，食えるだけの錠剤を食わなければならない．「λ男」には命が3つあり，幽霊に掴まると命を1つ失う．命がすべてなくなった時点でゲームオーバーである．錠剤をすべて食べれば「λ男」はそのレベルを完遂したことになる．
+「λ男」は壁にかこまれた2次元迷図上で活動し，追い掛けてくる幽霊を回避しつつ，食えるだけの錠剤を食わなければならない．「λ男」には3体生きていて，幽霊に掴まるとその1体は失なわれる．「λ男」がすべてなくなった時点でゲームオーバーである．錠剤をすべて食べれば「λ男」はそのレベルを完遂したことになる．
 
 In addition to pills, a Lambda-Man may also eat power pills. These gives every Lambda-Man the ability to eat ghosts for a short period of time.
 
@@ -115,37 +115,30 @@ By convention, the following symbols are used to represent the various elements 
 |    \#	    |      壁     |
 |    \.	    |     錠剤    |
 |    o      |  パワー錠剤 |
-|    \%     |     果物    |
+|    %      |     果物    |
 |    \\	    |   「λ男」  |
-|    \=     |     幽霊    |
+|    =      |     幽霊    |
 
 ## 機構
 
 The world is entirely deterministic, and runs on a tick-by-tick basis.
+世界は完全に決定的であり，クロックの刻みごとに走る．
 
-On each tick:
+時の刻みごとに，
 
-All Lambda-Man and ghost moves scheduled for this tick take place. (Note that Lambda-Man and the ghosts do not move every tick, only every few ticks; see the ticks section below.)
+1. All Lambda-Man and ghost moves scheduled for this tick take place. (Note that Lambda-Man and the ghosts do not move every tick, only every few ticks; see the ticks section below.)
+すべての「λ男」と幽霊はこの刻みに併せて移動する．（「λ男」と幽霊はすべての刻みで動くわけではなく，何刻みかごとに動くことに注意せよ．）
+2. Next, any actions (fright mode deactivating, fruit appearing/disappearing) take place.
+3. Next, we check if Lambda-Man is occupying the same square as pills, power pills, or fruit:
+    1. If Lambda-Man occupies a square with a pill, the pill is eaten by Lambda-Man and removed from the game.
+    2. If Lambda-Man occupies a square with a power pill, the power pill is eaten by Lambda-Man, removed from the game, and fright mode is immediately activated, allowing Lambda-Man to eat ghosts.
+    3. If Lambda-Man occupies a square with a fruit, the fruit is eaten by Lambda-Man, and removed from the game.
+4. Next, if one or more visible ghosts are on the same square as Lambda-Man, then depending on whether or not fright mode is active, Lambda-Man either loses a life or eats the ghost(s). See below for details.
+5. Next, if all the ordinary pills (ie not power pills) have been eaten, then Lambda-Man wins and the game is over.
+6. Next, if the number of Lambda-Man lives is 0, then Lambda-Man loses and the game is over.
+7. Finally, the tick counter is incremented.
 
-Next, any actions (fright mode deactivating, fruit appearing/disappearing) take place.
-
-Next, we check if Lambda-Man is occupying the same square as pills, power pills, or fruit:
-
-If Lambda-Man occupies a square with a pill, the pill is eaten by Lambda-Man and removed from the game.
-
-If Lambda-Man occupies a square with a power pill, the power pill is eaten by Lambda-Man, removed from the game, and fright mode is immediately activated, allowing Lambda-Man to eat ghosts.
-
-If Lambda-Man occupies a square with a fruit, the fruit is eaten by Lambda-Man, and removed from the game.
-
-Next, if one or more visible ghosts are on the same square as Lambda-Man, then depending on whether or not fright mode is active, Lambda-Man either loses a life or eats the ghost(s). See below for details.
-
-Next, if all the ordinary pills (ie not power pills) have been eaten, then Lambda-Man wins and the game is over.
-
-Next, if the number of Lambda-Man lives is 0, then Lambda-Man loses and the game is over.
-
-Finally, the tick counter is incremented.
-
-Losing a life
+## Losing a life
 
 If at the end of a tick Lambda-Man is in the same square as a visible ghost and fright mode is not active then Lambda-Man loses a life. In this case, Lambda-Man and all the ghosts are immediately returned to their starting positions and starting directions (so that at the beginning of the next tick, Lambda-Man and the ghosts are in their starting positions).
 
