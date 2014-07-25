@@ -39,18 +39,22 @@ data Inst
   | ST Int Int -- ^ store to environment
   | DBUG -- ^ printf debugging
   | BRK -- ^ breakpoint debugging
-
+  deriving (Eq, Ord, Show)
 
 data Value
   = VInt Int32
   | VPtr HeapObj
+  deriving (Eq)
 
 data HeapObj
   = HCons{ car :: IORef Value, cdr :: IORef Value }
   | HClosure InstAddr Frame
+  deriving (Eq)
 
 data Frame
   = Frame
   { fparent  :: Maybe Frame
   , fentries :: Array Int Value
   }
+  deriving (Eq)
+
