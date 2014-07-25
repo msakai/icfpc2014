@@ -1,5 +1,8 @@
 module GHostCPU where
 
+import Data.Array.IArray
+import Data.Array.IO
+import Data.IORef
 import Data.Word
 
 -- 'A' to 'H' or 'P' for PC
@@ -49,3 +52,20 @@ data Inst
     -- ^ Invoke the interrupt service i (see Interrupt Reference).
   | HLT
     -- ^ Halt execution of the GHC.
+
+
+data Machine
+  = Machine
+  { mPC :: IORef Word8
+  , mRegs :: IOArray Reg Word8
+  , mDataMemory :: IOArray Word8 Word8
+  , mCodeMemory :: Array Word8 Inst
+  }
+
+newMachine :: [Inst] -> IO Machine
+newMachine prog = do
+  pc <- newIORef 0
+  regs <- newArray ('A','H') 0
+  mem <- newArray (0,0xff) 0
+  let code = array (0,0xff) $ zip [0..] (take 256 prog)
+  return $ Machine pc regs mem code
