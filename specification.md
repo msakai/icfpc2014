@@ -362,11 +362,22 @@ On a tick when Lambda-Man or a ghost is scheduled to move, their next move is sc
 
 The Lambda-Man can move into any adjacent square that is not occupied by a wall. An adjacent square is one that is up, down, left, or right of another.
 
+λマンは壁がない隣のセルに移動できる．隣のセルとは1つ上，1つ下，1つ左，1つ右のセルのことである．
+
 When Lambda-Man tries to choose an illegal move, he stops moving.
+
+λマンが不正な移動選ぶと移動しません．
 
 Ghosts can only move into an adjacent square that is not occupied by a wall. At a tick when a ghost may move, it must move (unless it is surrounded on all four sides by walls). Furthermore, a ghost cannot move in the opposite direction to its current direction, unless that is the only direction available (because it is surrounded on three sides by walls).
 
+幽霊は壁のない隣のセルにしか移動できません．
+ゴーストが移動する時刻にはゴーストは必ず移動しなければなりません．4方が壁に囲まれていないかぎり．さらに，ゴーストは今向いている方向と反対方向には移動できません．ただし，三方を壁でかこまれていて，そちらにしか移動できない場合はその限りではありません．
+
 Consequently, a ghost can only choose its direction at a junction and cannot choose to turn back on itself. A junction is a square which has at least three adjacent squares with no walls. For example, the following are all junctions.
+
+結果として，ゴーストはジャンクションでは後戻り方向以外の方向しか選べません．
+ジャンクションは少くとも3方向に壁のないセルがある場所をいいます．
+例えば以下はすべてジャンクションです．
 
 ```
  # #     # #             # #     # # 
@@ -378,19 +389,32 @@ Consequently, a ghost can only choose its direction at a junction and cannot cho
 
 When a ghost encounters a bend, it is forced to continue around the bend. When a ghost encounters a dead end, it is forced to turn around.
 
+ゴースト
+
 When a ghost chooses an illegal move (or no move at all) at a junction, it is forced to continue in its previous direction if this is legal, and if not, then the first legal direction out of up, right, down, and left, in that order.
+
+ゴーストが不正な移動を選択すると（あるいは全く動かないことを選択すると）上右下左の順に見て動ける方向に動きます．
 
 At the start of the game, all ghosts and Lambdaman face down.
 
-Tournament scoring
+ゲーム開始時にはゴースト，λマンはすべて下を向いています．
+
+## トーナメント得点
 
 For the lightning round it is your Lambda-Man versus ghosts supplied by the judges and in mazes supplied by the judges.
 
+ライトニングラウンドでは君のλマンと審査員の用意した幽霊と審査員が用意した迷図で対決します．
+
 Your overall score in the lightning round is the sum of your individual scores on a series of games, played in different maps. The actual maps and ghosts used will not be revealed but they will range from easy to hard. The map properties are described below.
 
-Map properties
+ライトニングラウンドでの得点は，一連（別別の地図で）の君とのゲームで君が獲得した得点の総和になる．
+ここで使われた地図と幽霊は見えないのであるが，簡単なものから難しいものへの順にならんでいる．
+その地図の性質については[後述する](#map-properties)．
+
+## <a name="map-properties">地図の性質</a>
 
 Maps are rectangular. Map x and y coordinates are indexed from 0. The top left corner is (0,0), so increasing x-coordinates are to the right, and increasing y-coordinates are down.
+
 
 Maps are like mazes: they consist of corridors 1-square wide, without open spaces. More formally: there are no 2x2 areas consisting only of non-wall squares.
 
