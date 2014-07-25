@@ -187,7 +187,7 @@ The world is entirely deterministic, and runs on a tick-by-tick basis.
 1. All Lambda-Man and ghost moves scheduled for this tick take place. (Note that Lambda-Man and the ghosts do not move every tick, only every few ticks; see the ticks section below.)<br>
 すべてのλマンと幽霊はこの刻みに併せて移動する．（λマンと幽霊はすべての刻みで動くわけではなく，何刻みかごとに動くことに注意せよ．）
 2. Next, any actions (fright mode deactivating, fruit appearing/disappearing) take place.<br>
-つぎに，すべてのアクション（飛行モードの解除，フルーツの出現/消滅）がここで起こる．
+つぎに，すべてのアクション（イジケモードの解除，フルーツの出現/消滅）がここで起こる．
 
 3. Next, we check if Lambda-Man is occupying the same square as pills, power pills, or fruit:<br>
 つぎに，λマンが錠剤，スーパー錠剤，フルーツと同じセルにあるかをチェックする．<br>
@@ -210,21 +210,21 @@ The world is entirely deterministic, and runs on a tick-by-tick basis.
 
 If at the end of a tick Lambda-Man is in the same square as a visible ghost and fright mode is not active then Lambda-Man loses a life. In this case, Lambda-Man and all the ghosts are immediately returned to their starting positions and starting directions (so that at the beginning of the next tick, Lambda-Man and the ghosts are in their starting positions).
 
-チクの最後でλマンが見えている幽霊と同じセルにいて，飛行モードが有効になっていなければ，λマンは命を1つ失う．この場合，λマンおよびすべての幽霊はただちにスタート地点に戻りその向きもスタート時点と同じ向きになる（したがって，次のチクの開始点ではλマンおよび幽霊はスタート地点にいる）．
+チクの最後でλマンが見えている幽霊と同じセルにいて，イジケモードが有効になっていなければ，λマンは命を1つ失う．この場合，λマンおよびすべての幽霊はただちにスタート地点に戻りその向きもスタート時点と同じ向きになる（したがって，次のチクの開始点ではλマンおよび幽霊はスタート地点にいる）．
 
 ## パワー錠剤
 
 When a power pill is eaten, all ghosts turn around and move in the opposite direction to their previous move, and fright mode is enabled. While in fright mode, if a ghost occupies the same square as a Lambda-Man, the ghost is eaten. When a ghost is eaten, it is returned to its starting position and starting direction, and is invisible until fright mode expires. While invisible, the ghost can neither eat nor be eaten.
 
-パワー錠剤を食うと，すべての幽霊は反転して反対方向に向き直前の位置に移動し，飛行モードが有効になる．飛行モードが有効な間に幽霊と同じセルをλマンが占めれば，幽霊は食われる．幽霊は食われたら，スタート地点に戻り，スタート時点での方向を向く．そうして飛行モードが切れるまで見えなくなる．見えないあいだは幽霊は，食いも食われもしない．
+パワー錠剤を食うと，すべての幽霊は反転して反対方向に向き直前の位置に移動し，イジケモードが有効になる．イジケモードが有効な間に幽霊と同じセルをλマンが占めれば，幽霊は食われる．幽霊は食われたら，スタート地点に戻り，スタート時点での方向を向く．そうしてイジケモードが切れるまで見えなくなる．見えないあいだは幽霊は，食いも食われもしない．
 
 If a power pill is eaten during fright mode, the fright mode tick count is reset.
 
-飛行モードのときにパワー錠剤を食うと，飛行モードの時刻カウントはリセットされる．
+イジケモードのときにパワー錠剤を食うと，イジケモードの時刻カウントはリセットされる．
 
 When fright mode expires, all ghosts become visible.
 
-飛行モードが切れたら，すべての幽霊は見えるようになる．
+イジケモードが切れたら，すべての幽霊は見えるようになる．
 
 ## 得点
 
@@ -276,7 +276,7 @@ For example, a map of size 15 * 18 = 270 is a level 3 map, since 200 < 270 <= 30
 While in fright mode, the first ghost eaten is worth 200 points. 
 Each subsequent ghost eaten until another power-pill is eaten is worth double the previous one, up to a limit of 1600 points:
 
-飛行モードの間に最初に幽霊を食うと200点である．
+イジケモードの間に最初に幽霊を食うと200点である．
 ひきつづき次のパワー錠剤を食うまでに幽霊を食うごとに得点は前の得点の2倍になり，上限は1600点である．
 
 | 食った幽霊         | 得点 |
@@ -323,31 +323,31 @@ Each fruit remains in the game until either it is eaten, or it expires at a fixe
 
 Each power pill eaten triggers fright mode, which expires after a fixed duration counted from when the last power pill is eaten.
 
-それぞれのパワー錠剤を食うと飛行モードに以降する．
-飛行モードは，最近に食ったパワー錠剤を食った時点から一定の期間がたてば効力が消える．
+それぞれのパワー錠剤を食うとイジケモードに以降する．
+イジケモードは，最近に食ったパワー錠剤を食った時点から一定の期間がたてば効力が消える．
 
-| イベント       | チク期間                        |
-|:---------------|:--------------------------------|
-| 飛行モード期間 | 127 * 20                        |
+| イベント         | チク期間                        |
+|:-----------------|:--------------------------------|
+| イジケモード期間 | 127 * 20                        |
 
 The Lambda-Man and ghosts move at different speeds. Lambda-Man moves slower when he is eating, and the ghosts move slower when they are in fright mode. All moves are at regular intervals, based on their ticks per move value which is described below. For example, the first Lambda-Man move occurs at tick 127, the second at tick 254, and so on.
 
-λマンと幽霊の移動速度は異なる．λマンは食っているときは遅く，幽霊は飛行モードのときに移動が遅くなる．
+λマンと幽霊の移動速度は異なる．λマンは食っているときは遅く，幽霊はイジケモードのときに移動が遅くなる．
 すべての移動は一定の間隔でおこり，移動のチクは以下のとおり．
 たとえば，λマンは最初移動は127チクに起こり，次は154チクに移動する．
 
-| イベント             | UTC    |
-|:---------------------|:-------|
-| λマン               | 127    |
-| λマン(食ってるとき) | 137    |
-| 幽霊 0               | 130    |
-| 幽霊 1               | 132    |
-| 幽霊 2               | 134    |
-| 幽霊 3               | 136    |
-| 幽霊 0 (飛行モード)  | 195    |
-| 幽霊 1 (飛行モード)  | 198    |
-| 幽霊 2 (飛行モード)  | 201    |
-| 幽霊 3 (飛行モード)  | 204    |
+| イベント               | UTC    |
+|:-----------------------|:-------|
+| λマン                 | 127    |
+| λマン(食ってるとき)   | 137    |
+| 幽霊 0                 | 130    |
+| 幽霊 1                 | 132    |
+| 幽霊 2                 | 134    |
+| 幽霊 3                 | 136    |
+| 幽霊 0 (イジケモード)  | 195    |
+| 幽霊 1 (イジケモード)  | 198    |
+| 幽霊 2 (イジケモード)  | 201    |
+| 幽霊 3 (イジケモード)  | 204    |
 
 On a tick when Lambda-Man or a ghost is scheduled to move, their next move is scheduled for the appropriate number of ticks in the future, depending on their current state. For example if Lambda-Man moves into a square with a pill then the next tick on which he will move will be his previous scheduled tick number plus 137.
 
