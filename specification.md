@@ -153,15 +153,23 @@ The world is entirely deterministic, and runs on a tick-by-tick basis.
 
 If at the end of a tick Lambda-Man is in the same square as a visible ghost and fright mode is not active then Lambda-Man loses a life. In this case, Lambda-Man and all the ghosts are immediately returned to their starting positions and starting directions (so that at the beginning of the next tick, Lambda-Man and the ghosts are in their starting positions).
 
-## Power Pills
+チクの最後で「λ男」が見えている幽霊と同じセルにいて，飛行モードが有効になっていなければ，「λ男」は命を1つ失う．この場合，「λ男」およびすべての幽霊はただちにスタート地点に戻りその向きもスタート時点と同じ向きになる（したがって，次のチクの開始点では「λ男」および幽霊はスタート地点にいる）．
+
+## パワー錠剤
 
 When a power pill is eaten, all ghosts turn around and move in the opposite direction to their previous move, and fright mode is enabled. While in fright mode, if a ghost occupies the same square as a Lambda-Man, the ghost is eaten. When a ghost is eaten, it is returned to its starting position and starting direction, and is invisible until fright mode expires. While invisible, the ghost can neither eat nor be eaten.
 
+パワー錠剤を食うと，すべての幽霊は反転して反対方向に向き直前の位置に移動し，飛行モードが有効になる．飛行モードが有効な間に幽霊と同じセルを「λ男」が占めれば，幽霊は食われる．幽霊は食われたら，スタート地点に戻り，スタート時点での方向を向く．そうして飛行モードが切れるまで見えなくなる．見えないあいだは幽霊は，食いも食われもしない．
+
 If a power pill is eaten during fright mode, the fright mode tick count is reset.
+
+飛行モードのときにパワー錠剤を食うと，飛行モードの時刻カウントはリセットされる．
 
 When fright mode expires, all ghosts become visible.
 
-## Scoring
+飛行モードが切れたら，すべての幽霊は見えるようになる．
+
+## 得点
 
 The aim of the game is to achieve the highest score, which is the sum of all the scores achieved on all levels. Points are awarded as follows.
 
