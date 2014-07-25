@@ -127,14 +127,16 @@ The world is entirely deterministic, and runs on a tick-by-tick basis.
 
 時の刻みごとに，
 
-1. All Lambda-Man and ghost moves scheduled for this tick take place. (Note that Lambda-Man and the ghosts do not move every tick, only every few ticks; see the ticks section below.)
-
+1. All Lambda-Man and ghost moves scheduled for this tick take place. (Note that Lambda-Man and the ghosts do not move every tick, only every few ticks; see the ticks section below.)<br>
 すべての「λ男」と幽霊はこの刻みに併せて移動する．（「λ男」と幽霊はすべての刻みで動くわけではなく，何刻みかごとに動くことに注意せよ．）
-2. Next, any actions (fright mode deactivating, fruit appearing/disappearing) take place.
 
-つぎに
-3. Next, we check if Lambda-Man is occupying the same square as pills, power pills, or fruit:
-    1. If Lambda-Man occupies a square with a pill, the pill is eaten by Lambda-Man and removed from the game.
+2. Next, any actions (fright mode deactivating, fruit appearing/disappearing) take place.<br>
+つぎに，すべてのアクション（飛行モードの解除，果実の出現/消滅）がここで起こる．
+
+3. Next, we check if Lambda-Man is occupying the same square as pills, power pills, or fruit:<br>
+つぎに，「λ男」が錠剤，スーパー錠剤，果実と同じセルにあるかをチェックする．<br>
+    1. If Lambda-Man occupies a square with a pill, the pill is eaten by Lambda-Man and removed from the game.<br>
+    「λ男」が錠剤と同じセルにあれば，「λ男」は錠剤を食べ，錠剤はゲームから消える．
     2. If Lambda-Man occupies a square with a power pill, the power pill is eaten by Lambda-Man, removed from the game, and fright mode is immediately activated, allowing Lambda-Man to eat ghosts.
     3. If Lambda-Man occupies a square with a fruit, the fruit is eaten by Lambda-Man, and removed from the game.
 4. Next, if one or more visible ghosts are on the same square as Lambda-Man, then depending on whether or not fright mode is active, Lambda-Man either loses a life or eats the ghost(s). See below for details.
