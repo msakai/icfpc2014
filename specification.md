@@ -122,13 +122,17 @@ By convention, the following symbols are used to represent the various elements 
 ## 機構
 
 The world is entirely deterministic, and runs on a tick-by-tick basis.
+
 世界は完全に決定的であり，クロックの刻みごとに走る．
 
 時の刻みごとに，
 
 1. All Lambda-Man and ghost moves scheduled for this tick take place. (Note that Lambda-Man and the ghosts do not move every tick, only every few ticks; see the ticks section below.)
+
 すべての「λ男」と幽霊はこの刻みに併せて移動する．（「λ男」と幽霊はすべての刻みで動くわけではなく，何刻みかごとに動くことに注意せよ．）
 2. Next, any actions (fright mode deactivating, fruit appearing/disappearing) take place.
+
+つぎに
 3. Next, we check if Lambda-Man is occupying the same square as pills, power pills, or fruit:
     1. If Lambda-Man occupies a square with a pill, the pill is eaten by Lambda-Man and removed from the game.
     2. If Lambda-Man occupies a square with a power pill, the power pill is eaten by Lambda-Man, removed from the game, and fright mode is immediately activated, allowing Lambda-Man to eat ghosts.
@@ -142,7 +146,7 @@ The world is entirely deterministic, and runs on a tick-by-tick basis.
 
 If at the end of a tick Lambda-Man is in the same square as a visible ghost and fright mode is not active then Lambda-Man loses a life. In this case, Lambda-Man and all the ghosts are immediately returned to their starting positions and starting directions (so that at the beginning of the next tick, Lambda-Man and the ghosts are in their starting positions).
 
-Power Pills
+## Power Pills
 
 When a power pill is eaten, all ghosts turn around and move in the opposite direction to their previous move, and fright mode is enabled. While in fright mode, if a ghost occupies the same square as a Lambda-Man, the ghost is eaten. When a ghost is eaten, it is returned to its starting position and starting direction, and is invisible until fright mode expires. While invisible, the ghost can neither eat nor be eaten.
 
@@ -150,7 +154,7 @@ If a power pill is eaten during fright mode, the fright mode tick count is reset
 
 When fright mode expires, all ghosts become visible.
 
-Scoring
+## Scoring
 
 The aim of the game is to achieve the highest score, which is the sum of all the scores achieved on all levels. Points are awarded as follows.
 
@@ -160,23 +164,28 @@ Each power pill eaten is worth 50 points.
 
 Each fruit eaten is worth points depending on its flavour. The flavour of a fruit is determined by the level as described below:
 
-Level	Flavour	Points
-1	Cherry	100
-2	Strawberry	300
-3	Peach	500
-4	Peach	500
-5	Apple	700
-6	Apple	700
-7	Grapes	1000
-8	Grapes	1000
-9	Galaxian	2000
-10	Galaxian	2000
-11	Bell	3000
-12	Bell	3000
-> 12	Key	5000
+|  Level  |   Flavour  |  Points  |
+|:--------|:-----------|---------:|
+|  1	  |   Cherry   |  100     |
+|  2      | Strawberry |  300     |
+|  3      |  Peach     |  500     |
+|  4      |  Peach     |  500     |
+|  5      |  Apple     |  700     |
+|  6      |  Apple     |  700     |
+|  7      |  Grapes    | 1000     |
+|  8      |  Grapes    | 1000     |
+|  9      |  Galaxian  | 2000     |
+| 10      |  Galaxian  | 2000     |
+| 11      |  Bell      | 3000     |
+| 12      |  Bell      | 3000     |
+| > 12    |  Key       | 5000     |
+
 The level of a map is determined by its area. Given a map of size mapWidth * mapHeight, the level is the number which satisfies:
 
+```
 100 * (level - 1) < mapWidth * mapHeight <= 100 * level
+```
+
 For example, a map of size 15 * 18 = 270 is a level 3 map, since 200 < 270 <= 300.
 
 While in fright mode, the first ghost eaten is worth 200 points. Each subsequent ghost eaten until another power-pill is eaten is worth double the previous one, up to a limit of 1600 points:
