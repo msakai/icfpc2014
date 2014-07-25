@@ -77,32 +77,49 @@ The full round runs for the full 72 hours of the competition, so submissions mus
 
 To help you get started we are providing a reference implementation of the game rules and the Lambda-Man processor.
 
-http://icfpcontest.org/reference.html
+ゲームルールと「λ男」プロセッサの参考実装を用意してある．
+
+- [http://icfpcontest.org/reference.html](http://icfpcontest.org/reference.html)
+
 This site also contains other refence material that you might find useful, such as sample maps.
+
+ここには他にも参考資料があり，地図の例など役にたつ資料がある．
 
 If you find any discrepancies between this specification document and the reference implementation (or other material), then please let the judges know as soon as possible!
 
-The Lambda-Man game rules
+この仕様と参考実装(その他)との間に食い違いがある場合はすぐに審査員に知らせてください！
 
-Objectives
+# <a name="the-lambda-man-game-rules">「λ男」ゲームのルール</a>
+
+## 目的
 
 A Lambda-Man lives in a two-dimensional maze made up of walls, and must eat as many pills as he can, while avoiding the ghosts who chase him. Lambda-Man has three lives, and if a ghost catches Lambda-Man, then he loses a life. When there are no more Lambda-Man lives, the game is over. When all the pills are eaten, Lambda-Man has completed the level.
 
+「λ男」は壁にかこまれた2次元迷図上で活動し，追い掛けてくる幽霊を回避しつつ，食えるだけの錠剤を食わなければならない．「λ男」には命が3つあり，幽霊に掴まると命を1つ失う．命がすべてなくなった時点でゲームオーバーである．錠剤をすべて食べれば「λ男」はそのレベルを完遂したことになる．
+
 In addition to pills, a Lambda-Man may also eat power pills. These gives every Lambda-Man the ability to eat ghosts for a short period of time.
+
+錠剤以外に，「λ男」はパワー錠剤も食う．パワー錠剤を食うと「λ男」は短時間だけ幽霊を食う能力を得る．
 
 Bonus points are awarded for eating the fruit, which appears after a specific period of time at a specific location on the map before disappearing.
 
+果物を食えばボーナスポイントが付く．果物は定まった時間ごと？に地図上の特定の位置に現れる．
+
 By convention, the following symbols are used to represent the various elements of the game:
 
-Symbol	Element
-<space>	Empty
-#	Wall
-.	Pill
-o	Power Pill
-%	Fruit
-\	Lambda-Man
-=	Ghost
-Mechanics
+規約として以下の記号を用いてゲームの各種要素を表現する．
+
+|   記号    |     要素    |
+|:---------:|:-----------:|
+|  <space>  |      空     |
+|    \#	    |      壁     |
+|    \.	    |     錠剤    |
+|    o      |  パワー錠剤 |
+|    \%     |     果物    |
+|    \\	    |   「λ男」  |
+|    \=     |     幽霊    |
+
+## 機構
 
 The world is entirely deterministic, and runs on a tick-by-tick basis.
 
