@@ -559,19 +559,25 @@ GHCが初期化されたとき，各行に含まれる1命令がメモリの対�
 
 # <a name="instructionReference">命令リファレンス</a>
 
-The GHC is able to execute the following instructions:
+GHCは以下の命令を実行できる
 
+```
 MOV dest,src
+```
 
-Copy the value of the src argument into the dest argument. dest may not be a constant.
+```src```引数の値を```dest```引数にコピー．```dest```は定数であってはならない．
 
+```
 INC dest
+```
 
-Add 1 to the value of dest and store the result in dest. dest may not be a constant or the register PC.
+```dest```の値を1増やし，結果を```dest```に格納する．```dest```は定数あるいはPCレジスタであってはならない．
 
+```
 DEC dest
+```
 
-Subtract 1 from the value of dest and store the result in dest. dest may not be a constant or the register PC.
+```dest```の値を1減らし and store the result in dest. dest may not be a constant or the register PC.
 
 ADD dest,src
 
