@@ -513,27 +513,51 @@ By convention, a GHC program is stored in a file with the extension .ghc (GHost 
 A program consists of several lines, terminated by newline characters. The contents of a line are whitespace insensitive: multiple consecutive whitespace characters are treated identically to one. A line is either empty (containing only whitespace) or contains an instruction.
 
 プログラムは複数の行で構成され，行は改行文字で終端する．
-
+行の内容は，空白はいくつつづいても1つの空白と見做す．
+行は，1つの白空白のみを含む空行か，命令を1つ含む．
 
 A program may contain comments, which are introduced using a semicolon (;). Anything from a semicolon until the end of a line (including the semicolon) is ignored. Hence a line containing only a comment is regarded as empty.
 
+プログラムには;を使ってコメントを入れられる．;から行末までが無視される．
+したがって，コメントのみの行は空行とみなされる．
+
 An instruction consists of a mnemonic and zero or more arguments. The mnemonic is a case-insensitive sequence of alphabet characters.
 
-An argument is either:
+命令は0個以上の引数をもつニーモニックである．
+ニーモニックはアルファベットの大文字小文字を区別しない．
 
-a register argument (indicated by its name (A to H or PC));
-an indirect general-purpose register argument (indicated by its name enclosed in square brackets ([A] to [H] but not [PC]));
-a constant argument (indicated by its encoding in decimal (0 to 255));
-or the contents of a data memory location (indicated by its address in decimal, enclosed in square brackets ([0] to [255])).
+引数は以下のどれかである．
+
+1. a register argument (indicated by its name (A to H or PC));<br>
+レジスタ引数（ A から H あるいは PC で示す）
+2. an indirect general-purpose register argument (indicated by its name enclosed in square brackets ([A] to [H] but not [PC]));<br>
+間接汎用レジスタ引数（角括弧でかこって，[A] .. [H] として示す [PC]はないことに注意）．
+3. a constant argument (indicated by its encoding in decimal (0 to 255));<br>
+定数引数．（10進で 0 から 255 まで）
+4. or the contents of a data memory location (indicated by its address in decimal, enclosed in square brackets ([0] to [255])).<br>
+データメモリ格納場所の定数（アドレスを示す10進を角括弧で囲う[0] から [255]）．
+
 The number of arguments required depends on the instruction (see Instruction Reference).
+
+必要な引数の数は命令によって違う．[命令リファレンスを参照](#instruction-reference)
 
 There must be a whitespace character between a mnemonic and the first argument (if any). There must be a comma (,) between consecutive arguments.
 
+ニーモニックと最初の引数との間には1つの空白がなければならない．
+引数と引数の間には , がなければならない．
+
 Instructions may optionally be preceded or followed by whitespace. Arguments and argument-separating commas may optionally be preceded or followed by whitespace.
+
+命令は前後に空白がつづいてもよい．
+引数および引数区切り子のコンマの前後に空白があってもよい．
 
 When the GHC is initialised, each line containing an instruction is stored in the corresponding code memory location. For example, the instruction on the first non-empty line is stored at address 0 and the instruction on the second non-empty line is stored at address 1. As there are only 256 code memory locations available, a program may contain at most 256 instructions.
 
-Instruction Reference
+GHCが初期化されたとき，各行に含まれる1命令がメモリの対応する位置に格納される．
+たとえば，最初の空でない行の命令はアドレス0に格納される．空でない2つ目の行の命令はアドレス1に格納される．
+256個しか格納場所がないので，プログラムは高々256命令である．
+
+# <a name="instructionReference">命令リファレンス</a>
 
 The GHC is able to execute the following instructions:
 
