@@ -4,41 +4,18 @@
 
 # イントロダクション
 
-For this year's ICFP programming contest we thought it would be fun to do a bit of '80s software and hardware archaeology. 
-We just so happen (via friends of friends and bankruptcy asset sales) to have got our hands on a bunch of internal documents from LamCo. 
-Back in the '80s, LamCo were a failed manufacturer of arcade games. 
-You've probably never heard of them because they never managed to get a product out and were beaten by their better known rivals.
-
 今年のICFPプログラミングコンテストでは，80年代のソフトウェアとハードウェアの考古学を楽しんでもらいたいと考えた．
 たまたま，(友達の友達や破綻資産売却を通じて)LamCo社の内部資料を山を手にいれた．
 80年代に遡ると，LamCo社はアーケードゲームの製造に失敗した．
 製品を商品にすることができず，有名なライバル社に叩きのめされたために彼らのことに聞き及ぶことはなかったと思う．
 
-What we've found from the cache of documents is that they had some rather interesting technology.
-We also found that they had a spectacularly dysfunctional development process marked by bitter internal rivalries, which we suspect goes a long way to explain their failed projects.
-
 隠匿書類から満つかったのは，彼等の少々興味深い技術であった．
 また，彼等は開発過程でひどい内部抗争から派手に機能不全に陥いった．
 結局それが原因だろうとにらんでいる．
 
-So the contest task involves delving into LamCo's quirky old software and hardware technology, reconstructing the arcade hardware in simulation, and writing software for the arcade platform to play the game—and to play it better than your rivals!
-
 そこでコンテストの課題は，LamCo社の妙な古いソフトウェアとハードウェア技術を精査し，シミュレーションでアーケードハードウェアを再構築することであり，そのアーケードプラットフォームのソフトウェアを書いて，ゲームを遊べるようにし，君のライバルよりも上手くプレイすることである．
 
 ## あかされた歴史
-
-LamCo were building an arcade game where you control a little character called "Lambda-Man" who runs around in a maze eating pills and evading ghosts. 
-The game bears a striking resemblance to another well known arcade game.
-We don't know exactly why they ended up being so similar, though we rather suspect LamCo of stealing ideas from their more successful rival. 
-We don't know exactly why they ended up being so similar, though we rather suspect LamCo of stealing ideas from their more successful rival.
-For reasons best known to themselves, LamCo decided to make a two player version of their game where two Lambda-Man characters battle it out to swipe the most pills from under the noses of the ghosts. 
-Because they also wanted to have a one player mode they found that they needed an AI to play the opposing Lambda-Man. 
-This and the usual pressure to meet tight deadlines led to a catastrophic decision by The Management to force two rival engineering teams to work together on the project.
-The Management got one team to work on the ghost AIs and game mechanics and another team to work on the Lambda-Man AI.
-The Management claimed this was because they wanted to be proactive not reactive with their blue-sky thinking on this mission critical project, and believed this to be a win-win situation, harvesting low-hanging fruit with client focused deliverables.
-Because of time pressure and The Management, each team was allowed to use their favourite technology stack and the plan was to integrate it all together at the end.
-The ghost and game mechanics team were led by engineers who seemed to believe that 8-bit microprocessors are the be all and end all of computing. 
-The Lambda-Man AI team were led by engineers obsessed with LISP and all its arcanery.
 
 LamCo社が構築しようとしていたアーケードゲームではλマンという小さなキャラを制御するようになっていた．
 このキャラは迷路の中を錠剤を食いながら幽霊から逃げまわるというものである．
@@ -55,21 +32,11 @@ LamCo社が構築しようとしていたアーケードゲームではλマン�
 幽霊-ゲーム機構チームは8ビットマイクロプロセッサがすべてであると信じるようなエンジニアが率いていた．
 λマンAIチームはLISPにとりつかれたエンジニアに率いられていた．
 
-Of course the end product ended up reflecting the teams that had built it.
-The main motherboard had several 8-bit microcontrollers to implement the ghost AIs and the game mechanics. 
-It also had a customised coprocessor for running the Lambda-Man AI.
-The software also reflected the different teams' philosophies: the ghost AIs and game mechanics were written directly in assembly while the Lambda-Man AI was written in some dialect of LISP.
-
 もちろん，最終成果物はそれを組んだチームを反映したものになった．
 マザーボードは数台の8ビットマイクロコントローラを積んでおり，これを用いて幽霊とゲーム機構を実装していた．
 またλマンAIを走らせる専用のコプロセッサも積んでいた．
 ソフトウェアもそれぞれのチームの哲学を反映したものであった．
 幽霊AIとゲーム機構はアセンブリ言語で直接書かれており，λマンAIはLISPのとある方言で書かれていた．
-
-We don't know exactly why the project failed.
-It could have been schedule slippage from integrating the different technologies, infighting between the two teams, the horrendous bill of materials or all of the above.
-But surely not The Management. 
-All we know for sure is that the project was ultimately cancelled and LamCo filed for bankruptcy.
 
 このプロジェクトが失敗した本当の原因はよくわからない．
 スケジュール遅延の原因は，異なる技術を統合することによるもの，2つのチームのいがみあい，材料のすざまじい高騰，あるいは，その全部かもしれない．
@@ -86,35 +53,20 @@ All we know for sure is that the project was ultimately cancelled and LamCo file
 
 ## ライトニングラウンド概要
 
-For the lightning round we will play the "classic" version of the game where it is just a single Lambda-Man against the ghosts.
-
 ライトニングラウンドでは「クラシック」版でプレイする．1人のλマンと幽霊たちが対戦する．
-
-Your challenge is is to write an AI for the Lambda-Man. 
-It will play against ghost AIs supplied by the judges and in mazes supplied by the judges.
 
 λマンAIを書いてもらいたい．
 λマンは審査員が用意した迷図で審査員が用意した幽霊AIと戦う．
 
-You will be supplied with several of the mazes and with the assembly code for a few (not very smart) ghost AIs.
-
 いくつかの迷図とあまり賢くない幽霊AIのアセンブリコードをいくつかを君に提供する．
-
-The lightning round runs for the first 24 hours of the competition, so submissions must be in before 12:00 UTC 26/07/2014.
 
 ライトニングラウンドは最初の24時間である．
 したがって，提出期限は12:00 UTC 26/07/2014である．
 
 ## 本番ラウンド概要
 
-The full round will be broadly the same as the lightning round, but with a twist.
-The details will be made available at the end of the lightning round. 
-Check the front page for the link once the lightning round has closed.
-
 本番ラウンドもライトニングラウンドとほぼ同じだが，ちょっとひねってある．詳細についてはライトニングラウンドが終了したときにあかされる．
 ライトニングラウンド終了したらすぐにトップページのリンクをチェックすること．
-
-The full round runs for the full 72 hours of the competition, so submissions must be in before 12:00 UTC 28/07/2014.
 
 本番ラウンドは72時間であり，提出期限は12:00 UTC 28/07/2014である．
 
@@ -130,17 +82,11 @@ The full round runs for the full 72 hours of the competition, so submissions mus
 
 ## 参考資料
 
-To help you get started we are providing a reference implementation of the game rules and the Lambda-Man processor.
-
 ゲームルールとλマンプロセッサの参考実装を用意してある．
 
 - [http://icfpcontest.org/reference.html](http://icfpcontest.org/reference.html)
 
-This site also contains other refence material that you might find useful, such as sample maps.
-
 ここには他にも参考資料があり，地図の例など役にたつ資料がある．
-
-If you find any discrepancies between this specification document and the reference implementation (or other material), then please let the judges know as soon as possible!
 
 この仕様と参考実装(その他)との間に食い違いがある場合はすぐに審査員に知らせてください！
 
@@ -148,21 +94,11 @@ If you find any discrepancies between this specification document and the refere
 
 ## 目的
 
-A Lambda-Man lives in a two-dimensional maze made up of walls, and must eat as many pills as he can, while avoiding the ghosts who chase him. 
-Lambda-Man has three lives, and if a ghost catches Lambda-Man, then he loses a life.
-When there are no more Lambda-Man lives, the game is over. When all the pills are eaten, Lambda-Man has completed the level.
-
 λマンは壁にかこまれた2次元迷図上で活動し，追い掛けてくる幽霊を回避しつつ，食えるだけの錠剤を食わなければならない．λマンには命が3つあって，幽霊に掴まると命を1つは失なう．λマンの命がすべてなくなった時点でゲームオーバーである．錠剤をすべて食べればλマンはそのレベルを完遂したことになる．
-
-In addition to pills, a Lambda-Man may also eat power pills. These gives every Lambda-Man the ability to eat ghosts for a short period of time.
 
 錠剤以外に，λマンはパワー錠剤も食う．パワー錠剤を食うとλマンは短時間だけ幽霊を食う能力を得る．
 
-Bonus points are awarded for eating the fruit, which appears after a specific period of time at a specific location on the map before disappearing.
-
 フルーツを食えばボーナスポイントが付く．フルーツは定まった時間ごと？に地図上の特定の位置に現れる．
-
-By convention, the following symbols are used to represent the various elements of the game:
 
 規約として以下の記号を用いてゲームの各種要素を表現する．
 
@@ -178,70 +114,41 @@ By convention, the following symbols are used to represent the various elements 
 
 ## 機構
 
-The world is entirely deterministic, and runs on a tick-by-tick basis.
-
 世界は完全に決定的であり，クロックの刻みごとに走る．
 
 時の刻みごとに，
 
-1. All Lambda-Man and ghost moves scheduled for this tick take place. (Note that Lambda-Man and the ghosts do not move every tick, only every few ticks; see the ticks section below.)<br>
-すべてのλマンと幽霊はこの刻みに併せて移動する．（λマンと幽霊はすべての刻みで動くわけではなく，何刻みかごとに動くことに注意せよ．）
-2. Next, any actions (fright mode deactivating, fruit appearing/disappearing) take place.<br>
-つぎに，すべてのアクション（イジケモードの解除，フルーツの出現/消滅）がここで起こる．
-
-3. Next, we check if Lambda-Man is occupying the same square as pills, power pills, or fruit:<br>
-つぎに，λマンが錠剤，スーパー錠剤，フルーツと同じセルにあるかをチェックする．<br>
-    1. If Lambda-Man occupies a square with a pill, the pill is eaten by Lambda-Man and removed from the game.<br>
-    λマンが錠剤と同じセルにあれば，λマンは錠剤を食べ，錠剤はゲームからなくなる．
-    2. If Lambda-Man occupies a square with a power pill, the power pill is eaten by Lambda-Man, removed from the game, and fright mode is immediately activated, allowing Lambda-Man to eat ghosts.<br>
-    λマンがパワー錠剤と同じセルにあれば，λマンは錠剤を食べ，パワー錠剤はゲームからなくなる．
-    3. If Lambda-Man occupies a square with a fruit, the fruit is eaten by Lambda-Man, and removed from the game.<br>
-    λマンがフルーツと同じセルにあれば，λマンは錠剤を食べ，フルーツはゲームからなくなる．
-4. Next, if one or more visible ghosts are on the same square as Lambda-Man, then depending on whether or not fright mode is active, Lambda-Man either loses a life or eats the ghost(s). See below for details.<br>
-つぎに，1つあるいは複数の幽霊がλマンと同じセルにあれば，幽霊モードが有効かどうかによって，λマンが命を1つ失うか，幽霊を食うかのどちらかになる．詳細は後述．
-5. Next, if all the ordinary pills (ie not power pills) have been eaten, then Lambda-Man wins and the game is over.<br>
-つぎに，通常の錠剤（すなわちパワー錠剤ではない）がすべて食べつくされたら，λマンの勝利で，ゲームは終了．
-6. Next, if the number of Lambda-Man lives is 0, then Lambda-Man loses and the game is over.<br>
-つぎに，λマンの命の数が0なら，λマンの負けでゲームは終了．
-7. Finally, the tick counter is incremented.<br>
-最後に時刻刻みが1つ進む．
+1. すべてのλマンと幽霊はこの刻みに併せて移動する．（λマンと幽霊はすべての刻みで動くわけではなく，何刻みかごとに動くことに注意せよ．）
+2. つぎに，すべてのアクション（イジケモードの解除，フルーツの出現/消滅）がここで起こる．
+3. つぎに，λマンが錠剤，スーパー錠剤，フルーツと同じセルにあるかをチェックする．<br>
+    1. λマンが錠剤と同じセルにあれば，λマンは錠剤を食べ，錠剤はゲームからなくなる．
+    2. λマンがパワー錠剤と同じセルにあれば，λマンは錠剤を食べ，パワー錠剤はゲームからなくなる．
+    3. λマンがフルーツと同じセルにあれば，λマンは錠剤を食べ，フルーツはゲームからなくなる．
+4. つぎに，1つあるいは複数の幽霊がλマンと同じセルにあれば，幽霊モードが有効かどうかによって，λマンが命を1つ失うか，幽霊を食うかのどちらかになる．詳細は後述．
+5. つぎに，通常の錠剤（すなわちパワー錠剤ではない）がすべて食べつくされたら，λマンの勝利で，ゲームは終了．
+6. つぎに，λマンの命の数が0なら，λマンの負けでゲームは終了．
+7. 最後に時刻刻みが1つ進む．
 
 ## 命を1つ失うとき
-
-If at the end of a tick Lambda-Man is in the same square as a visible ghost and fright mode is not active then Lambda-Man loses a life. In this case, Lambda-Man and all the ghosts are immediately returned to their starting positions and starting directions (so that at the beginning of the next tick, Lambda-Man and the ghosts are in their starting positions).
 
 チクの最後でλマンが見えている幽霊と同じセルにいて，イジケモードが有効になっていなければ，λマンは命を1つ失う．この場合，λマンおよびすべての幽霊はただちにスタート地点に戻りその向きもスタート時点と同じ向きになる（したがって，次のチクの開始点ではλマンおよび幽霊はスタート地点にいる）．
 
 ## パワー錠剤
 
-When a power pill is eaten, all ghosts turn around and move in the opposite direction to their previous move, and fright mode is enabled. While in fright mode, if a ghost occupies the same square as a Lambda-Man, the ghost is eaten. When a ghost is eaten, it is returned to its starting position and starting direction, and is invisible until fright mode expires. While invisible, the ghost can neither eat nor be eaten.
-
 パワー錠剤を食うと，すべての幽霊は反転して反対方向に向き直前の位置に移動し，イジケモードが有効になる．イジケモードが有効な間に幽霊と同じセルをλマンが占めれば，幽霊は食われる．幽霊は食われたら，スタート地点に戻り，スタート時点での方向を向く．そうしてイジケモードが切れるまで見えなくなる．見えないあいだは幽霊は，食いも食われもしない．
 
-If a power pill is eaten during fright mode, the fright mode tick count is reset.
-
 イジケモードのときにパワー錠剤を食うと，イジケモードの時刻カウントはリセットされる．
-
-When fright mode expires, all ghosts become visible.
 
 イジケモードが切れたら，すべての幽霊は見えるようになる．
 
 ## 得点
 
-The aim of the game is to achieve the highest score, which is the sum of all the scores achieved on all levels. Points are awarded as follows.
-
 このゲームの目的は最高点を獲得することである．すべてのレベルでのすべての得点の和を最高にすることである．
 得点は以下のようにして獲得する．
 
-Each pill eaten is worth 10 points
-
 錠剤1個が10点．
 
-Each power pill eaten is worth 50 points.
-
 パワー錠剤が50点．
-
-Each fruit eaten is worth points depending on its flavour. The flavour of a fruit is determined by the level as described below:
 
 フルーツはその風味によって得点がことなる．フルーツはレベルで風味がちがい，それは以下のようになっている．
 
@@ -261,20 +168,13 @@ Each fruit eaten is worth points depending on its flavour. The flavour of a frui
 | 12      |  Bell      | 3000     |
 | > 12    |  Key       | 5000     |
 
-The level of a map is determined by its area. Given a map of size mapWidth * mapHeight, the level is the number which satisfies:
-
 地図のレベルはその面積できまる．mapWidth * mapHeightの大きさの地図だとすると，そのレベルは以下を満す．
 
 ```
 100 * (level - 1) < mapWidth * mapHeight <= 100 * level
 ```
 
-For example, a map of size 15 * 18 = 270 is a level 3 map, since 200 < 270 <= 300.
-
 たとえば，15 * 18 = 270のサイズだとすると，これはレベル3の地図である．200 < 270 <= 300 だからである．
-
-While in fright mode, the first ghost eaten is worth 200 points. 
-Each subsequent ghost eaten until another power-pill is eaten is worth double the previous one, up to a limit of 1600 points:
 
 イジケモードの間に最初に幽霊を食うと200点である．
 ひきつづき次のパワー錠剤を食うまでに幽霊を食うごとに得点は前の得点の2倍になり，上限は1600点である．
@@ -286,14 +186,10 @@ Each subsequent ghost eaten until another power-pill is eaten is worth double th
 | 3匹目              |   800|
 | 4匹目およびそれ以降|  1600|
 
-If Lambda-Man manages to eat all of the pills on a level, he is awarded with a bonus: his score is multiplied by the remaining lives plus one. For example, if the Lambda-Man is on his last life, the score is doubled.
-
 λマンが1つのレベルで錠剤をすべて食えば，ボーナスで，得点が残りの命の数に1を加えたものかけたものになる．
 たとえば，1つしか命がのこっていなければ，得点が倍になるということである．
 
 ## 時の刻み
-
-The world runs tick-by-tick. The Ultimate Tick Clock (UTC) gives the current tick time, and is counted from 1 at the beginning of each game. A game runs until the End Of Lives (EOL), which happens either when Lambda-Man runs out of lives, or if a particular UTC is reached, whereupon lives are set to 0:
 
 世界は時の刻みで走る．
 Ultimate Tick Clock (UTC)は現在のチク時刻である．
@@ -312,8 +208,6 @@ Ultimate Tick Clock (UTC)は現在のチク時刻である．
 | フルーツ1| 127 * 200 に出現                |
 | フルーツ2| 127 * 400 に出現                |
 
-Each fruit remains in the game until either it is eaten, or it expires at a fixed UTC.
-
 それぞれのフルーツは食われてしまうか，特定の時刻が来れば期限切れになって消える．
 
 | イベント | UTC                             |
@@ -321,16 +215,12 @@ Each fruit remains in the game until either it is eaten, or it expires at a fixe
 | フルーツ1| 期限切れ 127 * 280              |
 | フルーツ2| 期限切れ 127 * 480              |
 
-Each power pill eaten triggers fright mode, which expires after a fixed duration counted from when the last power pill is eaten.
-
 それぞれのパワー錠剤を食うとイジケモードに以降する．
 イジケモードは，最近に食ったパワー錠剤を食った時点から一定の期間がたてば効力が消える．
 
 | イベント         | チク期間                        |
 |:-----------------|:--------------------------------|
 | イジケモード期間 | 127 * 20                        |
-
-The Lambda-Man and ghosts move at different speeds. Lambda-Man moves slower when he is eating, and the ghosts move slower when they are in fright mode. All moves are at regular intervals, based on their ticks per move value which is described below. For example, the first Lambda-Man move occurs at tick 127, the second at tick 254, and so on.
 
 λマンと幽霊の移動速度は異なる．λマンは食っているときは遅く，幽霊はイジケモードのときに移動が遅くなる．
 すべての移動は一定の間隔でおこり，移動のチクは以下のとおり．
@@ -349,8 +239,6 @@ The Lambda-Man and ghosts move at different speeds. Lambda-Man moves slower when
 | 幽霊 2 (イジケモード)  | 201    |
 | 幽霊 3 (イジケモード)  | 204    |
 
-On a tick when Lambda-Man or a ghost is scheduled to move, their next move is scheduled for the appropriate number of ticks in the future, depending on their current state. For example if Lambda-Man moves into a square with a pill then the next tick on which he will move will be his previous scheduled tick number plus 137.
-
 λマンあるいは幽霊が移動するチクカウントにおいて次の移動のチクカウントが設定される．
 これはそのときの状態に依存する．
 たとえば，λマンが錠剤のあるセルにいたら次の移動はその直前の移動に設定されたチクカウントに137を加えた時刻である．
@@ -360,20 +248,12 @@ On a tick when Lambda-Man or a ghost is scheduled to move, their next move is sc
 
 ## 移動
 
-The Lambda-Man can move into any adjacent square that is not occupied by a wall. An adjacent square is one that is up, down, left, or right of another.
-
 λマンは壁がない隣のセルに移動できる．隣のセルとは1つ上，1つ下，1つ左，1つ右のセルのことである．
-
-When Lambda-Man tries to choose an illegal move, he stops moving.
 
 λマンが不正な移動選ぶと移動しません．
 
-Ghosts can only move into an adjacent square that is not occupied by a wall. At a tick when a ghost may move, it must move (unless it is surrounded on all four sides by walls). Furthermore, a ghost cannot move in the opposite direction to its current direction, unless that is the only direction available (because it is surrounded on three sides by walls).
-
 幽霊は壁のない隣のセルにしか移動できません．
 ゴーストが移動する時刻にはゴーストは必ず移動しなければなりません．4方が壁に囲まれていないかぎり．さらに，ゴーストは今向いている方向と反対方向には移動できません．ただし，三方を壁でかこまれていて，そちらにしか移動できない場合はその限りではありません．
-
-Consequently, a ghost can only choose its direction at a junction and cannot choose to turn back on itself. A junction is a square which has at least three adjacent squares with no walls. For example, the following are all junctions.
 
 結果として，ゴーストはジャンクションでは後戻り方向以外の方向しか選べません．
 ジャンクションは少くとも3方向に壁のないセルがある場所をいいます．
@@ -387,25 +267,15 @@ Consequently, a ghost can only choose its direction at a junction and cannot cho
          # #     # #     # #     # # 
 ```
 
-When a ghost encounters a bend, it is forced to continue around the bend. When a ghost encounters a dead end, it is forced to turn around.
-
 ## ゴースト
 
-When a ghost chooses an illegal move (or no move at all) at a junction, it is forced to continue in its previous direction if this is legal, and if not, then the first legal direction out of up, right, down, and left, in that order.
-
 ゴーストが不正な移動を選択すると（あるいは全く動かないことを選択すると）上右下左の順に見て動ける方向に動きます．
-
-At the start of the game, all ghosts and Lambdaman face down.
 
 ゲーム開始時にはゴースト，λマンはすべて下を向いています．
 
 ## トーナメント得点
 
-For the lightning round it is your Lambda-Man versus ghosts supplied by the judges and in mazes supplied by the judges.
-
 ライトニングラウンドでは君のλマンと審査員の用意した幽霊と審査員が用意した迷図で対決します．
-
-Your overall score in the lightning round is the sum of your individual scores on a series of games, played in different maps. The actual maps and ghosts used will not be revealed but they will range from easy to hard. The map properties are described below.
 
 ライトニングラウンドでの得点は，一連（別別の地図で）の君とのゲームで君が獲得した得点の総和になる．
 ここで使われた地図と幽霊は見えないのであるが，簡単なものから難しいものへの順にならんでいる．
@@ -413,25 +283,15 @@ Your overall score in the lightning round is the sum of your individual scores o
 
 ## <a name="map-properties">地図の性質</a>
 
-Maps are rectangular. Map x and y coordinates are indexed from 0. The top left corner is (0,0), so increasing x-coordinates are to the right, and increasing y-coordinates are down.
-
 地図は長方形で，x 方向，y 方向ともに 0 から番号が付く．
 左上の角が(0,0)である．したがって，x 方向は右へいくほど番号が多きくなり，y方向は下えいくほど番号が大きくなる．
-
-Maps are like mazes: they consist of corridors 1-square wide, without open spaces. More formally: there are no 2x2 areas consisting only of non-wall squares.
 
 地図は迷図のようになっており，1つの正方形のセル幅の通路で構成されており，それより広い場所はない．
 より形式的にいうと，壁を含まないセルの2×2の空間はない．
 
-Maps have walls around the edges.
-
 地図の周辺は壁がぐるりと回っている．
 
-Every pill in a map is accessible.
-
 地図にあるすべての錠剤は到達可能である．
-
-The maps vary in size and in the number of ghosts and power pills. Easy maps will be smaller, with fewer ghosts and a higher density of power pills. Harder maps will be larger, with more ghosts and a lower density of power pills. The maximum map size is 256 by 256.
 
 地図のサイズ，幽霊の数，パワー錠剤の数は地図ごとに変る．
 簡単な地図ほど，小さく，幽霊の数は少く，パワー錠剤の密度は高い．
@@ -440,13 +300,8 @@ The maps vary in size and in the number of ghosts and power pills. Easy maps wil
 
 ## 幽霊と幽霊のプログラム
 
-Ghost AI programs are assigned to ghosts in each map. 
-If there are more ghosts in a map than then are ghost AI programs in use then the AI programs are assigned to the ghosts cyclically.
-
 幽霊AIプログラムはそれぞれの地図ごとに幽霊に割り当てられている．
 AIプログラムの数以上の幽霊がいる地図ではAIプログラムを循環的に割り当てる．
-
-For example, if a map has 4 ghosts and there are 2 AI programs then they are assigned as follows:
 
 たとえば，幽霊が4体，AIが2つの場合の割あては以下のとおり
 
@@ -457,18 +312,11 @@ For example, if a map has 4 ghosts and there are 2 AI programs then they are ass
 | ghost 3  | program 1     |
 | ghost 4  | program 2     |
 
-The order of ghosts is in increasing order of their starting coordinates, where (x1, y1) is considered smaller than (x2, y2) if y1 < y2' or if y1 = y2' and x1 < x2'.
 幽霊の順番は出発の座標の大小できまります．
 
-The system allows at most 4 ghost programs (but more than 4 ghosts).
 このシステムでは高々4つの幽霊プログラムしか使いませんが幽霊は5体以上です．
 
 # GHost CPU (GHC)
-
-The GHost CPU (GHC) is a conventional 8-bit microcontroller. 
-Each ghost is run by a separate GHC. 
-Although we found a complete copy of the CPU manual, it is quite terse in parts, as it assumes the conventions of the day. 
-For those of you who (because of age or youth) do not remember the 1980s, we have tried to explain some of these conventions.
 
 GHost CPU (GHC)は旧型の8bitマイクロコントローラである．
 それぞれの幽霊が別々のGHCで動く．
@@ -477,8 +325,6 @@ CPUマニュアルの完全なコピーを見つけたが，簡単なパーツ�
 
 ## GHC State
 
-Each register holds an 8-bit unsigned integer (between 0 and 255 inclusive). There are 2 separate memories: a data memory and a code memory, each with 256 locations (numbered from 0 to 255 inclusive). Hence the contents of a register can be interpreted directly as a data memory address, the contents of a data memory location, or a code memory address. The GHC performs all arithmetic modulo 256, so 255 + 1 = 0.
-
 各レジスタは8bit符号なし整数を保持（0から255まで）．
 メモリはデータメモリとコードメモリの2本あり，それぞれ格納場所が0番から255番まである．
 したがって，レジスタの内容は直接データメモリアドレス，データメモリ場所の内容，コードメモリアドレスと解釈できる．
@@ -486,13 +332,9 @@ GHCはすべてを256のモデューロで実行する．したがって，255 +
 
 ## 初期化とプログラム実行
 
-At the start of a game, the GHC's code memory is initialised with a program, as described in the section Code Format. The contents of the code memory does not change during a game. All data memory locations and all registers are initialised to 0.
-
 ゲーム開始時にGHCのコードメモリはプログラムで初期化する．コードの形式は[コード形式](#code-format)の節で説明する．
 コードメモリの内容はゲーム中は変更されない．
 すべてのデータメモリ格納位置とすべてのレジスタは0で初期化される．
-
-During each game cycle, the GHC runs the program, executing up to 1024 instructions: the game cycle is divided into 1024 execution cycles. At the start of each game cycle, the PC is initialised to 0. An execution cycle begins with the GHC reading the instruction at the address referenced by the PC from code memory. It executes the instruction, as described in the section Instruction Reference, possibly changing the contents of the data memory and registers. At the end of the execution cycle, if the value of the PC is the same as it was at the start of the execution cycle, the GHC increments it. Execution terminates at the end of an execution cycle if: the instruction executed was HLT; it was the 1024th execution cycle of the game cycle; or execution of the instruction caused an error. The contents of the data memory and registers persist between game cycles.
 
 それぞれのゲームサイクルにおいて，GHCはプログラムを走らせ，1024個(まで)の命令を実行する．
 すなわち，そのゲームサイクルは1024の実行サイクルに分割される．
@@ -506,52 +348,32 @@ GHCは命令を実行する．命令については[命令リファレンス](#i
 
 ## <a name="#code-format">Code Format</a>
 
-By convention, a GHC program is stored in a file with the extension .ghc (GHost Code).
-
 規約により，GHCプログラムは.ghcという拡張子のファイルに格納．
-
-A program consists of several lines, terminated by newline characters. The contents of a line are whitespace insensitive: multiple consecutive whitespace characters are treated identically to one. A line is either empty (containing only whitespace) or contains an instruction.
 
 プログラムは複数の行で構成され，行は改行文字で終端する．
 行の内容は，空白はいくつつづいても1つの空白と見做す．
 行は，1つの白空白のみを含む空行か，命令を1つ含む．
 
-A program may contain comments, which are introduced using a semicolon (;). Anything from a semicolon until the end of a line (including the semicolon) is ignored. Hence a line containing only a comment is regarded as empty.
-
 プログラムには;を使ってコメントを入れられる．;から行末までが無視される．
 したがって，コメントのみの行は空行とみなされる．
-
-An instruction consists of a mnemonic and zero or more arguments. The mnemonic is a case-insensitive sequence of alphabet characters.
 
 命令は0個以上の引数をもつニーモニックである．
 ニーモニックはアルファベットの大文字小文字を区別しない．
 
 引数は以下のどれかである．
 
-1. a register argument (indicated by its name (A to H or PC));<br>
-レジスタ引数（ A から H あるいは PC で示す）
-2. an indirect general-purpose register argument (indicated by its name enclosed in square brackets ([A] to [H] but not [PC]));<br>
-間接汎用レジスタ引数（角括弧でかこって，[A] .. [H] として示す [PC]はないことに注意）．
-3. a constant argument (indicated by its encoding in decimal (0 to 255));<br>
-定数引数．（10進で 0 から 255 まで）
-4. or the contents of a data memory location (indicated by its address in decimal, enclosed in square brackets ([0] to [255])).<br>
-データメモリ格納場所の定数（アドレスを示す10進を角括弧で囲う[0] から [255]）．
-
-The number of arguments required depends on the instruction (see Instruction Reference).
+1. レジスタ引数（ A から H あるいは PC で示す）
+2. 間接汎用レジスタ引数（角括弧でかこって，[A] .. [H] として示す [PC]はないことに注意）．
+3. 定数引数．（10進で 0 から 255 まで）
+4. データメモリ格納場所の定数（アドレスを示す10進を角括弧で囲う[0] から [255]）．
 
 必要な引数の数は命令によって違う．[命令リファレンスを参照](#instruction-reference)
-
-There must be a whitespace character between a mnemonic and the first argument (if any). There must be a comma (,) between consecutive arguments.
 
 ニーモニックと最初の引数との間には1つの空白がなければならない．
 引数と引数の間には , がなければならない．
 
-Instructions may optionally be preceded or followed by whitespace. Arguments and argument-separating commas may optionally be preceded or followed by whitespace.
-
 命令は前後に空白がつづいてもよい．
 引数および引数区切り子のコンマの前後に空白があってもよい．
-
-When the GHC is initialised, each line containing an instruction is stored in the corresponding code memory location. For example, the instruction on the first non-empty line is stored at address 0 and the instruction on the second non-empty line is stored at address 1. As there are only 256 code memory locations available, a program may contain at most 256 instructions.
 
 GHCが初期化されたとき，各行に含まれる1命令がメモリの対応する位置に格納される．
 たとえば，最初の空でない行の命令はアドレス0に格納される．空でない2つ目の行の命令はアドレス1に格納される．
@@ -655,8 +477,6 @@ GHCの実行を停止する．
 
 # <a name="#interrupt-reference">割り込みリファレンス</a>
 
-The effect of invoking an interrupt service is architecture-dependent. In the LamCo architecture, the following interrupts are standard:
-
 割り込みサービスの起動効果はアーキテクチャ依存である．LamCoのアーキテクチャでは以下のような標準にしたがっている．
 
 ```
@@ -667,14 +487,19 @@ INT 0
 レジスタA: 幽霊の新しい方向
 幽霊の無機を設定する．0 は上，1 は右，2 は下，3 は左
 
-The direction of the ghost is set at the end of the game cycle. If the interrupt is called multiple times in a single game cycle, the last interrupt overrides any earlier ones. Using an invalid direction in register A is equivalent to retaining the ghost's original direction at the beginning of the game cycle.
+ゲームサイクルの最後に幽霊の方向が設定される．
+この割り込みは単一のゲームサイクルの中で複数回呼ばれた場合には最後の割り込みでの設定がすべての設定を上書きする．
+レジスタAに不正な方向が使われた場合にはそのゲームサイクルの開始時点での幽霊の元々の方向が保たれる．
 
+```
 INT 1
+```
 
-Out:
-Register A: First Lambda-Man's x-ordinate
-Register B: First Lambda-Man's y-ordinate
-Stores the first Lambda-Man's position in registers A (x-ordinate) and B (y-ordinate). In the single Lambda-Man version of the game, the first Lambda-Man is the only Lambda-Man.
+出力:
+レジスタ A: 1つめのλマンの x 座標
+レジスタ B: 1つめのλマンの y 座標
+1つめのλマンの位置をレジスタAとレジスタBに格納する．
+単一のIn the single Lambda-Man version of the game, the first Lambda-Man is the only Lambda-Man.
 
 INT 2
 
