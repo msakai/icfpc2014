@@ -151,7 +151,14 @@ step Machine{ mC, mS, mD, mE, mProg } = do
     DIV -> do -- integer division
       VInt y <- popS
       VInt x <- popS
-      pushS $ VInt (x `div` y) -- TODO: 負数の場合の定義は?
+      pushS $ VInt (x `div` y)
+      {- 負数の場合の扱いはこれで良い。
+         <http://icfpcontest.org/lman.html> で以下を実行すると -1 になる。
+         LDC  -1
+         LDC 2
+         DIV
+         RTN
+       -}
       incC
       return True
 
