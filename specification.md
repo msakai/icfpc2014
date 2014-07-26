@@ -25,7 +25,7 @@ So the contest task involves delving into LamCo's quirky old software and hardwa
 
 そこでコンテストの課題は，LamCo社の妙な古いソフトウェアとハードウェア技術を精査し，シミュレーションでアーケードハードウェアを再構築することであり，そのアーケードプラットフォームのソフトウェアを書いて，ゲームを遊べるようにし，君のライバルよりも上手くプレイすることである．
 
-## あかされない歴史
+## あかされた歴史
 
 LamCo were building an arcade game where you control a little character called "Lambda-Man" who runs around in a maze eating pills and evading ghosts. 
 The game bears a striking resemblance to another well known arcade game.
@@ -389,7 +389,7 @@ Consequently, a ghost can only choose its direction at a junction and cannot cho
 
 When a ghost encounters a bend, it is forced to continue around the bend. When a ghost encounters a dead end, it is forced to turn around.
 
-ゴースト
+## ゴースト
 
 When a ghost chooses an illegal move (or no move at all) at a junction, it is forced to continue in its previous direction if this is legal, and if not, then the first legal direction out of up, right, down, and left, in that order.
 
@@ -440,7 +440,8 @@ The maps vary in size and in the number of ghosts and power pills. Easy maps wil
 
 ## 幽霊と幽霊のプログラム
 
-Ghost AI programs are assigned to ghosts in each map. If there are more ghosts in a map than then are ghost AI programs in use then the AI programs are assigned to the ghosts cyclically.
+Ghost AI programs are assigned to ghosts in each map. 
+If there are more ghosts in a map than then are ghost AI programs in use then the AI programs are assigned to the ghosts cyclically.
 
 幽霊AIプログラムはそれぞれの地図ごとに幽霊に割り当てられている．
 AIプログラムの数以上の幽霊がいる地図ではAIプログラムを循環的に割り当てる．
@@ -464,24 +465,55 @@ The system allows at most 4 ghost programs (but more than 4 ghosts).
 
 # GHost CPU (GHC)
 
-The GHost CPU (GHC) is a conventional 8-bit microcontroller. Each ghost is run by a separate GHC. Although we found a complete copy of the CPU manual, it is quite terse in parts, as it assumes the conventions of the day. For those of you who (because of age or youth) do not remember the 1980s, we have tried to explain some of these conventions.
-GHost 
+The GHost CPU (GHC) is a conventional 8-bit microcontroller. 
+Each ghost is run by a separate GHC. 
+Although we found a complete copy of the CPU manual, it is quite terse in parts, as it assumes the conventions of the day. 
+For those of you who (because of age or youth) do not remember the 1980s, we have tried to explain some of these conventions.
+
+GHost CPU (GHC)は旧型の8bitマイクロコントローラである．
+それぞれの幽霊が別々のGHCで動く．
+CPUマニュアルの完全なコピーを見つけたが，簡単なパーツで，当時の慣習にしたがって書かれている．
+君らは若くて1980年代のことなどわからないだろうから，すこし説明しておいた．
 
 ## GHC State
 
 Each register holds an 8-bit unsigned integer (between 0 and 255 inclusive). There are 2 separate memories: a data memory and a code memory, each with 256 locations (numbered from 0 to 255 inclusive). Hence the contents of a register can be interpreted directly as a data memory address, the contents of a data memory location, or a code memory address. The GHC performs all arithmetic modulo 256, so 255 + 1 = 0.
 
-Initialisation and Program Execution
+各レジスタは8bit符号なし整数を保持（0から255まで）．
+メモリはデータメモリとコードメモリの2本あり，それぞれ格納場所が0番から255番まである．
+したがって，レジスタの内容は直接データメモリアドレス，データメモリ場所の内容，コードメモリアドレスと解釈できる．
+GHCはすべてを256のモデューロで実行する．したがって，255 + 1 = 0 である．
+
+## 初期化とプログラム実行
 
 At the start of a game, the GHC's code memory is initialised with a program, as described in the section Code Format. The contents of the code memory does not change during a game. All data memory locations and all registers are initialised to 0.
 
+ゲーム開始時にGHCのコードメモリはプログラムで初期化する．コードの形式は[コード形式](#code-format)の節で説明する．
+コードメモリの内容はゲーム中は変更されない．
+すべてのデータメモリ格納位置とすべてのレジスタは0で初期化される．
+
 During each game cycle, the GHC runs the program, executing up to 1024 instructions: the game cycle is divided into 1024 execution cycles. At the start of each game cycle, the PC is initialised to 0. An execution cycle begins with the GHC reading the instruction at the address referenced by the PC from code memory. It executes the instruction, as described in the section Instruction Reference, possibly changing the contents of the data memory and registers. At the end of the execution cycle, if the value of the PC is the same as it was at the start of the execution cycle, the GHC increments it. Execution terminates at the end of an execution cycle if: the instruction executed was HLT; it was the 1024th execution cycle of the game cycle; or execution of the instruction caused an error. The contents of the data memory and registers persist between game cycles.
 
-Code Format
+それぞれのゲームサイクルにおいて，GHCはプログラムを走らせ，1024個(まで)の命令を実行する．
+すなわち，そのゲームサイクルは1024の実行サイクルに分割される．
+1つの実行サイクルはPCがよって参照されているアドレスの命令をコードメモリからGHCが読むところから始まる．
+GHCは命令を実行する．命令については[命令リファレンス](#instructionReference)を参照のこと．
+命令によってデータメモリ，レジスタの内容が変更されることがある．
+実行サイクルの最後にPCの値がその実行サイクル開始時の値と同じであれば，GHCはそれを1インクリメントする．
+実行は以下は，いかのような実行サイクルの最後に終了するものとする．
+実行された命令がHLTである場合，そのゲームサイクルで1024番目の実行サイクルであった場合，実行した命令がエラーを起こした場合．
+データメモリの内容とレジスタの内容はゲーム中は永続的に保持される．
+
+## <a name="#code-format">Code Format</a>
 
 By convention, a GHC program is stored in a file with the extension .ghc (GHost Code).
 
+規約により，GHCプログラムは.ghcという拡張子のファイルに格納．
+
 A program consists of several lines, terminated by newline characters. The contents of a line are whitespace insensitive: multiple consecutive whitespace characters are treated identically to one. A line is either empty (containing only whitespace) or contains an instruction.
+
+プログラムは複数の行で構成され，行は改行文字で終端する．
+
 
 A program may contain comments, which are introduced using a semicolon (;). Anything from a semicolon until the end of a line (including the semicolon) is ignored. Hence a line containing only a comment is regarded as empty.
 
