@@ -14,7 +14,8 @@ computeLevel :: (Width,Height) -> Level
 computeLevel (width,height) = ceiling $ fromIntegral (width * height) / (100::Rational)
 -- computeLevel (15,18) == 3
 
-type UTC = Integer
+-- 最大マップサイズは256*256なのでutcEOLはIntに32bit符号付き整数に収まる
+type UTC = Int
 
 utcEOL :: (Width,Height) -> UTC
 utcEOL (w,h) = 127*w*h*16
