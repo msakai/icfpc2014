@@ -1,6 +1,36 @@
 module Game where
 
+data Symbol
+  = Empty     -- ^ 1
+  | Wall      -- ^ 0
+  | Pill      -- ^ 2  
+  | PowerPill -- ^ 3
+  | Fruit     -- ^ 4
+  | LambdaMan -- ^ 5?
+  | Ghost     -- ^ 6?
+
+symbolToChar ::  Symbol -> Char
+symbolToChar Empty     = ' '
+symbolToChar Wall      = '#'
+symbolToChar Pill      = '.'
+symbolToChar PowerPill = 'o'
+symbolToChar Fruit     = '%'
+symbolToChar LambdaMan = '\\'
+symbolToChar Ghost     = '='
+
+symbolFromChar :: Char -> Symbol
+symbolFromChar ' ' = Empty
+symbolFromChar '#' = Wall
+symbolFromChar '.' = Pill
+symbolFromChar 'o' = PowerPill
+symbolFromChar '%' = Fruit
+symbolFromChar '\\' = LambdaMan
+symbolFromChar '=' = Ghost
+
+type Map = Array (Int,Int) Symbol
+
 type Level = Int
+
 type Width = Int
 type Height = Int
 
