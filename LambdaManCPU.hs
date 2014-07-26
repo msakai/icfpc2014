@@ -68,8 +68,15 @@ data Frame
   = Frame
   { frameParent :: Maybe Frame
   , frameValues :: IOArray Int Value
+  , frameIsDUM  :: IORef Bool
   }
   deriving (Eq)
+
+allocFrame :: Int -> Frame -> Bool -> IO Frame
+allocFrame n parent isDUM = do
+  a <- newArray (0,n-1) undefined
+  ref <- newIORef isDUM
+  return $ Frame{ frameParent = Just parent, frameValues = a, frameIsDUM = ref }
 
 data ContFrame
   = ContJoin InstAddr -- ^ TAG_JOIN
@@ -123,6 +130,8 @@ step Machine{ mC, mS, mD, mE, mProg } = do
       let f 0 fp = return fp
           f m fp = f (m-1) (fromJust (frameParent fp))
       fp <- f n =<< readIORef mE
+      isDUM <- readIORef (frameIsDUM fp)
+      when isDUM $ error "FAULT(FRAME_MISMATCH)"
       pushS =<< readArray (frameValues fp) i
       incC
       return True
@@ -237,14 +246,13 @@ step Machine{ mC, mS, mD, mE, mProg } = do
 
     AP n -> do -- call function
       VClosure f e <- popS
-      a <- newArray (0,n-1) undefined
+      fp <- allocFrame n e False
       let g (-1) = return ()
           g i = do
             y <- popS
-            writeArray a i y
+            writeArray (frameValues fp) i y
             g (i-1)
       g (n-1)
-      let fp = Frame{ frameParent = Just e, frameValues = a }
       pushD (ContFP e)
       pushD (ContRet (pc+1))
       writeIORef mE fp
@@ -264,14 +272,15 @@ step Machine{ mC, mS, mD, mE, mProg } = do
 
     DUM n -> do -- create empty environment frame
       e <- readIORef mE
-      a <- newArray (0,n-1) undefined
-      let fp = Frame{ frameParent = Just e, frameValues = a }
+      fp <- allocFrame n e True
       writeIORef mE fp
       incC
       return True
 
     RAP n -> do -- recursive environment call function
       VClosure f fp <- popS
+      isDUM <- readIORef (frameIsDUM fp)
+      unless isDUM $ error "FAULT(FRAME_MISMATCH)"
       size <- liftM rangeSize $ getBounds $ frameValues fp
       when (size /= n) $ error "FAULT(FRAME_MISMATCH)"
       let g (-1) = return ()
@@ -283,6 +292,7 @@ step Machine{ mC, mS, mD, mE, mProg } = do
       let Just fpp = frameParent fp
       pushD (ContFP fpp)
       pushD (ContRet (pc+1))
+      writeIORef (frameIsDUM fp) False
       writeIORef mE fp
       writeIORef mC f
       return True
@@ -300,14 +310,13 @@ step Machine{ mC, mS, mD, mE, mProg } = do
 
     TAP n -> do -- tail-call function
       VClosure f e <- popS
-      a <- newArray (0,n-1) undefined
+      fp <- allocFrame n e False
       let g (-1) = return ()
           g i = do
             y <- popS
-            writeArray a i y
+            writeArray (frameValues fp) i y
             g (i-1)
       g (n-1)
-      let fp = Frame{ frameParent = Just e, frameValues = a }
       writeIORef mE fp
       writeIORef mC f
       return True
