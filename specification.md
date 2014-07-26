@@ -577,65 +577,95 @@ INC dest
 DEC dest
 ```
 
-```dest```の値を1減らし and store the result in dest. dest may not be a constant or the register PC.
+```dest```の値を1減らし，結果を```dest```に格納する．```dest```は定数あるいはPCレジスタであってはならない．
 
+```
 ADD dest,src
+```
 
 Add the value of src to the value of dest and store the result in dest. dest may not be a constant or the register PC.
 
+```src```の値を```dest```の値に加え，結果を```dest```に格納する．```dest```は定数またはPCレジスタであってはならない．
+
+```
 SUB dest,src
+```
 
-Subtract the value of src from the value of dest and store the result in dest. dest may not be a constant or the register PC.
+```src```の値を```dest```の値から引き，結果を```dest```に格納する．```dest```は定数またはPCレジスタであってはならない．
 
+```
 MUL dest,src
+```
 
-Multiply the value of src by the value of dest and store the result in dest. dest may not be a constant or the register PC.
+```src```の値を```dest```の値倍し，結果を```dest```に格納する．```dest```は定数またはPCレジスタであってはならない．
 
+```
 DIV dest,src
+```
 
-Compute the integer quotient of dest by the value of src, and store the result in dest. dest may not be a constant or the register PC. Results in an error if the value of src is 0.
+整数の除算を計算する```dest```の値を```src```の値で除算した商を```dest```に格納する．```dest```は定数またはPCレジスタであってはならない．```src```が0のときエラーになる．
 
+```
 AND dest,src
+```
 
-Bitwise AND the value of dest and the value of src, storing the result in dest. dest may not be a constant or the register PC.
+```dest```の値と```src```の値のビット毎のANDを取る．結果は```dest```に格納する．```dest```は定数またはPCレジスタであってはならない．
 
+```
 OR dest,src
+```
 
-Bitwise OR the value of dest and the value of src, storing the result in dest. dest may not be a constant or the register PC.
+```dest```の値と```src```の値のビット毎のORを取る．結果は```dest```に格納する．```dest```は定数またはPCレジスタであってはならない．
 
+```
 XOR dest,src
+```
 
-Bitwise XOR the value of dest and the value of src, storing the result in dest. dest may not be a constant or the register PC.
+```dest```の値と```src```の値のビット毎のXORを取る．結果は```dest```に格納する．```dest```は定数またはPCレジスタであってはならない．
 
+```
 JLT targ,x,y
+```
 
-Compare the value of x with the value of y. If the value of x is less than the value of y, set the PC to the constant value targ.
+```x```の値と```y```の値を比較し，```x```の値が```y```の値未満であれば，PCを定数値```targ```に設定する．
 
+```
 JEQ targ,x,y
+```
 
-Compare the value of x with the value of y. If the value of x is equal to the value of y, set the PC to the constant value targ.
+```x```の値と```y```の値を比較し，```x```の値が```y```の値と等しければ，PCを定数値```targ```に設定する．
 
+```
 JGT targ,x,y
+```
 
-Compare the value of x with the value of y. If the value of x is greater than the value of y, set the PC to the constant value targ.
+```x```の値と```y```の値を比較し，```x```の値が```y```の値より大きければ，PCを定数値```targ```に設定する．
 
+```
 INT i
+```
 
-Invoke the interrupt service i (see Interrupt Reference).
+割り込みサービス```i```番を起動する．[割り込みリファレンス](#interrupt-reference)参照．
 
+```
 HLT
+```
 
-Halt execution of the GHC.
+GHCの実行を停止する．
 
-Interrupt Reference
+# <a name="#interrupt-reference">割り込みリファレンス</a>
 
 The effect of invoking an interrupt service is architecture-dependent. In the LamCo architecture, the following interrupts are standard:
 
-INT 0
+割り込みサービスの起動効果はアーキテクチャ依存である．LamCoのアーキテクチャでは以下のような標準にしたがっている．
 
-In:
-Register A: ghost's new direction
-Set the direction of the ghost. 0 is up; 1 is right; 2 is down; 3 is left.
+```
+INT 0
+```
+
+入力:
+レジスタA: 幽霊の新しい方向
+幽霊の無機を設定する．0 は上，1 は右，2 は下，3 は左
 
 The direction of the ghost is set at the end of the game cycle. If the interrupt is called multiple times in a single game cycle, the last interrupt overrides any earlier ones. Using an invalid direction in register A is equivalent to retaining the ghost's original direction at the beginning of the game cycle.
 
