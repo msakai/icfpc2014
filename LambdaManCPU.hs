@@ -48,6 +48,9 @@ data GInst addr
   | BRK -- ^ breakpoint debugging
   deriving (Eq, Ord, Show)
 
+showInstSeq :: [Inst] -> String
+showInstSeq is = unlines $ map show is
+
 data Value
   = VInt {-# UNPACK #-} !Int32
   | VCons{ car :: IORef Value, cdr :: IORef Value }
