@@ -52,6 +52,13 @@ data Value
   | VClosure {-# UNPACK #-} !InstAddr Frame
   deriving (Eq)
 
+instance Show Value where
+  showsPrec d (VInt i) = showsPrec d i
+  showsPrec d (VCons _ _) = showParen (d > 10) $
+    showString "CONS _ _"
+  showsPrec d (VClosure i _) = showParen (d > 10) $
+    showString "CLOSURE " . shows i . showString " _"
+
 data Frame
   = Frame
   { frameParent :: Maybe Frame
