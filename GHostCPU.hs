@@ -60,7 +60,7 @@ type ProgramCounter     = IORef Word8
 type Registers   = IOArray Reg Word8
 type DataMemory  = IOArray Word8 Word8
 type CodeMemory  = Array Word8 Inst
-type InterruptHandler = Rgisters -> Registers
+type InterruptHandler = Registers -> IO ()
 
 data Machine
   = Machine
@@ -86,7 +86,8 @@ newMachine prog = do
   regs <- newArray ('A','H') 0
   mem  <- newArray (0,0xff) 0
   let code = array (0,0xff) $ zip [0..] (take 256 prog)
-  return $ Machine ic pc regs mem code
+  let hdl  = array (0,0xff) $ zip [0..] (replicate 9 undefined)
+  return $ Machine ic pc regs mem code hdl
 
 runMachine :: Machine -> IO (Machine, Reason)
 runMachine m = do 
@@ -97,12 +98,12 @@ runMachine m = do
   }
 
 instrCycle :: Machine -> IO (Machine,Reason)
-instrCycle m@(Machine _ pc _ _ code) = do
-  { pc   <- readIORef pc
-  ; case code ! pc of
+instrCycle m@(Machine _ pc _ _ code _) = do
+  { c   <- readIORef pc
+  ; case code ! c of
       mov@(MOV _ _) -> execMov m mov
-      inc@(INC _ _) -> execInc m inc
-      dec@(DEC _ _) -> execDec m dec
+      inc@(INC _)   -> execInc m inc
+      dec@(DEC _)   -> execDec m dec
       add@(ADD _ _) -> execAdd m add
       sub@(SUB _ _) -> execSub m sub
       mul@(MUL _ _) -> execMul m mul
@@ -118,8 +119,8 @@ instrCycle m@(Machine _ pc _ _ code) = do
   }
 
 execMov m@(Machine ic pc regs mem code hdl) (MOV d s) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; v  <- getValue pc regs mem s
@@ -133,8 +134,8 @@ execMov m@(Machine ic pc regs mem code hdl) (MOV d s) = do
 execMov _ _ = error "Not MOV"
 
 execInc m@(Machine ic pc regs mem code hdl) (INC d) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; case d of
@@ -147,8 +148,8 @@ execInc m@(Machine ic pc regs mem code hdl) (INC d) = do
 execInc _ _ = error "Not INC"
 
 execDec m@(Machine ic pc regs mem code hdl) (DEC d) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; case d of
@@ -161,8 +162,8 @@ execDec m@(Machine ic pc regs mem code hdl) (DEC d) = do
 execDec _ _ = error "Not DEC"
 
 execAdd m@(Machine ic pc regs mem code hdl) (ADD d s) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; v  <- getValue pc regs mem s
@@ -176,8 +177,8 @@ execAdd m@(Machine ic pc regs mem code hdl) (ADD d s) = do
 execAdd _ _ = error "Not ADD"
 
 execSub m@(Machine ic pc regs mem code hdl) (SUB d s) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; v  <- getValue pc regs mem s
@@ -191,8 +192,8 @@ execSub m@(Machine ic pc regs mem code hdl) (SUB d s) = do
 execSub _ _ = error "Not SUB"
 
 execMul m@(Machine ic pc regs mem code hdl) (MUL d s) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; v  <- getValue pc regs mem s
@@ -206,8 +207,8 @@ execMul m@(Machine ic pc regs mem code hdl) (MUL d s) = do
 execMul _ _ = error "Not MUL"
 
 execDiv m@(Machine ic pc regs mem code hdl) (DIV d s) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; v  <- getValue pc regs mem s
@@ -221,8 +222,8 @@ execDiv m@(Machine ic pc regs mem code hdl) (DIV d s) = do
 execDiv _ _ = error "Not DIV"
 
 execAnd m@(Machine ic pc regs mem code hdl) (AND d s) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; v  <- getValue pc regs mem s
@@ -236,8 +237,8 @@ execAnd m@(Machine ic pc regs mem code hdl) (AND d s) = do
 execAnd _ _ = error "Not ADD"
 
 execOr m@(Machine ic pc regs mem code hdl) (OR d s) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; v  <- getValue pc regs mem s
@@ -251,8 +252,8 @@ execOr m@(Machine ic pc regs mem code hdl) (OR d s) = do
 execOr _ _ = error "Not OR"
 
 execXor m@(Machine ic pc regs mem code hdl) (XOR d s) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; v  <- getValue pc regs mem s
@@ -266,60 +267,62 @@ execXor m@(Machine ic pc regs mem code hdl) (XOR d s) = do
 execXor _ _ = error "Not XOR"
 
 execJlt m@(Machine ic pc regs mem code hdl) (JLT targ x y) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; vx  <- getValue pc regs mem x
   ; vy  <- getValue pc regs mem y
-  ; if vx < vy then modifyIORef (const (getValue targ)) pc >> return (m,ResNon)
+  ; if vx < vy then modifyIORef pc (const targ) >> return (m,ResNon)
                else return (m,ResNon)
   }
 execJlt _ _ = error "Not JLT"
 
 execJeq m@(Machine ic pc regs mem code hdl) (JEQ targ x y) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; vx  <- getValue pc regs mem x
   ; vy  <- getValue pc regs mem y
-  ; if vx == vy then modifyIORef (const (getValue targ)) pc >> return (m,ResNon)
+  ; if vx == vy then modifyIORef pc (const targ) >> return (m,ResNon)
                 else return (m,ResNon)
   }
 execJEQ _ _ = error "Not JEQ"
 
 execJgt m@(Machine ic pc regs mem code hdl) (JGT targ x y) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
   ; vx  <- getValue pc regs mem x
   ; vy  <- getValue pc regs mem y
-  ; if vx > vy then modifyIORef (const (getValue targ)) pc >> return (m,ResNon)
+  ; if vx > vy then modifyIORef pc (const targ) >> return (m,ResNon)
                else return (m,ResNon)
   }
 execJgt _ _ = error "Not JGT"
 
-execInt m@(Machine ic pc regs mem code hdl) (Int i) = do
-  { modifyIORef succ pc
-  ; modifyIORef succ ic
+execInt m@(Machine ic pc regs mem code hdl) (INT i) = do
+  { modifyIORef pc succ
+  ; modifyIORef ic succ
   ; c  <- readIORef ic
   ; let reason = if c == 1024 then ResLim else ResNon
-  ; readArray hdl i >>= flip ($) regs
+  ; (hdl ! i) regs
   ; return (m,ResNon)
   }
 execInt _ _ = error "Not Int"
 
-execHlt m@(Machine ic _ _ _ _) HLT = modifyIORef' succ ic >> return (m,ResHLT)
+execHlt m@(Machine ic _ _ _ _ _) HLT = modifyIORef' ic succ >> return (m,ResHLT)
 execHlt _ _ = error "not HLT"
 
 getValue :: IORef Word8 -> IOArray Reg Word8 -> IOArray Word8 Word8 -> Arg -> IO Word8
-getValue pc _    _   ArgPC       = readIORef pc
+getValue pc _    _  ArgPC        = readIORef pc
 getValue _ regs _   (ArgReg r)   = readArray regs r
 getValue _ regs mem (ArgInd r)   = readArray regs r >>= readArray mem
 getValue _ _    _   (ArgConst w) = return w
-getValue _ _    mem (ArgConst w) = readArray mem w
+getValue _ _    mem (ArgLoc w)   = readArray mem w
 
 modifyArray :: (MArray a e m, Ix i) => (e -> e) -> a i e -> i -> m ()
 modifyArray f a i = readArray a i >>= writeArray a i . f
+
+sampleProg = undefined
