@@ -74,6 +74,14 @@ data Machine
   , mProg :: Array Int Inst
   }
 
+newMachine :: [Inst] -> IO Machine
+newMachine prog = do
+  c <- newIORef 0
+  s <- newIORef []
+  d <- newIORef [ContStop]
+  e <- newIORef (error "no frame")
+  return $ Machine{ mC = c, mS = s, mD = d, mE = e, mProg = array (0, length prog -1) (zip [0..] prog) }
+
 step :: Machine -> IO Bool
 step Machine{ mC, mS, mD, mE, mProg } = do
   let incC = modifyIORef' mC (+1)
@@ -316,3 +324,24 @@ step Machine{ mC, mS, mD, mE, mProg } = do
     BRK -> do -- breakpoint debugging
       incC
       return True
+
+run :: Machine -> IO ()
+run m = do
+  b <- step m
+  if b then
+    run m
+  else
+    return ()
+
+run1sec :: Machine -> IO ()
+run1sec m = go 0
+  where
+    go :: Int -> IO ()
+    go cnt
+      | cnt > 3072 * 10^(3::Int) = error "catastrophic failure"
+      | otherwise = do
+          b <- step m
+          if b then
+            go (cnt+1)
+          else
+            return ()
