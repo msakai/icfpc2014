@@ -4,9 +4,15 @@ import Data.Char
 import Text.ParserCombinators.ReadP
 import GHostCPU
 
-getProgram :: String -> [Inst]
-getProgram = map (fst . head . filter (null . snd) . readP_to_S parseInst) . map (fst . break (';'==)) . lines
+-- getProgram :: String -> [Inst]
+getProgram =  map (fst . head . filter (null . snd) . readP_to_S parseInst) 
+           . filter (not . null)
+           . map (trim . fst . break (';'==)) . lines . map toUpper
 
+trim :: String -> String
+trim = reverse . dropWhile isSpace . reverse . dropWhile isSpace
+
+parseInst :: ReadP Inst
 parseInst =   pMov
           +++ pSop
           +++ pBop
@@ -14,6 +20,7 @@ parseInst =   pMov
           +++ pInt
           +++ pHlt
 
+pMov :: ReadP Inst
 pMov = do
      { skipSpaces
      ; string "MOV"
@@ -21,6 +28,8 @@ pMov = do
      ; [a,b] <- sepBy1 parseArg (char ',')
      ; return (MOV a b)
      }
+
+pSop :: ReadP Inst
 pSop = do 
      { skipSpaces
      ; sop <- string "INC"+++string "DEC"
@@ -28,9 +37,11 @@ pSop = do
      ; return (mkSop sop a)
      }
 
+mkSop :: String -> Arg -> Inst
 mkSop "INC" = INC
 mkSop "DEC" = DEC
 
+pBop :: ReadP Inst
 pBop = do
     { skipSpaces
     ; bop <- string "ADD"+++string "SUB"
@@ -41,6 +52,8 @@ pBop = do
     ; [a,b] <- sepBy1 parseArg (char ',')
     ; return (mkBop bop a b)
     }
+
+mkBop :: String -> Dest -> Src -> Inst
 mkBop bop = case bop of
     "ADD" -> ADD
     "SUB" -> SUB
@@ -49,7 +62,9 @@ mkBop bop = case bop of
     "AND" -> AND
     "OR"  -> OR
     "XOR" -> XOR
+    _     -> error "mkBop"
 
+pJmp :: ReadP Inst
 pJmp = do
     { skipSpaces
     ; jmp <- string "JLT"+++string "JEQ"+++string "JGT"
@@ -61,11 +76,15 @@ pJmp = do
     ; [x,y] <- sepBy1 parseArg (char ',')
     ; return (mkJmp jmp (read lab) x y)
     }
+
+mkJmp :: String -> Targ -> X -> Y -> Inst
 mkJmp jmp = case jmp of
     "JLT" -> JLT
     "JEQ" -> JEQ
     "JGT" -> JGT
+    _     -> error "mkJmp"
 
+pInt :: ReadP Inst
 pInt = do
     { skipSpaces 
     ; _ <- string "INT"
@@ -74,6 +93,7 @@ pInt = do
     ; return (INT (read s))
     }
 
+pHlt :: ReadP Inst
 pHlt = do
     { skipSpaces 
     ; _ <- string "HLT"
@@ -128,3 +148,27 @@ argLoc = do
     ; skipSpaces;
     ; return (ArgLoc (read num))
     }
+
+showArg :: Arg -> String
+showArg ArgPC = "PC"
+showArg (ArgReg r) = [r]
+showArg (ArgInd r) = '[':r:"]"
+showArg (ArgConst w) = show w
+showArg (ArgLoc w) = '[':(show w++"]")
+
+showInst :: Inst -> String
+showInst (MOV d s)      = "MOV "++showArg d++","++showArg s
+showInst (INC d)        = "INC "++showArg d
+showInst (DEC d)        = "DEC "++showArg d
+showInst (ADD d s)      = "ADD "++showArg d++","++showArg s
+showInst (SUB d s)      = "SUB "++showArg d++","++showArg s
+showInst (MUL d s)      = "MUL "++showArg d++","++showArg s
+showInst (DIV d s)      = "DIV "++showArg d++","++showArg s
+showInst (AND d s)      = "AND "++showArg d++","++showArg s
+showInst (OR d s)       = "OR "++showArg d++","++showArg s
+showInst (XOR d s)      = "XOR "++showArg d++","++showArg s
+showInst (JLT lab x y)  = "JEQ "++show lab++","++showArg x++","++showArg y
+showInst (JEQ lab x y)  = "JEQ "++show lab++","++showArg x++","++showArg y
+showInst (JGT lab x y)  = "JGT "++show lab++","++showArg x++","++showArg y
+showInst (INT n)        = "INT "++show n
+showInst HLT            = "HLT"
