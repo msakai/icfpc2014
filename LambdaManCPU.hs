@@ -116,50 +116,50 @@ step Machine{ mC, mS, mD, mE, mProg } = do
       return True
 
     ADD -> do -- integer addition
-      VInt x <- popS
       VInt y <- popS
+      VInt x <- popS
       pushS $ VInt (x+y)
       incC
       return True
 
     SUB -> do -- integer subtraction
-      VInt x <- popS
       VInt y <- popS
+      VInt x <- popS
       pushS $ VInt (x-y)
       incC
       return True
 
     MUL -> do -- integer multiplication
-      VInt x <- popS
       VInt y <- popS
+      VInt x <- popS
       pushS $ VInt (x*y)
       incC
       return True
 
     DIV -> do -- integer division
-      VInt x <- popS
       VInt y <- popS
+      VInt x <- popS
       pushS $ VInt (x `div` y) -- TODO: 負数の場合の定義は?
       incC
       return True
 
     CEQ -> do -- compare equal
-      VInt x <- popS
       VInt y <- popS
+      VInt x <- popS
       pushS $ VInt (if x==y then 1 else 0)
       incC
       return True
 
     CGT -> do -- compare greater than
-      VInt x <- popS
       VInt y <- popS
+      VInt x <- popS
       pushS $ VInt (if x>y then 1 else 0)
       incC
       return True
 
     CGTE -> do -- compare greater than or equal
-      VInt x <- popS
       VInt y <- popS
+      VInt x <- popS
       pushS $ VInt (if x>=y then 1 else 0)
       incC
       return True
@@ -174,8 +174,8 @@ step Machine{ mC, mS, mD, mE, mProg } = do
       return True
 
     CONS -> do -- allocate a CONS cell
-      x <- popS
       y <- popS
+      x <- popS
       carRef <- newIORef x
       cdrRef <- newIORef y
       pushS $ VCons carRef cdrRef
