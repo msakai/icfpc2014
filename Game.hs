@@ -3,13 +3,14 @@ module Game where
 import Data.Array.IArray
 
 data Symbol
-  = Empty     -- ^ 1
-  | Wall      -- ^ 0
+  = Wall      -- ^ 0
+  | Empty     -- ^ 1
   | Pill      -- ^ 2  
   | PowerPill -- ^ 3
   | Fruit     -- ^ 4
-  | LambdaMan -- ^ 5?
-  | Ghost     -- ^ 6?
+  | LambdaMan -- ^ 5
+  | Ghost     -- ^ 6
+  deriving (Eq, Ord, Show, Bounded, Enum)
 
 symbolToChar ::  Symbol -> Char
 symbolToChar Empty     = ' '
