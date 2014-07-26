@@ -1,6 +1,38 @@
 module Game where
 
+import Data.Array.IArray
+
+data Symbol
+  = Empty     -- ^ 1
+  | Wall      -- ^ 0
+  | Pill      -- ^ 2  
+  | PowerPill -- ^ 3
+  | Fruit     -- ^ 4
+  | LambdaMan -- ^ 5?
+  | Ghost     -- ^ 6?
+
+symbolToChar ::  Symbol -> Char
+symbolToChar Empty     = ' '
+symbolToChar Wall      = '#'
+symbolToChar Pill      = '.'
+symbolToChar PowerPill = 'o'
+symbolToChar Fruit     = '%'
+symbolToChar LambdaMan = '\\'
+symbolToChar Ghost     = '='
+
+symbolFromChar :: Char -> Symbol
+symbolFromChar ' ' = Empty
+symbolFromChar '#' = Wall
+symbolFromChar '.' = Pill
+symbolFromChar 'o' = PowerPill
+symbolFromChar '%' = Fruit
+symbolFromChar '\\' = LambdaMan
+symbolFromChar '=' = Ghost
+
+type Map = Array (Int,Int) Symbol
+
 type Level = Int
+
 type Width = Int
 type Height = Int
 
@@ -14,7 +46,8 @@ computeLevel :: (Width,Height) -> Level
 computeLevel (width,height) = ceiling $ fromIntegral (width * height) / (100::Rational)
 -- computeLevel (15,18) == 3
 
-type UTC = Integer
+-- 最大マップサイズは256*256なのでutcEOLはIntに32bit符号付き整数に収まる
+type UTC = Int
 
 utcEOL :: (Width,Height) -> UTC
 utcEOL (w,h) = 127*w*h*16
