@@ -334,21 +334,27 @@ step Machine{ mC, mS, mD, mE, mProg } = do
 
 run :: Machine -> IO ()
 run m = do
+  print =<< readIORef (mS m)
   b <- step m
   if b then
     run m
   else
     return ()
 
-run1sec :: Machine -> IO ()
-run1sec m = go 0
+runNStep :: Machine -> Int -> IO Bool
+runNStep m n = go 0
   where
-    go :: Int -> IO ()
+    go :: Int -> IO Bool
     go cnt
-      | cnt > 3072 * 10^(3::Int) = error "catastrophic failure"
+      | cnt > n = return False
       | otherwise = do
           b <- step m
           if b then
             go (cnt+1)
           else
-            return ()
+            return True
+
+run1sec :: Machine -> IO ()
+run1sec m = do
+  b <- runNStep m (3072 * 10^(3::Int))
+  unless b $ error "catastrophic failure"
