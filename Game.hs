@@ -1,5 +1,7 @@
 module Game where
 
+import Data.Array.IArray
+
 data Symbol
   = Empty     -- ^ 1
   | Wall      -- ^ 0
