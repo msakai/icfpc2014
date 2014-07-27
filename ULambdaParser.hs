@@ -44,6 +44,7 @@ parseCompound = choice $ map try
             , parseEBegin
             , parseELet
             , parseELetRec
+            , parseELetStar
             , parseEPrimOp1
             , parseEPrimOp2
             , parseECall
@@ -69,6 +70,9 @@ parseDefn = spaces >> parens ((,) <$> parseIdent <*> parseExpr)
 
 parseELetRec :: Parser Expr
 parseELetRec = string "letrec" >> ELetRec <$> parseDefns <*> parseExpr
+
+parseELetStar :: Parser Expr
+parseELetStar = string "let*" >> ELetStar <$> parseDefns <*> parseExpr
 
 parseEPrimOp1 :: Parser Expr
 parseEPrimOp1 = EPrimOp1 <$> pPrimOp1 <*> parseExpr

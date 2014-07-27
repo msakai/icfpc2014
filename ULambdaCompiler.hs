@@ -123,6 +123,16 @@ compileExpr env = f
         s <- compileExpr envBody body
         emit (s++[RTN])
       return $ [DUM n] ++ ss ++ [LDF l, RAP n]
+    f (ELetStar defs body) = do
+      let g ss i ef [] = do
+            s <- compileExpr (ef:env) body
+            l <- emit (ss++s++[RTN])
+            let n = length defs
+            return $ replicate n (LDC 1234) ++ [LDF l, AP n]
+          g ss i ef ((v,vbody):defs) = do
+            s <- compileExpr (ef:env) vbody
+            g (ss++s++[ST 0 i]) (i+1) (Map.insert v i ef) defs
+      g [] 0 Map.empty defs
     f (EPrimOp1 op arg) = do
       s <- f arg
       case op of
@@ -214,6 +224,36 @@ test_fact = compile [] $
   ELetRec
     [ ("fact", ELambda ["n"] $ EIf ("n" .==. 0) 1 ("n" * (ECall "fact" ["n" - 1]))) ]
     (ECall "fact" [4])
+
+-- => 4
+test_letstar :: [Inst]
+test_letstar = compile [] $
+  ELetStar
+    [ ("a", 1)
+    , ("b", "a" + 2)
+    , ("c", "a" + "b")
+    ]
+    "c"
+
+-- => 4
+test_letstar2 :: [Inst]
+test_letstar2 = compile [] $
+  ELet [ ("a", 100) ] $ 
+    ELetStar
+      [ ("a", 1)
+      , ("b", "a" + 2)
+      , ("c", "a" + "b")
+      ]
+      "c"
+
+-- *** Exception: no such variable "b" in scope
+test_letstar3 :: [Inst]
+test_letstar3 = compile [] $
+  ELetStar
+    [ ("a", 1)
+    , ("b", "a" + "b")
+    ]
+    "b"
 
 exampleAI :: [Inst]
 exampleAI = compileWithDefinitions [step] [] e

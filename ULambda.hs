@@ -44,6 +44,7 @@ data Expr
   | EBegin [Expr]
   | ELet [(Ident, Expr)] Expr
   | ELetRec [(Ident, Expr)] Expr
+  | ELetStar [(Ident, Expr)] Expr
   | EPrimOp1 Ident Expr -- ATOM, CAR, CDR
   | EPrimOp2 Ident Expr Expr -- ADD, SUB, MUL, DIV, CEQ, CGT, CGTE, CONS
   | ECall Expr [Expr]

@@ -33,6 +33,31 @@ ai01 = compileWithDefinitions [step, defNth, defLookupMap, defMove, defTurnClock
                     (tuple ["state", "lambda-man-dir"])
       }
 
+ai01' :: [Inst]
+ai01' = compileWithDefinitions [step, defNth, defLookupMap, defMove, defTurnClockwise] ["initial-world", "ghost-progs"] e
+  where
+    e = tuple [42, "step"]
+
+    step =
+      TopLevelFuncDefinition
+      { funcName   = "step"
+      , funcParams = ["state","world"]
+      , funcBody   = 
+          ELetStar
+            [ ("current-map", tproj 4 0 "world")
+            , ("lambda-man", tproj 4 1 "world")
+            , ("ghosts", tproj 4 2 "world")
+            , ("fruits", tproj 4 3 "world")
+            , ("lambda-man-pos", tproj 5 1 "lambda-man")
+            , ("lambda-man-dir", tproj 5 2 "lambda-man")
+            , ("lambda-man-next-pos", move "lambda-man-pos" "lambda-man-dir")
+            , ("cell", lookupMap "current-map" "lambda-man-next-pos")
+            ] $
+            EIf ("cell" .==. wall)
+              (tuple ["state" + 1, turnClockWise "lambda-man-dir"])
+              (tuple ["state", "lambda-man-dir"])
+      }
+
 wall = 0
 [up, right, down, left] = map EConst [0..3]
 
