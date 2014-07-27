@@ -1,4 +1,4 @@
-{-# LANGUAGE NamedFieldPuns, BangPatterns, GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE NamedFieldPuns, BangPatterns, GeneralizedNewtypeDeriving, OverloadedStrings #-}
 {-# OPTIONS_GHC -Wall #-}
 module LambdaManCompiler
   ( Ident
@@ -12,6 +12,7 @@ import Data.Int
 import Data.List (intercalate)
 import Data.Map (Map)
 import qualified Data.Map as Map
+import Data.String
 
 import LambdaManCPU
 
@@ -208,22 +209,51 @@ compileExpr env = f
       return $ [LDF l]
 
 -- ---------------------------------------------------------------
+-- EDSL combinators
+-- ---------------------------------------------------------------
+
+instance Num Expr where
+  (+) = EPrimOp2 "ADD"
+  (-) = EPrimOp2 "SUB"
+  (*) = EPrimOp2 "MUL"
+  abs    = error "Expr.abs is not implemented"
+  signum = error "Expr.signum is not implemented"
+  fromInteger = EConst . fromInteger
+
+instance IsString Expr where
+  fromString = ERef
+
+cons :: Expr -> Expr -> Expr
+cons = EPrimOp2 "CONS"
+
+nil :: Expr
+nil = EConst 0
+
+list :: [Expr] -> Expr
+list = foldr cons nil
+
+tuple :: [Expr] -> Expr
+tuple [] = error "empty tuple"
+tuple [x] = x
+tuple (x:xs) = cons x (tuple xs)
+
+-- ---------------------------------------------------------------
 -- test case
 -- ---------------------------------------------------------------
 
 test :: [Inst]
 test = compile e [to,go]
   where
-    e  = ECall (ERef "go") [EConst 1]
+    e  = ECall "go" [1]
     to = TopLevelFuncDefinition
          { funcName   = "to"
          , funcParams = ["n"]
-         , funcBody   = ECall (ERef "go") [EPrimOp2 "SUB" (ERef "n") (EConst 1)]
+         , funcBody   = ECall "go" ["n" - 1]
          }
     go = TopLevelFuncDefinition
          { funcName   = "go"
          , funcParams = ["n"]
-         , funcBody   = ECall (ERef "to") [EPrimOp2 "ADD" (ERef "n") (EConst 1)]
+         , funcBody   = ECall "to" ["n" + 1]
          }
 {-
 [DUM 2,LDF 16,LDF 6,LDF 12,RAP 2,RTN] ++
@@ -237,10 +267,10 @@ test2 = compile e []
   where
     e  =
       ELetRec
-        [ ("to", ELambda ["n"] $ ECall (ERef "go") [EPrimOp2 "SUB" (ERef "n") (EConst 1)])
-        , ("go", ELambda ["n"] $ ECall (ERef "to") [EPrimOp2 "ADD" (ERef "n") (EConst 1)])
+        [ ("to", ELambda ["n"] $ ECall "go" ["n" - 1])
+        , ("go", ELambda ["n"] $ ECall "to" ["n" + 1])
         ]
-        (ECall (ERef "go") [EConst 1])
+        (ECall "go" [1])
 {-
 [DUM 0,LDF 20,RAP 0,RTN]
 4:[LD 0 0,LDC 1,SUB,LD 1 1,AP 1,RTN]
@@ -252,11 +282,11 @@ test2 = compile e []
 exampleAI :: [Inst]
 exampleAI = compile e [step]
   where
-    e = EPrimOp2 "CONS" (EConst 42) (ERef "step")
+    e = tuple [42, "step"]
     step =
       TopLevelFuncDefinition
       { funcName   = "step"
       , funcParams = ["state","world"]
-      , funcBody   = EPrimOp2 "CONS" (EPrimOp2 "ADD" (ERef "state") (EConst 1)) (EConst right)
+      , funcBody   = tuple ["state" + 1, right]
       }
-    [up, right, down, left] = [(0::Int32)..3]
+    [up, right, down, left] = map EConst [0..3]
