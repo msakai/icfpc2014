@@ -208,6 +208,13 @@ test2 = compile [] $
     ]
     (ECall "go" [1])
 
+-- try it with <http://icfpcontest.org/lman.html>
+test_fact :: [Inst]
+test_fact = compile [] $
+  ELetRec
+    [ ("fact", ELambda ["n"] $ EIf ("n" .==. 0) 1 ("n" * (ECall "fact" ["n" - 1]))) ]
+    (ECall "fact" [4])
+
 exampleAI :: [Inst]
 exampleAI = compileWithDefinitions [step] [] e
   where
