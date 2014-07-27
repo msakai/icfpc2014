@@ -55,7 +55,7 @@ data TopLevelFuncDefinition
   , funcParams  :: [Ident]
   , funcBody    :: Expr
   }
-
+  deriving (Show)
 -- ---------------------------------------------------------------
 -- EDSL combinators
 -- ---------------------------------------------------------------
