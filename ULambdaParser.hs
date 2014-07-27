@@ -38,6 +38,17 @@ parseIdent :: Parser String
 parseIdent = spaces >> (:) <$> letter <*> many (letter <|> digit) >>= (spaces >>) .  return
 
 parseCompound :: Parser Expr
+parseCompound = choice $ map try
+            [ parseESet
+            , parseEIf
+            , parseEBegin
+            , parseELet
+            , parseELetRec
+            , parseEPrimOp1
+            , parseEPrimOp2
+            , parseECall
+            , parseELambda ]
+{-
 parseCompound = parseESet
             <|> parseEIf
             <|> parseEBegin
@@ -47,7 +58,7 @@ parseCompound = parseESet
             <|> parseEPrimOp2
             <|> parseECall
             <|> parseELambda
-       
+-}       
 parseESet :: Parser Expr
 parseESet = string "set!" >> ESet <$> parseIdent <*> parseExpr
 
