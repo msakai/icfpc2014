@@ -1,50 +1,17 @@
 {-# LANGUAGE NamedFieldPuns, BangPatterns, GeneralizedNewtypeDeriving, OverloadedStrings #-}
 {-# OPTIONS_GHC -Wall #-}
-module LambdaManCompiler
-  ( Ident
-  , Expr (..)
-  , TopLevelFuncDefinition
-  , compile
+module ULambdaCompiler
+  ( compile
   ) where
 
 import Control.Monad.State
-import Data.Int
 import Data.List (intercalate)
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.String
 
 import LambdaManCPU
-
--- ---------------------------------------------------------------
--- language definition
--- ---------------------------------------------------------------
-
-type Ident = String
-
-data Expr
-  = EConst Int32
-  | ERef Ident
-  | ESet Ident Expr
-  | EIf Expr Expr Expr
-  | EBegin [Expr]
-  | ELet [(Ident, Expr)] Expr
-  | ELetRec [(Ident, Expr)] Expr
-  | EPrimOp1 Ident Expr -- ATOM, CAR, CDR
-  | EPrimOp2 Ident Expr Expr -- ADD, SUB, MUL, DIV, CEQ, CGT, CGTE, CONS
-  | ECall Expr [Expr]
-  | ELambda [Ident] Expr
-
-data TopLevelFuncDefinition
-  = TopLevelFuncDefinition
-  { funcName    :: Ident
-  , funcParams  :: [Ident]
-  , funcBody    :: Expr
-  }
-
--- ---------------------------------------------------------------
--- compiler
--- ---------------------------------------------------------------
+import ULambda
 
 data Label
   = GenLabel {-# UNPACK #-} !Int
@@ -63,7 +30,6 @@ lookupVarSlot name = f 0
       case Map.lookup name e of
         Just i -> (n,i)
         _ -> f (n+1) es
-
 
 newtype M a = M (State (Int, Map Label InstSeq) a) deriving Monad
 
@@ -207,35 +173,6 @@ compileExpr env = f
       s <- compileExpr (Map.fromList (zip params [0..]) : env) body
       l <- emit $ s ++ [RTN]
       return $ [LDF l]
-
--- ---------------------------------------------------------------
--- EDSL combinators
--- ---------------------------------------------------------------
-
-instance Num Expr where
-  (+) = EPrimOp2 "ADD"
-  (-) = EPrimOp2 "SUB"
-  (*) = EPrimOp2 "MUL"
-  abs    = error "Expr.abs is not implemented"
-  signum = error "Expr.signum is not implemented"
-  fromInteger = EConst . fromInteger
-
-instance IsString Expr where
-  fromString = ERef
-
-cons :: Expr -> Expr -> Expr
-cons = EPrimOp2 "CONS"
-
-nil :: Expr
-nil = EConst 0
-
-list :: [Expr] -> Expr
-list = foldr cons nil
-
-tuple :: [Expr] -> Expr
-tuple [] = error "empty tuple"
-tuple [x] = x
-tuple (x:xs) = cons x (tuple xs)
 
 -- ---------------------------------------------------------------
 -- test case
