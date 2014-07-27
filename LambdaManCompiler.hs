@@ -192,7 +192,8 @@ compileExpr env = f
       s2 <- f func
       return $ s1 ++ s2 ++ [AP n]
     f (ELambda params body) = do
-      l <- emit =<< compileExpr (Map.fromList (zip params [0..]) : env) body
+      s <- compileExpr (Map.fromList (zip params [0..]) : env) body
+      l <- emit $ s ++ [RTN]
       return $ [LDF l]
 
 -- ---------------------------------------------------------------
