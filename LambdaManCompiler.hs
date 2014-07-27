@@ -27,9 +27,8 @@ data Expr
   | ESet Ident Expr
   | EIf Expr Expr Expr
   | EBegin [Expr]
-{-
-  | ELet [Ident] Expr
--}
+  | ELet [(Ident, Expr)] Expr
+  | ELetRec [(Ident, Expr)] Expr
   | EPrimOp1 Ident Expr -- ATOM, CAR, CDR
   | EPrimOp2 Ident Expr Expr -- ADD, SUB, MUL, DIV, CEQ, CGT, CGTE, CONS
   | ECall Expr [Expr]
@@ -161,12 +160,24 @@ compileExpr env = f
     f (EBegin xs) = do
       ss <- mapM f xs
       return $ intercalate [DBUG] ss -- 単純にスタックから値をPOPする命令がないのでDBUGを使ってる
-{-
     f (ELet vs body) = do
       let n = length vs
-      s <- compileExpr (Map.fromList (zip vs [0..]) : env) body
-      return $ [DUM n] ++ s
--}
+          envDefn = Map.empty : env
+          envBody = Map.fromList (zip (map fst vs) [0..]) : env
+      ss <- liftM concat $ mapM (compileExpr envDefn . snd) vs
+      l <- do
+        s <- compileExpr envBody body
+        emit (s++[RTN])
+      return $ [DUM n] ++ ss ++ [LDF l, RAP n]
+    f (ELetRec vs body) = do
+      let n = length vs
+          envDefn = envBody
+          envBody = Map.fromList (zip (map fst vs) [0..]) : env
+      ss <- liftM concat $ mapM (compileExpr envDefn . snd) vs
+      l <- do
+        s <- compileExpr envBody body
+        emit (s++[RTN])
+      return $ [DUM n] ++ ss ++ [LDF l, RAP n]
     f (EPrimOp1 op arg) = do
       s <- f arg
       case op of
@@ -219,4 +230,21 @@ test = compile e [to,go]
 go(6):[LD 0 0,LDC 1,ADD,LD 1 0,AP 1,RTN] ++
 main(12):[LDC 1,LD 0 1,AP 1,RTN] ++
 to(16):[LD 0 0,LDC 1,SUB,LD 1 1,AP 1,RTN] 
+-}
+
+test2 :: [Inst]
+test2 = compile e []
+  where
+    e  =
+      ELetRec
+        [ ("to", ELambda ["n"] $ ECall (ERef "go") [EPrimOp2 "SUB" (ERef "n") (EConst 1)])
+        , ("go", ELambda ["n"] $ ECall (ERef "to") [EPrimOp2 "ADD" (ERef "n") (EConst 1)])
+        ]
+        (ECall (ERef "go") [EConst 1])
+{-
+[DUM 0,LDF 20,RAP 0,RTN]
+4:[LD 0 0,LDC 1,SUB,LD 1 1,AP 1,RTN]
+10:[LD 0 0,LDC 1,ADD,LD 1 0,AP 1,RTN]
+16:[LDC 1,LD 0 1,AP 1,RTN]
+20:[DUM 2,LDF 4,LDF 10,LDF 16,RAP 2,RTN]
 -}
