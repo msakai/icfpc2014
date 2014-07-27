@@ -2,6 +2,7 @@
 {-# OPTIONS_GHC -Wall #-}
 module ULambdaCompiler
   ( compile
+  , compileWithDefinitions
   ) where
 
 import Control.Monad.State
@@ -12,6 +13,33 @@ import Data.String
 
 import LambdaManCPU
 import ULambda
+
+-- ---------------------------------------------------------------
+-- test case
+-- ---------------------------------------------------------------
+
+compile :: [Ident] -> Expr -> [Inst]
+compile params e = map (mapAddr (addrs Map.! )) code2
+  where
+    (code,defs) = runM $ do
+      let env = [ Map.fromList (zip [v | v <- params] [0..]) ]
+      s <- compileExpr env e
+      return $ s ++ [RTN]
+    (code2,addrs) = link1 (Map.toAscList defs) (length code) (code, Map.empty)
+
+    link1 :: [(Label,InstSeq)] -> InstAddr -> (InstSeq, Map Label InstAddr) -> (InstSeq, Map Label InstAddr)
+    link1 [] _ result = result
+    link1 ((label,block):defs) offset (code, table) =
+      link1 defs (offset + length block) (code ++ block, Map.insert label offset table)
+
+compileWithDefinitions :: [TopLevelFuncDefinition] -> [Ident] -> Expr -> [Inst]
+compileWithDefinitions funcs params main  = compile params e
+  where
+    e = ELetRec [(funcName func, ELambda [p | p <- funcParams func] (funcBody func)) | func <- funcs] main
+
+-- ---------------------------------------------------------------
+-- implementation
+-- ---------------------------------------------------------------
 
 data Label
   = GenLabel {-# UNPACK #-} !Int
@@ -54,60 +82,6 @@ emitWithName name code = M $ do
   put $ (n, Map.insert l code defs)
   return l
 
-compile :: Expr -> [TopLevelFuncDefinition] -> [Inst]
-compile main funcs = map (mapAddr (addrs Map.! )) code2
-  where
-    (code,defs) = runM $ compileMain main funcs
-    (code2,addrs) = link1 (Map.toAscList defs) (length code) (code, Map.empty)
-
-    link1 :: [(Label,InstSeq)] -> InstAddr -> (InstSeq, Map Label InstAddr) -> (InstSeq, Map Label InstAddr)
-    link1 [] _ result = result
-    link1 ((label,block):defs) offset (code, table) =
-      link1 defs (offset + length block) (code ++ block, Map.insert label offset table)
-
-    mapAddr :: (a -> b) -> GInst a -> GInst b
-    mapAddr _ (LDC n)      = LDC n
-    mapAddr _ (LD n i)     = LD n i
-    mapAddr _ ADD          = ADD       
-    mapAddr _ SUB          = SUB       
-    mapAddr _ MUL          = MUL       
-    mapAddr _ DIV          = DIV       
-    mapAddr _ CEQ          = CEQ       
-    mapAddr _ CGT          = CGT       
-    mapAddr _ CGTE         = CGTE      
-    mapAddr _ ATOM         = ATOM      
-    mapAddr _ CONS         = CONS
-    mapAddr _ CAR          = CAR       
-    mapAddr _ CDR          = CDR       
-    mapAddr fun (SEL t f)  = SEL (fun t) (fun f)
-    mapAddr _ JOIN         = JOIN      
-    mapAddr fun (LDF f)    = LDF (fun f)
-    mapAddr _ (AP n)       = AP n    
-    mapAddr _ RTN          = RTN       
-    mapAddr _ (DUM n)      = DUM n
-    mapAddr _ (RAP n)      = RAP n
-    mapAddr _ STOP         = STOP      
-    mapAddr fun (TSEL t f) = TSEL (fun t) (fun f)
-    mapAddr _ (TAP n)      = TAP n
-    mapAddr _ (TRAP n)     = TRAP n
-    mapAddr _ (ST n i)     = ST n i
-    mapAddr _ DBUG         = DBUG      
-    mapAddr _ BRK          = BRK
-
-compileMain :: Expr -> [TopLevelFuncDefinition] -> M InstSeq
-compileMain main funcs = do
-  let n = length funcs
-      topEnv = [ Map.fromList (zip [funcName func | func <- funcs] [0..]) ]
-
-  ls <- forM funcs $ \TopLevelFuncDefinition{ funcName, funcParams, funcBody } -> do
-    let env = Map.fromList (zip funcParams [0..]) : topEnv
-    s <- compileExpr env funcBody
-    emitWithName funcName (s ++ [RTN])
-
-  s <- compileExpr topEnv main
-  lmain <- emitWithName "main" (s ++ [RTN])
-  return $ [DUM n] ++ map LDF (ls++[lmain]) ++ [RAP n, RTN]
-
 compileExpr :: Env -> Expr -> M InstSeq
 compileExpr env = f
   where
@@ -121,8 +95,12 @@ compileExpr env = f
         (n,i) -> return $ s ++ [ST n i, LDC 0]
     f (EIf c tbody fbody) = do
       s1 <- f c
-      lT <- emit =<< f tbody
-      lF <- emit =<< f fbody
+      lT <- do
+        s <- f tbody
+        emit (s ++ [JOIN])
+      lF <- do
+        s <- f fbody
+        emit (s ++ [JOIN])
       return $ s1 ++ [SEL lT lF]
     f (EBegin xs) = do
       ss <- mapM f xs
@@ -174,12 +152,41 @@ compileExpr env = f
       l <- emit $ s ++ [RTN]
       return $ [LDF l]
 
+mapAddr :: (a -> b) -> GInst a -> GInst b
+mapAddr _ (LDC n)      = LDC n
+mapAddr _ (LD n i)     = LD n i
+mapAddr _ ADD          = ADD       
+mapAddr _ SUB          = SUB       
+mapAddr _ MUL          = MUL       
+mapAddr _ DIV          = DIV       
+mapAddr _ CEQ          = CEQ       
+mapAddr _ CGT          = CGT       
+mapAddr _ CGTE         = CGTE      
+mapAddr _ ATOM         = ATOM      
+mapAddr _ CONS         = CONS
+mapAddr _ CAR          = CAR       
+mapAddr _ CDR          = CDR       
+mapAddr fun (SEL t f)  = SEL (fun t) (fun f)
+mapAddr _ JOIN         = JOIN      
+mapAddr fun (LDF f)    = LDF (fun f)
+mapAddr _ (AP n)       = AP n    
+mapAddr _ RTN          = RTN       
+mapAddr _ (DUM n)      = DUM n
+mapAddr _ (RAP n)      = RAP n
+mapAddr _ STOP         = STOP      
+mapAddr fun (TSEL t f) = TSEL (fun t) (fun f)
+mapAddr _ (TAP n)      = TAP n
+mapAddr _ (TRAP n)     = TRAP n
+mapAddr _ (ST n i)     = ST n i
+mapAddr _ DBUG         = DBUG      
+mapAddr _ BRK          = BRK
+
 -- ---------------------------------------------------------------
 -- test case
 -- ---------------------------------------------------------------
 
 test :: [Inst]
-test = compile e [to,go]
+test = compileWithDefinitions [to,go] [] e
   where
     e  = ECall "go" [1]
     to = TopLevelFuncDefinition
@@ -192,32 +199,24 @@ test = compile e [to,go]
          , funcParams = ["n"]
          , funcBody   = ECall "to" ["n" + 1]
          }
-{-
-[DUM 2,LDF 16,LDF 6,LDF 12,RAP 2,RTN] ++
-go(6):[LD 0 0,LDC 1,ADD,LD 1 0,AP 1,RTN] ++
-main(12):[LDC 1,LD 0 1,AP 1,RTN] ++
-to(16):[LD 0 0,LDC 1,SUB,LD 1 1,AP 1,RTN] 
--}
 
 test2 :: [Inst]
-test2 = compile e []
-  where
-    e  =
-      ELetRec
-        [ ("to", ELambda ["n"] $ ECall "go" ["n" - 1])
-        , ("go", ELambda ["n"] $ ECall "to" ["n" + 1])
-        ]
-        (ECall "go" [1])
-{-
-[DUM 0,LDF 20,RAP 0,RTN]
-4:[LD 0 0,LDC 1,SUB,LD 1 1,AP 1,RTN]
-10:[LD 0 0,LDC 1,ADD,LD 1 0,AP 1,RTN]
-16:[LDC 1,LD 0 1,AP 1,RTN]
-20:[DUM 2,LDF 4,LDF 10,LDF 16,RAP 2,RTN]
--}
+test2 = compile [] $
+  ELetRec
+    [ ("to", ELambda ["n"] $ ECall "go" ["n" - 1])
+    , ("go", ELambda ["n"] $ ECall "to" ["n" + 1])
+    ]
+    (ECall "go" [1])
+
+-- try it with <http://icfpcontest.org/lman.html>
+test_fact :: [Inst]
+test_fact = compile [] $
+  ELetRec
+    [ ("fact", ELambda ["n"] $ EIf ("n" .==. 0) 1 ("n" * (ECall "fact" ["n" - 1]))) ]
+    (ECall "fact" [4])
 
 exampleAI :: [Inst]
-exampleAI = compile e [step]
+exampleAI = compileWithDefinitions [step] [] e
   where
     e = tuple [42, "step"]
     step =
