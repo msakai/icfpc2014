@@ -67,3 +67,22 @@ utcFruit2Expire = 127*480
 
 frightModeDuration :: UTC
 frightModeDuration = 127*20
+
+data Dir
+  = DirUp    -- ^ 0
+  | DirRight -- ^ 1
+  | DirDown  -- ^ 2
+  | DirLeft  -- ^ 3
+  deriving (Eq, Ord, Show, Bounded, Enum)
+
+oppositeDir :: Dir -> Dir
+oppositeDir DirUp    = DirDown
+oppositeDir DirDown  = DirUp
+oppositeDir DirLeft  = DirRight
+oppositeDir DirRight = DirLeft
+
+data Vitality
+  = Standard   -- ^ 0
+  | FrightMode -- ^ 1
+  | Invisible  -- ^ 2
+  deriving (Eq, Ord, Show, Bounded, Enum)
