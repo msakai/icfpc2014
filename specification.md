@@ -96,7 +96,7 @@ LamCo社が構築しようとしていたアーケードゲームではλマン�
 
 λマンは壁にかこまれた2次元迷図上で活動し，追い掛けてくる幽霊を回避しつつ，食えるだけの錠剤を食わなければならない．λマンには命が3つあって，幽霊に掴まると命を1つは失なう．λマンの命がすべてなくなった時点でゲームオーバーである．錠剤をすべて食べればλマンはそのレベルを完遂したことになる．
 
-錠剤以外に，λマンはパワー錠剤も食う．パワー錠剤を食うとλマンは短時間だけ幽霊を食う能力を得る．
+錠剤以外に，λマンは強力錠剤も食う．強力錠剤を食うとλマンは短時間だけ幽霊を食う能力を得る．
 
 フルーツを食えばボーナスポイントが付く．フルーツは定まった時間ごと？に地図上の特定の位置に現れる．
 
@@ -107,7 +107,7 @@ LamCo社が構築しようとしていたアーケードゲームではλマン�
 |  <space>  |      空     |
 |    \#	    |      壁     |
 |    \.	    |     錠剤    |
-|    o      |  パワー錠剤 |
+|    o      |  強力錠剤 |
 |    %      |     フルーツ    |
 |    \\	    |   λマン    |
 |    =      |     幽霊    |
@@ -122,10 +122,10 @@ LamCo社が構築しようとしていたアーケードゲームではλマン�
 2. つぎに，すべてのアクション（イジケモードの解除，フルーツの出現/消滅）がここで起こる．
 3. つぎに，λマンが錠剤，スーパー錠剤，フルーツと同じセルにあるかをチェックする．<br>
     1. λマンが錠剤と同じセルにあれば，λマンは錠剤を食べ，錠剤はゲームからなくなる．
-    2. λマンがパワー錠剤と同じセルにあれば，λマンは錠剤を食べ，パワー錠剤はゲームからなくなる．
+    2. λマンが強力錠剤と同じセルにあれば，λマンは錠剤を食べ，強力錠剤はゲームからなくなる．
     3. λマンがフルーツと同じセルにあれば，λマンは錠剤を食べ，フルーツはゲームからなくなる．
 4. つぎに，1つあるいは複数の幽霊がλマンと同じセルにあれば，幽霊モードが有効かどうかによって，λマンが命を1つ失うか，幽霊を食うかのどちらかになる．詳細は後述．
-5. つぎに，通常の錠剤（すなわちパワー錠剤ではない）がすべて食べつくされたら，λマンの勝利で，ゲームは終了．
+5. つぎに，通常の錠剤（すなわち強力錠剤ではない）がすべて食べつくされたら，λマンの勝利で，ゲームは終了．
 6. つぎに，λマンの命の数が0なら，λマンの負けでゲームは終了．
 7. 最後に時刻刻みが1つ進む．
 
@@ -133,11 +133,11 @@ LamCo社が構築しようとしていたアーケードゲームではλマン�
 
 チクの最後でλマンが見えている幽霊と同じセルにいて，イジケモードが有効になっていなければ，λマンは命を1つ失う．この場合，λマンおよびすべての幽霊はただちにスタート地点に戻りその向きもスタート時点と同じ向きになる（したがって，次のチクの開始点ではλマンおよび幽霊はスタート地点にいる）．
 
-## パワー錠剤
+## 強力錠剤
 
-パワー錠剤を食うと，すべての幽霊は反転して反対方向に向き直前の位置に移動し，イジケモードが有効になる．イジケモードが有効な間に幽霊と同じセルをλマンが占めれば，幽霊は食われる．幽霊は食われたら，スタート地点に戻り，スタート時点での方向を向く．そうしてイジケモードが切れるまで見えなくなる．見えないあいだは幽霊は，食いも食われもしない．
+強力錠剤を食うと，すべての幽霊は反転して反対方向に向き直前の位置に移動し，イジケモードが有効になる．イジケモードが有効な間に幽霊と同じセルをλマンが占めれば，幽霊は食われる．幽霊は食われたら，スタート地点に戻り，スタート時点での方向を向く．そうしてイジケモードが切れるまで見えなくなる．見えないあいだは幽霊は，食いも食われもしない．
 
-イジケモードのときにパワー錠剤を食うと，イジケモードの時刻カウントはリセットされる．
+イジケモードのときに強力錠剤を食うと，イジケモードの時刻カウントはリセットされる．
 
 イジケモードが切れたら，すべての幽霊は見えるようになる．
 
@@ -148,7 +148,7 @@ LamCo社が構築しようとしていたアーケードゲームではλマン�
 
 錠剤1個が10点．
 
-パワー錠剤が50点．
+強力錠剤が50点．
 
 フルーツはその風味によって得点がことなる．フルーツはレベルで風味がちがい，それは以下のようになっている．
 
@@ -177,7 +177,7 @@ LamCo社が構築しようとしていたアーケードゲームではλマン�
 たとえば，15 * 18 = 270のサイズだとすると，これはレベル3の地図である．200 < 270 <= 300 だからである．
 
 イジケモードの間に最初に幽霊を食うと200点である．
-ひきつづき次のパワー錠剤を食うまでに幽霊を食うごとに得点は前の得点の2倍になり，上限は1600点である．
+ひきつづき次の強力錠剤を食うまでに幽霊を食うごとに得点は前の得点の2倍になり，上限は1600点である．
 
 | 食った幽霊         | 得点 |
 |:-------------------|-----:|
@@ -215,8 +215,8 @@ Ultimate Tick Clock (UTC)は現在のチク時刻である．
 | フルーツ1| 期限切れ 127 * 280              |
 | フルーツ2| 期限切れ 127 * 480              |
 
-それぞれのパワー錠剤を食うとイジケモードに以降する．
-イジケモードは，最近に食ったパワー錠剤を食った時点から一定の期間がたてば効力が消える．
+それぞれの強力錠剤を食うとイジケモードに以降する．
+イジケモードは，最近に食った強力錠剤を食った時点から一定の期間がたてば効力が消える．
 
 | イベント         | チク期間                        |
 |:-----------------|:--------------------------------|
@@ -293,9 +293,9 @@ Ultimate Tick Clock (UTC)は現在のチク時刻である．
 
 地図にあるすべての錠剤は到達可能である．
 
-地図のサイズ，幽霊の数，パワー錠剤の数は地図ごとに変る．
-簡単な地図ほど，小さく，幽霊の数は少く，パワー錠剤の密度は高い．
-難しい地図ほど，大きく，幽霊の数は多く，パワー錠剤の密度は低い．
+地図のサイズ，幽霊の数，強力錠剤の数は地図ごとに変る．
+簡単な地図ほど，小さく，幽霊の数は少く，強力錠剤の密度は高い．
+難しい地図ほど，大きく，幽霊の数は多く，強力錠剤の密度は低い．
 最大の地図サイズは 256 × 256 である．
 
 ## 幽霊と幽霊のプログラム
@@ -493,92 +493,121 @@ INT 0
 INT 1
 ```
 
-出力:
-レジスタ A: 1つめのλマンの x 座標
-レジスタ B: 1つめのλマンの y 座標
+- 出力:
+    - レジスタ A: 1つめのλマンの x 座標
+    - レジスタ B: 1つめのλマンの y 座標
+
 1つめのλマンの位置をレジスタAとレジスタBに格納する．
-単一のIn the single Lambda-Man version of the game, the first Lambda-Man is the only Lambda-Man.
+単一λマン版では，1つめのλマンが唯一のλマン．
 
+```
 INT 2
+```
 
-Out:
-Register A: Second Lambda-Man's x-ordinate
-Register B: Second Lambda-Man's y-ordinate
-Stores the second Lambda-Man's position in registers A (x-ordinate) and B (y-ordinate). In the single Lambda-Man version of the game, the behaviour of this interrupt is unknown.
+- 出力:
+    - レジスタ A:  2つめのλマンの x 座標
+    - レジスタ B:  2つめのλマンの y 座標
 
+2つめのλマンの位置をレジスタAとレジスタBに格納する．
+単一λマン版では，の割り込みの動作は不明．
+
+````
 INT 3
+```
 
-Out:
-Register A: this ghost's index
-Stores the ghost's index in register A.
+- 出力:
+    - レジスタ A: この幽霊の番号
 
+この幽霊の番号をレジスタAに格納する．
+
+```
 INT 4
+```
 
-In:
-Register A: ghost index
-Out:
-Register A: indexed ghost's starting x-ordinate
-Register B: indexed ghost's starting y-ordinate
-For the ghost with index read from register A, stores its starting position in registers A (x-ordinate) and B (y-ordinate).
+- 入力:
+    - A: 幽霊の番号
+- 出力
+    - レジスタ A: 番号で指定した幽霊の開始時の x 座標
+    - レジスタ B: 番号で指定した幽霊の開始時の y 座標
 
+レジスタAから読んだ番号の幽霊の開始時の位置をレジスタAとレジスタBに格納する．
+
+```
 INT 5
+```
 
-In:
-Register A: ghost index
-Out:
-Register A: indexed ghost's current x-ordinate
-Register B: indexed ghost's current y-ordinate
-For the ghost with index read from register A, stores its current position in registers A (x-ordinate) and B (y-ordinate).
+- 入力:
+    - A: 幽霊の番号
+- 出力
+    - レジスタ A: 番号で指定した幽霊の現在の x 座標
+    - レジスタ B: 番号で指定した幽霊の現在の y 座標
 
+レジスタAから読んだ番号の幽霊の現在の位置をレジスタAとレジスタBに格納する．
+
+```
 INT 6
+```
 
-In:
-Register A: ghost index
-Out:
-Register A: indexed ghost's current vitality
-Register B: indexed ghost's current direction
-For the ghost with index read from register A, stores its vitality in register A, and its direction in register B.
+- 入力:
+    - A: 幽霊の番号
+- 出力
+    - レジスタ A: 番号で指定した幽霊の現在のバイタリティ
+    - レジスタ B: 番号で指定した幽霊の現在の向き
 
-Vitality:
-0: standard;
-1: fright mode;
-2: invisible.
+レジスタAから読んだ番号の幽霊の現在のバイタリティをレジスタAに現在の向きをレジスタBに格納する．
+
+- バイタリティ:
+    - 0: 標準
+    - 1: イジケモード
+    - 2: 不可視モード
+
+```
 INT 7
+```
 
-In:
-Register A: map square x-ordinate
-Register B: map square y-ordinate
-Out:
-Register A: contents of map square
-Stores the contents of map square with index read from registers A (x-ordinate) and B (y-ordinate) in register A. If the co-ordinates lie outside the defined bounds of the map, stores 0.
+- 入力:
+    - レジスタ A: セルの x 座標
+    - レジスタ B: セルの y 座標
+- 出力:
+    - レジスタ A: 指定したセルの内容
 
-Contents:
-0: Wall (#)
-1: Empty (<space>)
-2: Pill
-3: Power pill
-4: Fruit
-5: Lambda-Man starting position
-6: Ghost starting position
+レジスタ A とレジスタ Bで指定した位置のセルの内容をレジスタ A に格納．指定した座標が地図外なら0が入る．
+
+- 内容
+    - 0: 壁 (#)
+    - 1: 空 (<space>)
+    - 2: 錠剤
+    - 3: 強力錠剤
+    - 4: フルーツ
+    - 5: λマンのスタート地点
+    - 6: 幽霊のスタート地点
+
+```
 INT 8
+```
 
-In:
-Register PC
-Register A..H
-Sends the current value of the PC and all registers to an external debug/trace agent.
+- 入力:
+    - レジスタ PC
+    - レジスタ A..H
 
-Examples
+PCの現在の値とすべてのレジスタの値を外部のデバッグ/トレースエージェントに送る．
 
-The following GHC programs illustrate the behaviour of some of the instructions:
+## 例
 
-miner.ghc
+以下のGHCプログラムは命令列のふるまいを説明するためのものである．
 
+- miner.ghc
+
+```
 ; Always try to go down.
 mov a,2
 int 0
 hlt
-flipper.ghc
+```
 
+- flipper.ghc
+
+```
 ; Go up if our x-ordinate is even, or down if it is odd.
 int 3          ; Get our ghost index in A.
 int 5          ; Get our x-ordinate in A.
@@ -590,8 +619,11 @@ jeq 7,b,1      ; Don't change anything if x-ordinate is odd.
 mov a,0        ; We only get here if x-ordinate was even, so move up.
 int 0          ; This is line 7, the target of the above jump. Now actually set the direction.
 hlt            ; Stop.
-fickle.ghc
+```
 
+- fickle.ghc
+
+```
 ; Keep track of how long we have spent travelling in each direction.
 ; Try to go in the direction we've travelled in least.
 
@@ -615,10 +647,11 @@ int 6          ; Get out current direction in B.
 inc [b]        ; Increment corresponding count.
 hlt            ; Stop.
 Errors
+```
 
 As mentioned above, if an instruction causes an error then execution halts. If prior to this the new direction of the Ghost was set (with INT 0) then this will be the requested move of the ghost and the game will continue. If the direction is not set then the ghost's requested move will be the same as its previous move.
 
-Lambda-Man CPU
+# Lambda-Man CPU
 
 We have been able to recover some documentation about the programming environment used by the Lambda-Man AI team, including their processor ISA and some bits of assembly code. We also know that the Lambda-Man AI team, being LISP fanatics, used some form of LISP but unfortunately we have not been able to find any of their LISP code, nor their compiler.
 
@@ -628,32 +661,36 @@ Fortunately we do have the original documentation of the processor which describ
 
 The sections below include excerpts from the original documentation along with our own comments.
 
-General architecture
+## General architecture
 
 The machine is stack based, with three different stacks used for different purposes. It has—for its time—a relatively large memory. The way the memory is accessed and organised is quite unusual: apart from the stacks that live in memory, the rest of the memory is used for a garbage collected heap, with the GC implemented by the hardware. Because of this there are no general purpose memory access instructions: all memory access is in one of these stacks or in the GC'd heap.
 
-CPU Registers
+## CPU Registers
 
 There are 4 programmer visible machine registers, all of which are for special purposes:
 
-%c: control register (program counter / instruction pointer)
-%s: data stack register
-%d: control stack register
-%e: environment frame register
-Memory stacks
+- %c: control register (program counter / instruction pointer)
+- %s: data stack register
+- %d: control stack register
+- %e: environment frame register
+
+## Memory stacks
 
 Three of the registers point into special data structures in memory:
 
-Data stack
-Control stack
-Environment frame chain
-The remainder of the memory is dedicated to the data heap.
+- Data stack
+- Control stack
+- Environment frame chain
+- The remainder of the memory is dedicated to the data heap.
 
-Control register and program code layout
+## Control register and program code layout
 
-The machine has logically separate address spaces for code versus data. The %c register is an instruction pointer, pointing to the next instruction to be executed. Programs are laid out from low addresses to high. The effect of most instructions on the instruction pointer is simply to increment its value by one.
+The machine has logically separate address spaces for code versus data.
+The %c register is an instruction pointer, pointing to the next instruction to be executed. 
+Programs are laid out from low addresses to high. 
+The effect of most instructions on the instruction pointer is simply to increment its value by one.
 
-Data stack and register
+## Data stack and register
 
 The data stack is used to save intermediate data values during calculations, and to return results from function calls.
 
@@ -661,7 +698,7 @@ It is a logically contiguous stack. The %s register points to the top of the sta
 
 Many of the instructions simply pop and push values on the data stack. For example the ADD instruction pops two integer values off the stack and pushes back their sum.
 
-Control stack and register
+# Control stack and register
 
 The control stack is used to save return information in function calls. It saves return address and environment frame pointers.
 
@@ -669,7 +706,7 @@ It is a logically contiguous stack.
 
 Only the complex control flow instructions affect the control stack and register. See SEL/JOIN and AP/RAP/RTN for details.
 
-Environment frames and register
+## Environment frames and register
 
 The environment is used for storing local variables, including function parameters. There is an instruction for loading values from the environment onto the top of the data stack. The environment consists of a chain of frames, which is used to implement nested variable scopes within higher level languages, such as local blocks with extra local variables and functions.
 
@@ -679,7 +716,7 @@ Each frame consists of a pointer to its parent frame and zero or more data value
 
 (We believe in the real hardware this feature was implemented in microcode, with internal registers to cache the outermost frame and a fixed number of the inner most frames for quick access).
 
-Data heap and data values
+## Data heap and data values
 
 The machine makes extensive use of dynamic allocations and has built-in support for a garbage collected data heap. Values in the data stack and in environment frames can be pointers into the heap.
 
@@ -689,26 +726,34 @@ There are three instructions for manipulating pairs: allocating a pair, accessin
 
 All program data structures have to be represented using combinations of pairs and integers (and sometimes closures).
 
-Instruction reference
+# Instruction reference
 
-LDC - load constant
+-----
 
-Synopsis: load an immediate literal;
-          push it onto the data stack
-Syntax:  LDC $n
-Example: LDC 3
-Effect:
+- LDC - load constant
+
+- Synopsis: load an immediate literal;
+    - push it onto the data stack
+- Syntax:  LDC $n
+- Example: LDC 3
+- Effect:
+
+```
   %s := PUSH(SET_TAG(TAG_INT,$n),%s)
   %c := %c+1
+```
 
+-----
 
-LD - load from environment
+- LD - load from environment
 
-Synopsis: load a value from the environment;
-          push it onto the data stack
-Syntax:  LD $n $i
-Example: LD 0 1
-Effect:
+- Synopsis: load a value from the environment;
+    - push it onto the data stack
+- Syntax:  LD $n $i
+- Example: LD 0 1
+- Effect:
+
+```
   $fp := %e
   while $n > 0 do            ; follow chain of frames to get n'th frame
   begin
@@ -718,16 +763,20 @@ Effect:
   $v := FRAME_VALUE($fp, $i) ; i'th element of frame
   %s := PUSH($v,%s)          ; push onto the data stack
   %c := %c+1
-Notes:
-  Values within a frame are indexed from 0.
+```
 
+- Notes: Values within a frame are indexed from 0.
 
-ADD - integer addition
+-----
 
-Synopsis: pop two integers off the data stack;
-          push their sum
-Syntax: ADD
-Effect:
+- ADD - integer addition
+
+- Synopsis: pop two integers off the data stack;
+    - push their sum
+- Syntax: ADD
+- Effect:
+
+```
   $y,%s := POP(%s)
   $x,%s := POP(%s)
   if TAG($x) != TAG_INT then FAULT(TAG_MISMATCH)
@@ -735,14 +784,18 @@ Effect:
   $z := $x + $y
   %s := PUSH(SET_TAG(TAG_INT,$z),%s)
   %c := %c+1
+```
 
+-----
 
-SUB - integer subtraction
+- SUB - integer subtraction
 
-Synopsis: pop two integers off the data stack;
-          push the result of subtracting one from the other
-Syntax: SUB
-Effect:
+- Synopsis: pop two integers off the data stack;
+    - push the result of subtracting one from the other
+- Syntax: SUB
+- Effect:
+
+```
   $y,%s := POP(%s)
   $x,%s := POP(%s)
   if TAG($x) != TAG_INT then FAULT(TAG_MISMATCH)
@@ -750,14 +803,18 @@ Effect:
   $z := $x - $y
   %s := PUSH(SET_TAG(TAG_INT,$z),%s)
   %c := %c+1
+```
 
+-----
 
-MUL - integer multiplication
+- MUL - integer multiplication
 
-Synopsis: pop two integers off the data stack;
-          push their product
-Syntax: MUL
-Effect:
+- Synopsis: pop two integers off the data stack;
+    - push their product
+- Syntax: MUL
+- Effect:
+
+```
   $y,%s := POP(%s)
   $x,%s := POP(%s)
   if TAG($x) != TAG_INT then FAULT(TAG_MISMATCH)
@@ -765,14 +822,18 @@ Effect:
   $z := $x * $y
   %s := PUSH(SET_TAG(TAG_INT,$z),%s)
   %c := %c+1
+```
 
+-----
 
-DIV - integer division
+- DIV - integer division
 
-Synopsis: pop two integers off the data stack;
-          push the result of the integer division of one of the other
-Syntax: DIV
-Effect:
+- Synopsis: pop two integers off the data stack;
+    - push the result of the integer division of one of the other
+- Syntax: DIV
+- Effect:
+
+```
   $y,%s := POP(%s)
   $x,%s := POP(%s)
   if TAG($x) != TAG_INT then FAULT(TAG_MISMATCH)
@@ -780,11 +841,13 @@ Effect:
   $z := $x / $y
   %s := PUSH(SET_TAG(TAG_INT,$z),%s)
   %c := %c+1
+```
 
+-----
 
-CEQ - compare equal
+- CEQ - compare equal
 
-Synopsis: pop two integers off the data stack;
+- Synopsis: pop two integers off the data stack;
           test if they are equal;
           push the result of the test
 Syntax: CEQ
