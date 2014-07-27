@@ -2,9 +2,12 @@
 -- 壁に当たると右へ曲がるだけのAI
 module AI01 where
 
+import Text.ParserCombinators.Parsec
+
 import LambdaManCPU hiding (car, cdr)
 import ULambda
 import ULambdaCompiler
+import ULambdaParser
 
 ai01 :: [Inst]
 ai01 = compileWithDefinitions [step, defNth, defLookupMap, defMove, defTurnClockwise] ["initial-world", "ghost-progs"] e
@@ -65,12 +68,15 @@ nth :: Expr -> Expr -> Expr
 nth xs i = ECall "nth" [xs, i]
 
 defNth :: TopLevelFuncDefinition
+{-
 defNth =
   TopLevelFuncDefinition
   { funcName   = "nth"
   , funcParams = ["xs","i"]
   , funcBody   = EIf ("i" .==. 0) (car "xs") (nth (cdr "xs") ("i" - 1))
   }
+-}
+Right defNth = parse parseSC "" "(define (nth xs i) (if (= i 0) (car xs) (nth (cdr xs) (- i 1))))"
 
 lookupMap :: Expr -> Expr -> Expr
 lookupMap map pos = ECall "lookup-map" [map, pos]

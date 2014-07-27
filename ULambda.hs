@@ -11,16 +11,27 @@ module ULambda
   , (.>=.)
   , (.<.)
   , (.<=.)
+
   , cons
   , nil
   , car
   , cdr
   , list
+  , null'
+
   , tuple
   , tproj
+
+  , true
+  , false
+  , not'
+  , and'
+  , or'
   ) where
 
 import Data.Int
+import Data.Set (Set)
+import qualified Data.Set as Set
 import Data.String
 import Text.Printf
 
@@ -58,6 +69,40 @@ data TopLevelFuncDefinition
   , funcBody    :: Expr
   }
   deriving (Show)
+
+-- ---------------------------------------------------------------
+-- AST manipulation
+-- ---------------------------------------------------------------
+
+class Vars a where
+  fvs :: a -> Set Ident
+
+instance Vars a => Vars [a] where
+  fvs = Set.unions . map fvs
+
+instance Vars Expr where
+  fvs (EConst _)  = Set.empty
+  fvs (ERef v)    = Set.singleton v
+  fvs (ESet v e)  = Set.insert v (fvs e)
+  fvs (EIf c t e) = fvs [c,t,e]
+  fvs (EBegin xs) = fvs xs
+  fvs (ELet bs body) =
+    Set.union (Set.unions [fvs def | (_,def) <- bs])
+              (fvs body `Set.difference` Set.fromList [v | (v,_) <- bs])
+  fvs (ELetRec bs body) =
+    Set.unions (fvs body : [fvs def | (_,def) <- bs]) `Set.difference` Set.fromList [v | (v,_) <- bs]
+  fvs (ELetStar bs body) = f bs
+    where
+      f [] = fvs body
+      f ((v,def):bs) = Set.delete v (f bs) `Set.union` fvs def
+  fvs (EPrimOp1 _ arg) = fvs arg
+  fvs (EPrimOp2 _ arg1 arg2) = fvs [arg1, arg2]
+  fvs (ECall fun args) = fvs (fun : args)
+  fvs (ELambda params body) = fvs body `Set.difference` Set.fromList params
+
+-- vsに含まれない変数名を生成する
+gensym :: Set Ident -> Ident
+gensym vs = head $ [v | n <- [(1::Int)..], let v = "__v" ++ show n, v `Set.notMember` vs]
 
 -- ---------------------------------------------------------------
 -- EDSL combinators
@@ -104,6 +149,10 @@ cdr = EPrimOp1 "CDR"
 list :: [Expr] -> Expr
 list = foldr cons nil
 
+-- nilは0で表されていることに注意
+null' :: Expr -> Expr
+null' xs = EPrimOp1 "ATOM" xs
+
 tuple :: [Expr] -> Expr
 tuple [] = error "empty tuple"
 tuple [x] = x
@@ -116,3 +165,18 @@ tproj n i e | i>=n = error $ printf "tproj %d %d: should not happen" n i
 tproj 1 0 e = e -- (x) = x
 tproj n 0 e = car e
 tproj n i e = tproj (n-1) (i-1) (cdr e)
+
+true :: Expr
+true = 1
+
+false :: Expr
+false = 0
+
+not' :: Expr -> Expr
+not' e = e .==. 0
+
+and' :: Expr -> Expr -> Expr
+and' a b = EIf a b false
+
+or' :: Expr -> Expr -> Expr
+or' a b = EIf a true b
