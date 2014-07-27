@@ -248,3 +248,15 @@ test2 = compile e []
 16:[LDC 1,LD 0 1,AP 1,RTN]
 20:[DUM 2,LDF 4,LDF 10,LDF 16,RAP 2,RTN]
 -}
+
+exampleAI :: [Inst]
+exampleAI = compile e [step]
+  where
+    e = EPrimOp2 "CONS" (EConst 42) (ERef "step")
+    step =
+      TopLevelFuncDefinition
+      { funcName   = "step"
+      , funcParams = ["state","world"]
+      , funcBody   = EPrimOp2 "CONS" (EPrimOp2 "ADD" (ERef "state") (EConst 1)) (EConst right)
+      }
+    [up, right, down, left] = [(0::Int32)..3]
