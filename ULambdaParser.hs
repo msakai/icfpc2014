@@ -9,6 +9,15 @@ import qualified Data.Map as M
 import Text.ParserCombinators.Parsec hiding (spaces)
 import ULambda
 
+parseULambda :: Parser [TopLevelFuncDefinition]
+parseULambda = many1 parseSC
+
+parseSC :: Parser TopLevelFuncDefinition
+parseSC = spaces >> parens parseDefine
+
+parseDefine = spaces >> string "define" >> spaces >> parens (many1 parseIdent) >>= \ (f:xs) ->
+              parseExpr >>= \ e -> return (TopLevelFuncDefinition f xs e)
+
 parseExpr :: Parser Expr
 parseExpr = spaces >> (parseAtom <|> parens parseCompound)
 
