@@ -369,7 +369,6 @@ runNStep m n = go 0
     go cnt
       | cnt > n = return False
       | otherwise = do
-          print =<< readIORef (mS m)
           b <- step m
           if b then
             go (cnt+1)
