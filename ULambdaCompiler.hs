@@ -106,11 +106,11 @@ compileExpr env = f
       ss <- mapM f xs
       return $ intercalate [DBUG] ss -- 単純にスタックから値をPOPする命令がないのでDBUGを使ってる
     f (ELet defs body) = f $ ECall (ELambda (map fst defs) body) (map snd defs)
-    f (ELetRec vs body) = do
-      let n = length vs
+    f (ELetRec defs body) = do
+      let n = length defs
           envDefn = envBody
-          envBody = Map.fromList (zip (map fst vs) [0..]) : env
-      ss <- liftM concat $ mapM (compileExpr envDefn . snd) vs
+          envBody = Map.fromList (zip (map fst defs) [0..]) : env
+      ss <- liftM concat $ mapM (compileExpr envDefn . snd) defs
       l <- do
         s <- compileExpr envBody body
         emit (s++[RTN])
