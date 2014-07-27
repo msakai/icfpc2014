@@ -96,7 +96,7 @@ car :: Expr -> Expr
 car = EPrimOp1 "CAR"
 
 cdr :: Expr -> Expr
-cdr = EPrimOp1 "CAR"
+cdr = EPrimOp1 "CDR"
 
 list :: [Expr] -> Expr
 list = foldr cons nil
