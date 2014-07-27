@@ -48,17 +48,7 @@ parseCompound = choice $ map try
             , parseEPrimOp2
             , parseECall
             , parseELambda ]
-{-
-parseCompound = parseESet
-            <|> parseEIf
-            <|> parseEBegin
-            <|> parseELet
-            <|> parseELetRec
-            <|> parseEPrimOp1
-            <|> parseEPrimOp2
-            <|> parseECall
-            <|> parseELambda
--}       
+
 parseESet :: Parser Expr
 parseESet = string "set!" >> ESet <$> parseIdent <*> parseExpr
 
@@ -102,7 +92,7 @@ pPrimOp2 = maybe (error "Unknown primitive operator")
 
 primop2s :: M.Map String Ident
 primop2s = M.fromList
-         $ [("+","ADD"),("-","ADD"),("*","MUL"),("/","DIV")
+         $ [("+","ADD"),("-","SUB"),("*","MUL"),("/","DIV")
            ,("=","CEQ"),(">","CGT"),(">=","CGTE"),(":","CONS")]
 
 parseECall :: Parser Expr
