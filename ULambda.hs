@@ -50,6 +50,7 @@ data Expr
   | ECall Expr [Expr]
   | ELambda [Ident] Expr
   deriving (Show)
+
 data TopLevelFuncDefinition
   = TopLevelFuncDefinition
   { funcName    :: Ident
@@ -57,6 +58,7 @@ data TopLevelFuncDefinition
   , funcBody    :: Expr
   }
   deriving (Show)
+
 -- ---------------------------------------------------------------
 -- EDSL combinators
 -- ---------------------------------------------------------------
