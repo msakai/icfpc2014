@@ -32,7 +32,7 @@ data Expr
   | EPrimOp2 Ident Expr Expr -- ADD, SUB, MUL, DIV, CEQ, CGT, CGTE, CONS
   | ECall Expr [Expr]
   | ELambda [Ident] Expr
-
+  deriving (Show)
 data TopLevelFuncDefinition
   = TopLevelFuncDefinition
   { funcName    :: Ident
