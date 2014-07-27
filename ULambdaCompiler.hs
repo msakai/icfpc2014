@@ -95,8 +95,12 @@ compileExpr env = f
         (n,i) -> return $ s ++ [ST n i, LDC 0]
     f (EIf c tbody fbody) = do
       s1 <- f c
-      lT <- emit =<< f tbody
-      lF <- emit =<< f fbody
+      lT <- do
+        s <- f tbody
+        emit (s ++ [JOIN])
+      lF <- do
+        s <- f fbody
+        emit (s ++ [JOIN])
       return $ s1 ++ [SEL lT lF]
     f (EBegin xs) = do
       ss <- mapM f xs
