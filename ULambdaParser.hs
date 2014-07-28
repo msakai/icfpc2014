@@ -133,7 +133,7 @@ parseECall :: Parser Expr
 parseECall = ECall <$> pExpr <*> many pExpr
 
 parseELambda :: Parser Expr
-parseELambda = try (string "\\" >> spaces) >> ELambda <$> parens (many parseIdent) <*> pExpr
+parseELambda = try (string "lambda" >> spaces1) >> ELambda <$> parens (many parseIdent) <*> pExpr
 
 parseTProj :: Parser Expr
 parseTProj = do
