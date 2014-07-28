@@ -32,20 +32,22 @@ spaces =  skipMany ((space >> return ()) <|> comment)
 
 parseAtom :: Parser Expr
 parseAtom = parseEConst
+        <|> parseConst
         <|> parseERef
+  where
+    parseConst = choice $ map try $
+      [ string s >> return c
+      | (s,c) <- M.toList constTable
+      ]
 
 parseEConst :: Parser Expr
 parseEConst = many1 digit >>= return . EConst . read
 
 parseERef :: Parser Expr
-parseERef = do
-  s <- parseIdent
-  case M.lookup s constTable of
-    Just e -> return e
-    Nothing -> return $ ERef s
+parseERef = ERef <$> parseIdent
 
 parseIdent :: Parser String
-parseIdent = spaces >> (:) <$> letter <*> many (letter <|> digit <|> char '-') >>= (spaces >>) .  return
+parseIdent = spaces >> (:) <$> letter <*> many (letter <|> digit <|> char '-' <|> char '?') >>= (spaces >>) .  return
 
 parseCompound :: Parser Expr
 parseCompound = choice $ map try

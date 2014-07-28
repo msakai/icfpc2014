@@ -202,8 +202,8 @@ or' a b = EIf a true b
 
 constTable :: Map Ident Expr
 constTable = Map.fromList $ 
-  [ ("true", true)
-  , ("false", false)
+  [ ("#t", true)
+  , ("#f", false)
   , ("nil", nil)
   ] ++
   [ (map toUpper (show s), EConst $ fromIntegral $ fromEnum s)
@@ -220,7 +220,7 @@ op1Table =
   Map.fromList
   [ ("car", car)
   , ("cdr", cdr)
-  , ("null", null')
+  , ("null?", null')
 
   , ("fst", fst')
   , ("snd", snd')
@@ -231,7 +231,8 @@ op1Table =
 op2Table :: Map Ident (Expr -> Expr -> Expr)
 op2Table =
   Map.fromList
-  [ (":", cons)
+  [ ("cons", cons)
+
   , ("+", (+))
   , ("-", (-))
   , ("*", (*))

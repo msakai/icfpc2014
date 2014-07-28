@@ -1,3 +1,4 @@
+; foo
 (define (main initial-world ghost-progs) (tuple 42 step))
 
 (define (step state world)
@@ -17,15 +18,15 @@
 (define (nth xs i) (if (= i 0) (car xs) (nth (cdr xs) (- i 1))))
 
 (define (any f xs)
-  (if (null xs)
-      false
+  (if (null? xs)
+      #f
       (or (f (car xs)) (any f xs))))
 
 (define (filter f xs)
-  (if (null xs)
+  (if (null? xs)
       xs
       (if (f (car xs))
-          (: (car xs) (filter f (cdr xs)))
+          (cons (car xs) (filter f (cdr xs)))
           (filter f (cdr xs)))))
 
 (define (lookup-map map pos)
