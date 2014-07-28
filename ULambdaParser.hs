@@ -35,7 +35,7 @@ parseERef :: Parser Expr
 parseERef = ERef <$> parseIdent
 
 parseIdent :: Parser String
-parseIdent = spaces >> (:) <$> letter <*> many (letter <|> digit) >>= (spaces >>) .  return
+parseIdent = spaces >> (:) <$> letter <*> many (letter <|> digit <|> char '-') >>= (spaces >>) .  return
 
 parseCompound :: Parser Expr
 parseCompound = choice $ map try
