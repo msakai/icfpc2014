@@ -15,13 +15,17 @@ parseULambda = many1 parseSC
 parseSC :: Parser TopLevelFuncDefinition
 parseSC = spaces >> parens parseDefine
 
+parseDefine :: Parser TopLevelFuncDefinition
 parseDefine = spaces >> string "define" >> spaces >> parens (many1 parseIdent) >>= \ (f:xs) ->
               parseExpr >>= \ e -> return (TopLevelFuncDefinition f xs e)
 
 parseExpr :: Parser Expr
 parseExpr = spaces >> (parseAtom <|> parens parseCompound)
 
+parens :: Parser a -> Parser a
 parens =  between ( char '(') (char ')')
+
+spaces :: Parser ()
 spaces =  skipMany space
 
 parseAtom :: Parser Expr
