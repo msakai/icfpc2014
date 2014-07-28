@@ -1,0 +1,37 @@
+(define (main initial-world ghost-progs) (tuple 42 step))
+
+(define (step state world)
+  (let* 
+    ((current-map (tproj_4_0 world))
+     (lambda-man (tproj_4_1 world))
+     (ghosts (tproj_4_2 world))
+     (fruits (tproj_4_3 world))
+     (lambda-man-pos (tproj_5_1 lambda-man))
+     (lambda-man-dir (tproj_5_2 lambda-man))
+     (lambda-man-next-pos (move lambda-man-pos lambda-man-dir))
+     (cell (lookup-map current-map lambda-man-next-pos)))
+    (if (= cell WALL)
+        (tuple (+ state 1) (turn-clockwise lambda-man-dir))
+        (tuple state lambda-man-dir))))
+
+(define (nth xs i) (if (= i 0) (car xs) (nth (cdr xs) (- i 1))))
+
+(define (lookup-map map pos)
+  (let ((x (fst pos)) (y (snd pos)))
+       (nth (nth map y) x)))
+
+(define (move pos dir)
+   (let ((x (fst pos)) (y (snd pos)))
+        (if (= dir UP)
+            (tuple x (- y 1))
+            (if (= dir RIGHT)
+                (tuple (+ x 1) y)
+                (if (= dir DOWN)
+                    (tuple x (+ y 1))
+                    (tuple (- x 1) y))))))
+
+(define (turn-clockwise dir)
+  (if (= dir UP) RIGHT
+      (if (= dir RIGHT) DOWN
+          (if (= dir DOWN) LEFT
+              UP))))
