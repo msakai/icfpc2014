@@ -26,7 +26,9 @@ parens :: Parser a -> Parser a
 parens =  between ( char '(') (char ')')
 
 spaces :: Parser ()
-spaces =  skipMany space
+spaces =  skipMany ((space >> return ()) <|> comment)
+  where
+    comment = char ';' >> manyTill anyChar (try (char '\n')) >> return ()
 
 parseAtom :: Parser Expr
 parseAtom = parseEConst
