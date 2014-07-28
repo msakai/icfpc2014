@@ -75,32 +75,25 @@ parseELetStar :: Parser Expr
 parseELetStar = string "let*" >> ELetStar <$> parseDefns <*> parseExpr
 
 parseEPrimOp1 :: Parser Expr
-parseEPrimOp1 = EPrimOp1 <$> pPrimOp1 <*> parseExpr
+parseEPrimOp1 = pPrimOp1 <*> parseExpr
 
-pPrimOp1 :: Parser Ident
-pPrimOp1 = upcase <$> choice (map (try . string) primOp1names)
-
-primOp1names :: [String]
-primOp1names = ["atom","car","cdr"]
+pPrimOp1 :: Parser (Expr -> Expr)
+pPrimOp1 = choice [ try (string name) >> return op | (name, op) <- M.toList op1Table ]
 
 upcase :: String -> String
 upcase = map toUpper
 
 parseEPrimOp2 :: Parser Expr
-parseEPrimOp2 = EPrimOp2 <$> pPrimOp2 <*> parseExpr <*> parseExpr
+parseEPrimOp2 = pPrimOp2 <*> parseExpr <*> parseExpr
 
-pPrimOp2 :: Parser Ident
-pPrimOp2 = maybe (error "Unknown primitive operator")
-                 id . flip M.lookup primop2s
-       <$> choice (map  (try . string) primOp2names)
+pPrimOp2 :: Parser (Expr -> Expr -> Expr)
+pPrimOp2 = choice [ try (string name) >> return op | (name, op) <- M.toList op2Table ]
 
-primOp2names,primOp2names' :: [String]
-primOp2names  = ["+","-","*","/","=",">",">=",":"]
-primOp2names' = ["ADD","SUB","MUL","DIV","CEQ","CGT","CGTE","CONS"]
+parseEPrimOpN :: Parser Expr
+parseEPrimOpN = pPrimOpN <*> many parseExpr
 
-primop2s :: M.Map String Ident
-primop2s = M.fromList
-         $ zip primOp2names primOp2names'
+pPrimOpN :: Parser ([Expr] -> Expr)
+pPrimOpN = choice [ try (string name) >> return op | (name, op) <- M.toList opNTable ]
 
 parseECall :: Parser Expr
 parseECall = ECall <$> parseExpr <*> many parseExpr

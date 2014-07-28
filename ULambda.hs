@@ -27,9 +27,16 @@ module ULambda
   , not'
   , and'
   , or'
+
+  , constTable
+  , op1Table
+  , op2Table
+  , opNTable
   ) where
 
 import Data.Int
+import Data.Map (Map)
+import qualified Data.Map as Map
 import Data.Set (Set)
 import qualified Data.Set as Set
 import Data.String
@@ -180,3 +187,48 @@ and' a b = EIf a b false
 
 or' :: Expr -> Expr -> Expr
 or' a b = EIf a true b
+
+
+constTable :: Map Ident Expr
+constTable =
+  Map.fromList
+  [ ("true", true)
+  , ("false", false)
+  , ("nil", nil)
+  ]
+
+op1Table :: Map Ident (Expr -> Expr)
+op1Table =
+  Map.fromList
+  [ ("car", car)
+  , ("cdr", cdr)
+  , ("null", null')
+
+  , ("not", not')
+  ]
+
+op2Table :: Map Ident (Expr -> Expr -> Expr)
+op2Table =
+  Map.fromList
+  [ (":", cons)
+  , ("+", (+))
+  , ("-", (-))
+  , ("*", (*))
+  , ("/", EPrimOp2 "DIV")
+
+  , ("=", (.==.))
+  , (">", (.>.))
+  , ("<", (.<.))
+  , (">=", (.>=.))
+  , ("<=", (.<=.))
+
+  , ("or", or')
+  , ("and", and')
+  ]
+
+opNTable :: Map Ident ([Expr] -> Expr)
+opNTable =
+  Map.fromList
+  [ ("list", list)
+  , ("tuple", tuple)
+  ]
