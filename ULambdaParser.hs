@@ -3,7 +3,7 @@
 module ULambdaParser
       where
 
-import Control.Applicative ((<$>),(<*>))
+import Control.Applicative ((<$>),(<*>),liftA)
 import Data.Char
 import qualified Data.Map as M
 import Text.ParserCombinators.Parsec hiding (spaces)
@@ -36,7 +36,11 @@ parseEConst :: Parser Expr
 parseEConst = many1 digit >>= return . EConst . read
 
 parseERef :: Parser Expr
-parseERef = ERef <$> parseIdent
+parseERef = do
+  s <- parseIdent
+  case M.lookup s constTable of
+    Just e -> return e
+    Nothing -> return $ ERef s
 
 parseIdent :: Parser String
 parseIdent = spaces >> (:) <$> letter <*> many (letter <|> digit <|> char '-') >>= (spaces >>) .  return
@@ -51,6 +55,8 @@ parseCompound = choice $ map try
             , parseELetStar
             , parseEPrimOp1
             , parseEPrimOp2
+            , parseEPrimOpN
+            , parseTProj
             , parseECall
             , parseELambda ]
 
@@ -104,3 +110,13 @@ parseECall = ECall <$> parseExpr <*> many parseExpr
 
 parseELambda :: Parser Expr
 parseELambda = string "\\" >> spaces >> ELambda <$> parens (many parseIdent) <*> parseExpr
+
+parseTProj :: Parser Expr
+parseTProj = do
+  _ <- string "tproj_"
+  n <- liftA read (many digit)
+  _ <- char '_'
+  i <- liftA read (many digit)
+  _ <- spaces
+  e <- parseExpr
+  return $ tproj n i e
