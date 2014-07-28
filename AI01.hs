@@ -61,6 +61,26 @@ ai01' = compileWithDefinitions [step, defNth, defLookupMap, defMove, defTurnCloc
               (tuple ["state", "lambda-man-dir"])
       }
 
+ai01'' :: [Inst]
+ai01'' = compileWithDefinitions [step, defNth, defLookupMap, defMove, defTurnClockwise] ["initial-world", "ghost-progs"] e
+  where
+    e = tuple [42, "step"]
+    Right step = parse parseSC "" $ unlines $
+      [ "(define (step state world)"
+      , "  (let* "
+      , "    ((current-map (tproj_4_0 world))"
+      , "     (lambda-man (tproj_4_1 world))"
+      , "     (ghosts (tproj_4_2 world))"
+      , "     (fruits (tproj_4_3 world))"
+      , "     (lambda-man-pos (tproj_5_1 lambda-man))"
+      , "     (lambda-man-dir (tproj_5_2 lambda-man))"
+      , "     (lambda-man-next-pos (move lambda-man-pos lambda-man-dir))"
+      , "     (cell (lookup-map current-map lambda-man-next-pos)))"
+      , "    (if (= cell WALL)"
+      , "        (tuple (+ state 1) (turn-clockwise lambda-man-dir))"
+      , "        (tuple state lambda-man-dir))))"
+      ]
+
 wall = 0
 [up, right, down, left] = map EConst [0..3]
 
@@ -82,6 +102,7 @@ lookupMap :: Expr -> Expr -> Expr
 lookupMap map pos = ECall "lookup-map" [map, pos]
 
 defLookupMap :: TopLevelFuncDefinition
+{-
 defLookupMap =
   TopLevelFuncDefinition
   { funcName   = "lookup-map"
@@ -91,11 +112,18 @@ defLookupMap =
   where
     x = tproj 2 0 "pos"
     y = tproj 2 1 "pos"
+-}
+Right defLookupMap = parse parseSC "" $ unlines $
+  [ "(define (lookup-map map pos)"
+  , "  (let ((x (tproj_2_0 pos)) (y (tproj_2_1 pos)))"
+  , "       (nth (nth map y) x)))"
+  ]
 
 move :: Expr -> Expr -> Expr
 move pos dir = ECall "move" [pos, dir]
 
 defMove :: TopLevelFuncDefinition
+{-
 defMove = 
   TopLevelFuncDefinition
   { funcName   = "move"
@@ -109,11 +137,24 @@ defMove =
   where
     x = tproj 2 0 "pos"
     y = tproj 2 1 "pos"
+-}
+Right defMove = parse parseSC "" $ unlines $
+  [ "(define (move pos dir)"
+  , "   (let ((x (tproj_2_0 pos)) (y (tproj_2_1 pos)))"
+  , "        (if (= dir UP)"
+  , "            (tuple x (- y 1))"
+  , "            (if (= dir RIGHT)"
+  , "                (tuple (+ x 1) y)"
+  , "                (if (= dir DOWN)"
+  , "                    (tuple x (+ y 1))"
+  , "                    (tuple (- x 1) y))))))"
+  ]
 
 turnClockWise :: Expr -> Expr
 turnClockWise dir = ECall "turn-clockwise" [dir]
 
 defTurnClockwise :: TopLevelFuncDefinition
+{-
 defTurnClockwise = 
   TopLevelFuncDefinition
   { funcName   = "turn-clockwise"
@@ -124,6 +165,14 @@ defTurnClockwise =
       EIf ("dir" .==. down)  left $
       {- dir == left -} up
   }
+-}
+Right defTurnClockwise = parse parseSC "" $ unlines $
+  [ "(define (turn-clockwise dir)"
+  , "  (if (= dir UP) RIGHT"
+  , "      (if (= dir RIGHT) DOWN"
+  , "          (if (= dir DOWN) LEFT"
+  , "              UP))))"
+  ]
 
 {-
 > putStr $ showInstSeq ai01
