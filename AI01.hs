@@ -115,7 +115,7 @@ defLookupMap =
 -}
 Right defLookupMap = parse parseSC "" $ unlines $
   [ "(define (lookup-map map pos)"
-  , "  (let ((x (tproj_2_0 pos)) (y (tproj_2_1 pos)))"
+  , "  (let ((x (fst pos)) (y (snd pos)))"
   , "       (nth (nth map y) x)))"
   ]
 
@@ -140,7 +140,7 @@ defMove =
 -}
 Right defMove = parse parseSC "" $ unlines $
   [ "(define (move pos dir)"
-  , "   (let ((x (tproj_2_0 pos)) (y (tproj_2_1 pos)))"
+  , "   (let ((x (fst pos)) (y (snd pos)))"
   , "        (if (= dir UP)"
   , "            (tuple x (- y 1))"
   , "            (if (= dir RIGHT)"

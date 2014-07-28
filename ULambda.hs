@@ -21,6 +21,8 @@ module ULambda
 
   , tuple
   , tproj
+  , fst'
+  , snd'
 
   , true
   , false
@@ -176,6 +178,12 @@ tproj 1 0 e = e -- (x) = x
 tproj n 0 e = car e
 tproj n i e = tproj (n-1) (i-1) (cdr e)
 
+fst' :: Expr -> Expr
+fst' = tproj 2 0
+
+snd' :: Expr -> Expr
+snd' = tproj 2 1
+
 true :: Expr
 true = 1
 
@@ -213,6 +221,9 @@ op1Table =
   [ ("car", car)
   , ("cdr", cdr)
   , ("null", null')
+
+  , ("fst", fst')
+  , ("snd", snd')
 
   , ("not", not')
   ]
