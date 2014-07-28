@@ -16,6 +16,18 @@
 
 (define (nth xs i) (if (= i 0) (car xs) (nth (cdr xs) (- i 1))))
 
+(define (any f xs)
+  (if (null xs)
+      false
+      (or (f (car xs)) (any f xs))))
+
+(define (filter f xs)
+  (if (null xs)
+      xs
+      (if (f (car xs))
+          (: (car xs) (filter f (cdr xs)))
+          (filter f (cdr xs)))))
+
 (define (lookup-map map pos)
   (let ((x (fst pos)) (y (snd pos)))
        (nth (nth map y) x)))
