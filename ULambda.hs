@@ -164,11 +164,11 @@ null' :: Expr -> Expr
 null' xs = EPrimOp1 "ATOM" xs
 
 tuple :: [Expr] -> Expr
-tuple [] = error "empty tuple"
+tuple []  = 0 -- 空のタプルはとりあえず0で表現
 tuple [x] = x
 tuple (x:xs) = cons x (tuple xs)
 
--- tproj project i-th component of n-tuple
+-- "tproj n i" project i-th component of n-tuple
 -- (x_0,…,x_i,…,x_{n-1}) ↦ x_i
 tproj :: Int -> Int -> Expr -> Expr
 tproj n i e | i>=n = error $ printf "tproj %d %d: should not happen" n i
