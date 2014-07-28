@@ -32,7 +32,7 @@
 (define (any f xs)
   (if (null? xs)
       #f
-      (or (f (car xs)) (any f xs))))
+      (or (f (car xs)) (any f (cdr xs)))))
 
 (define (filter f xs)
   (if (null? xs)
