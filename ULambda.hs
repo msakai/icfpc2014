@@ -34,6 +34,7 @@ module ULambda
   , opNTable
   ) where
 
+import Data.Char
 import Data.Int
 import Data.Map (Map)
 import qualified Data.Map as Map
@@ -41,6 +42,8 @@ import Data.Set (Set)
 import qualified Data.Set as Set
 import Data.String
 import Text.Printf
+
+import qualified Game
 
 infix 4 .==.
 infix 4 .>.
@@ -190,11 +193,18 @@ or' a b = EIf a true b
 
 
 constTable :: Map Ident Expr
-constTable =
-  Map.fromList
+constTable = Map.fromList $ 
   [ ("true", true)
   , ("false", false)
   , ("nil", nil)
+  ] ++
+  [ (map toUpper (show s), EConst $ fromIntegral $ fromEnum s)
+  | s <- [(minBound::Game.Symbol) .. maxBound]
+  ] ++
+  [ ("UP",    EConst $ fromIntegral $ fromEnum Game.DirUp)
+  , ("RIGHT", EConst $ fromIntegral $ fromEnum Game.DirRight)
+  , ("DOWN",  EConst $ fromIntegral $ fromEnum Game.DirDown)
+  , ("LEFT",  EConst $ fromIntegral $ fromEnum Game.DirLeft)
   ]
 
 op1Table :: Map Ident (Expr -> Expr)
