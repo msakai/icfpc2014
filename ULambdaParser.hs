@@ -1,13 +1,32 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wall #-}
 module ULambdaParser
-      where
+  ( parseExpr
+  , parseDefinition
+  , parseDefinitions
+  , parseULambdaFile
+  )
+  where
 
-import Control.Applicative ((<$>),(<*>),liftA)
+import Control.Applicative ((<$>),(<*>),(<*),liftA)
 import Data.Char
 import qualified Data.Map as M
 import Text.ParserCombinators.Parsec hiding (spaces)
 import ULambda
+
+
+parseExpr :: String -> Either ParseError Expr
+parseExpr = parse (spaces >> pExpr <* spaces <* eof) "<string>"
+
+parseDefinition :: String -> Either ParseError TopLevelFuncDefinition
+parseDefinition = parse (spaces >> (parseSC <* spaces) <* eof) "<string>"
+
+parseDefinitions :: String -> Either ParseError [TopLevelFuncDefinition]
+parseDefinitions = parse (spaces >> many (parseSC <* spaces) <* eof) "<string>"
+
+parseULambdaFile :: FilePath -> IO (Either ParseError [TopLevelFuncDefinition])
+parseULambdaFile fname = parseFromFile (spaces >> many (parseSC <* spaces) <* eof) fname
+
 
 parseULambda :: Parser [TopLevelFuncDefinition]
 parseULambda = many1 parseSC
@@ -17,10 +36,10 @@ parseSC = spaces >> parens parseDefine
 
 parseDefine :: Parser TopLevelFuncDefinition
 parseDefine = spaces >> string "define" >> spaces >> parens (many1 parseIdent) >>= \ (f:xs) ->
-              parseExpr >>= \ e -> return (TopLevelFuncDefinition f xs e)
+              pExpr >>= \ e -> return (TopLevelFuncDefinition f xs e)
 
-parseExpr :: Parser Expr
-parseExpr = spaces >> (parseAtom <|> parens parseCompound)
+pExpr :: Parser Expr
+pExpr = spaces >> (parseAtom <|> parens parseCompound)
 
 parens :: Parser a -> Parser a
 parens =  between ( char '(') (char ')')
@@ -65,31 +84,31 @@ parseCompound = choice $ map try
             , parseELambda ]
 
 parseESet :: Parser Expr
-parseESet = string "set!" >> ESet <$> parseIdent <*> parseExpr
+parseESet = string "set!" >> ESet <$> parseIdent <*> pExpr
 
 parseEIf :: Parser Expr
-parseEIf = string "if" >> EIf <$> parseExpr <*> parseExpr <*> parseExpr
+parseEIf = string "if" >> EIf <$> pExpr <*> pExpr <*> pExpr
 
 parseEBegin :: Parser Expr
-parseEBegin = string "begin" >> EBegin <$> many1 parseExpr
+parseEBegin = string "begin" >> EBegin <$> many1 pExpr
 
 parseELet :: Parser Expr
-parseELet = string "let" >> ELet <$> parseDefns <*> parseExpr
+parseELet = string "let" >> ELet <$> parseDefns <*> pExpr
 
 parseDefns :: Parser [(Ident,Expr)]
 parseDefns = spaces >> parens (many1 parseDefn)
 
 parseDefn :: Parser (Ident,Expr)
-parseDefn = spaces >> parens ((,) <$> parseIdent <*> parseExpr)
+parseDefn = spaces >> parens ((,) <$> parseIdent <*> pExpr)
 
 parseELetRec :: Parser Expr
-parseELetRec = string "letrec" >> ELetRec <$> parseDefns <*> parseExpr
+parseELetRec = string "letrec" >> ELetRec <$> parseDefns <*> pExpr
 
 parseELetStar :: Parser Expr
-parseELetStar = string "let*" >> ELetStar <$> parseDefns <*> parseExpr
+parseELetStar = string "let*" >> ELetStar <$> parseDefns <*> pExpr
 
 parseEPrimOp1 :: Parser Expr
-parseEPrimOp1 = pPrimOp1 <*> parseExpr
+parseEPrimOp1 = pPrimOp1 <*> pExpr
 
 pPrimOp1 :: Parser (Expr -> Expr)
 pPrimOp1 = choice [ try (string name) >> return op | (name, op) <- M.toList op1Table ]
@@ -98,22 +117,22 @@ upcase :: String -> String
 upcase = map toUpper
 
 parseEPrimOp2 :: Parser Expr
-parseEPrimOp2 = pPrimOp2 <*> parseExpr <*> parseExpr
+parseEPrimOp2 = pPrimOp2 <*> pExpr <*> pExpr
 
 pPrimOp2 :: Parser (Expr -> Expr -> Expr)
 pPrimOp2 = choice [ try (string name) >> return op | (name, op) <- M.toList op2Table ]
 
 parseEPrimOpN :: Parser Expr
-parseEPrimOpN = pPrimOpN <*> many parseExpr
+parseEPrimOpN = pPrimOpN <*> many pExpr
 
 pPrimOpN :: Parser ([Expr] -> Expr)
 pPrimOpN = choice [ try (string name) >> return op | (name, op) <- M.toList opNTable ]
 
 parseECall :: Parser Expr
-parseECall = ECall <$> parseExpr <*> many parseExpr
+parseECall = ECall <$> pExpr <*> many pExpr
 
 parseELambda :: Parser Expr
-parseELambda = string "\\" >> spaces >> ELambda <$> parens (many parseIdent) <*> parseExpr
+parseELambda = string "\\" >> spaces >> ELambda <$> parens (many parseIdent) <*> pExpr
 
 parseTProj :: Parser Expr
 parseTProj = do
@@ -122,5 +141,5 @@ parseTProj = do
   _ <- char '_'
   i <- liftA read (many digit)
   _ <- spaces
-  e <- parseExpr
+  e <- pExpr
   return $ tproj n i e

@@ -2,8 +2,6 @@
 -- 壁に当たると右へ曲がるだけのAI
 module AI01 where
 
-import qualified Text.ParserCombinators.Parsec as Parsec
-
 import LambdaManCPU hiding (car, cdr)
 import ULambda
 import ULambdaCompiler
@@ -11,7 +9,7 @@ import ULambdaParser
 
 ai02 :: IO [Inst]
 ai02 = do
-  ret <- Parsec.parseFromFile (Parsec.many (Parsec.try parseSC)) "AI02.scm"
+  ret <- parseULambdaFile "AI02.scm"
   case ret of
     Left err -> error (show err)
     Right defs -> do

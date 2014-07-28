@@ -2,7 +2,6 @@
 module Main where
 
 import System.Environment
-import qualified Text.ParserCombinators.Parsec as Parsec
 
 import LambdaManCPU hiding (car, cdr)
 import ULambda
@@ -12,7 +11,7 @@ import ULambdaParser
 main :: IO ()
 main = do
   [fname] <- getArgs
-  ret <- Parsec.parseFromFile (Parsec.many (Parsec.try parseSC)) fname
+  ret <- parseULambdaFile fname
   case ret of
     Left err -> error (show err)
     Right defs -> do

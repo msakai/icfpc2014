@@ -2,8 +2,6 @@
 -- 壁に当たると右へ曲がるだけのAI
 module AI01 where
 
-import Text.ParserCombinators.Parsec
-
 import LambdaManCPU hiding (car, cdr)
 import ULambda
 import ULambdaCompiler
@@ -65,7 +63,7 @@ ai01'' :: [Inst]
 ai01'' = compileWithDefinitions [step, defNth, defLookupMap, defMove, defTurnClockwise] ["initial-world", "ghost-progs"] e
   where
     e = tuple [42, "step"]
-    Right step = parse parseSC "" $ unlines $
+    Right step = parseDefinition $ unlines $
       [ "(define (step state world)"
       , "  (let* "
       , "    ((current-map (tproj_4_0 world))"
@@ -96,7 +94,7 @@ defNth =
   , funcBody   = EIf ("i" .==. 0) (car "xs") (nth (cdr "xs") ("i" - 1))
   }
 -}
-Right defNth = parse parseSC "" "(define (nth xs i) (if (= i 0) (car xs) (nth (cdr xs) (- i 1))))"
+Right defNth = parseDefinition "(define (nth xs i) (if (= i 0) (car xs) (nth (cdr xs) (- i 1))))"
 
 lookupMap :: Expr -> Expr -> Expr
 lookupMap map pos = ECall "lookup-map" [map, pos]
@@ -113,7 +111,7 @@ defLookupMap =
     x = tproj 2 0 "pos"
     y = tproj 2 1 "pos"
 -}
-Right defLookupMap = parse parseSC "" $ unlines $
+Right defLookupMap = parseDefinition $ unlines $
   [ "(define (lookup-map map pos)"
   , "  (let ((x (fst pos)) (y (snd pos)))"
   , "       (nth (nth map y) x)))"
@@ -138,7 +136,7 @@ defMove =
     x = tproj 2 0 "pos"
     y = tproj 2 1 "pos"
 -}
-Right defMove = parse parseSC "" $ unlines $
+Right defMove = parseDefinition $ unlines $
   [ "(define (move pos dir)"
   , "   (let ((x (fst pos)) (y (snd pos)))"
   , "        (if (= dir UP)"
@@ -166,7 +164,7 @@ defTurnClockwise =
       {- dir == left -} up
   }
 -}
-Right defTurnClockwise = parse parseSC "" $ unlines $
+Right defTurnClockwise = parseDefinition $ unlines $
   [ "(define (turn-clockwise dir)"
   , "  (if (= dir UP) RIGHT"
   , "      (if (= dir RIGHT) DOWN"
