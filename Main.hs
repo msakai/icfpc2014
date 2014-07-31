@@ -24,4 +24,3 @@ main = do
               prog = compileWithDefinitions defs args (ECall "main" (map ERef args))
           in putStr $ showInstSeq prog
 
-      

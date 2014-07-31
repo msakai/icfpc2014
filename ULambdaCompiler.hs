@@ -23,8 +23,7 @@ compile params e = map (mapAddr (addrs Map.! )) code2
   where
     (code,defs) = runM $ do
       let env = [ Map.fromList (zip [v | v <- params] [0..]) ]
-      s <- compileExpr env e
-      return $ s ++ [RTN]
+      compileExpr env True e
     (code2,addrs) = link1 (Map.toAscList defs) (length code) (code, Map.empty)
 
     link1 :: [(Label,InstSeq)] -> InstAddr -> (InstSeq, Map Label InstAddr) -> (InstSeq, Map Label InstAddr)
@@ -82,77 +81,79 @@ emitWithName name code = M $ do
   put $ (n, Map.insert l code defs)
   return l
 
-compileExpr :: Env -> Expr -> M InstSeq
+compileExpr :: Env -> Bool -> Expr -> M InstSeq
 compileExpr env = f
   where
-    f (EConst n)  = return [LDC n]
-    f (ERef name) =
+    f isTail (EConst n) = return $ [LDC n] ++ [RTN | isTail]
+    f isTail (ERef name) =
       case lookupVarSlot name env of
-        (n,i) -> return [LD n i]
-    f (ESet name e) = do
-      s <- f e
+        (n,i) -> return $ [LD n i] ++ [RTN | isTail]
+    f isTail (ESet name e) = do
+      s <- f False e
       case lookupVarSlot name env of
-        (n,i) -> return $ s ++ [ST n i, LDC 0]
-    f (EIf c tbody fbody) = do
-      s1 <- f c
+        (n,i) -> return $ s ++ [ST n i, LDC 0] ++ [RTN | isTail]
+    f isTail (EIf c tbody fbody) = do
+      s1 <- f False c
       lT <- do
-        s <- f tbody
-        emit (s ++ [JOIN])
+        s <- f isTail tbody
+        emit (s ++ [JOIN | not isTail])
       lF <- do
-        s <- f fbody
-        emit (s ++ [JOIN])
-      return $ s1 ++ [SEL lT lF]
-    f (EBegin xs) = do
-      ss <- mapM f xs
-      return $ intercalate [DBUG] ss -- 単純にスタックから値をPOPする命令がないのでDBUGを使ってる
-    f (ELet defs body) = f $ ECall (ELambda (map fst defs) body) (map snd defs)
-    f (ELetRec defs body) = do
+        s <- f isTail fbody
+        emit (s ++ [JOIN | not isTail])
+      return $ s1 ++ [if isTail then TSEL lT lF else SEL lT lF]
+    f isTail (EBegin xs) = do
+      ss <- forM (init xs) $ \e -> do
+        s <- f False e
+        return $ s ++ [DBUG] -- 単純にスタックから値をPOPする命令がないのでDBUGを使ってる
+      s <- f isTail (last xs)
+      return $ concat (ss ++ [s])
+    f isTail (ELet defs body) = f isTail $ ECall (ELambda (map fst defs) body) (map snd defs)
+    f isTail (ELetRec defs body) = do
       let n = length defs
           envDefn = envBody
           envBody = Map.fromList (zip (map fst defs) [0..]) : env
-      ss <- liftM concat $ mapM (compileExpr envDefn . snd) defs
+      ss <- liftM concat $ mapM (compileExpr envDefn False . snd) defs
       l <- do
-        s <- compileExpr envBody body
-        emit (s++[RTN])
-      return $ [DUM n] ++ ss ++ [LDF l, RAP n]
-    f (ELetStar defs body) = do
+        s <- compileExpr envBody isTail body
+        emit (s++[RTN | not isTail])
+      return $ [DUM n] ++ ss ++ [LDF l, if isTail then TRAP n else RAP n]
+    f isTail (ELetStar defs body) = do
       let g ss i ef [] = do
-            s <- compileExpr (ef:env) body
-            l <- emit (ss++s++[RTN])
+            s <- compileExpr (ef:env) True body
+            l <- emit (ss++s)
             let n = length defs
-            return $ replicate n (LDC 1234) ++ [LDF l, AP n]
+            return $ replicate n (LDC 1234) ++ [LDF l, if isTail then TAP n else AP n]
           g ss i ef ((v,vbody):defs) = do
-            s <- compileExpr (ef:env) vbody
+            s <- compileExpr (ef:env) False vbody
             g (ss++s++[ST 0 i]) (i+1) (Map.insert v i ef) defs
       g [] 0 Map.empty defs
-    f (EPrimOp1 op arg) = do
-      s <- f arg
+    f isTail (EPrimOp1 op arg) = do
+      s <- f False arg
       case op of
-        "ATOM" -> return $ s ++ [ATOM]
-        "CAR"  -> return $ s ++ [CAR]
-        "CDR"  -> return $ s ++ [CDR]
+        "ATOM" -> return $ s ++ [ATOM] ++ [RTN | isTail]
+        "CAR"  -> return $ s ++ [CAR] ++ [RTN | isTail]
+        "CDR"  -> return $ s ++ [CDR] ++ [RTN | isTail]
         _ -> error $ "unknown operator: " ++ op
-    f (EPrimOp2 op arg1 arg2) = do
-      s <- liftM concat $ mapM f [arg1,arg2]
+    f isTail (EPrimOp2 op arg1 arg2) = do
+      s <- liftM concat $ mapM (f False) [arg1,arg2]
       case op of
-        "ADD"  -> return $ s ++ [ADD]
-        "SUB"  -> return $ s ++ [SUB]
-        "MUL"  -> return $ s ++ [MUL]
-        "DIV"  -> return $ s ++ [DIV]
-        "CEQ"  -> return $ s ++ [CEQ]
-        "CGT"  -> return $ s ++ [CGT]
-        "CGTE" -> return $ s ++ [CGTE]
-        "CONS" -> return $ s ++ [CONS]
+        "ADD"  -> return $ s ++ [ADD] ++ [RTN | isTail]
+        "SUB"  -> return $ s ++ [SUB] ++ [RTN | isTail]
+        "MUL"  -> return $ s ++ [MUL] ++ [RTN | isTail]
+        "DIV"  -> return $ s ++ [DIV] ++ [RTN | isTail]
+        "CEQ"  -> return $ s ++ [CEQ] ++ [RTN | isTail]
+        "CGT"  -> return $ s ++ [CGT] ++ [RTN | isTail]
+        "CGTE" -> return $ s ++ [CGTE] ++ [RTN | isTail]
+        "CONS" -> return $ s ++ [CONS] ++ [RTN | isTail]
         _ -> error $ "unknown operator: " ++ op
-    f (ECall func args) = do
+    f isTail (ECall func args) = do
       let n = length args
-      s1 <- liftM concat $ mapM f args
-      s2 <- f func
-      return $ s1 ++ s2 ++ [AP n]
-    f (ELambda params body) = do
-      s <- compileExpr (Map.fromList (zip params [0..]) : env) body
-      l <- emit $ s ++ [RTN]
-      return $ [LDF l]
+      s1 <- liftM concat $ mapM (f False) args
+      s2 <- f False func
+      return $ s1 ++ s2 ++ [if isTail then TAP n else AP n]
+    f isTail (ELambda params body) = do
+      l <- emit =<< compileExpr (Map.fromList (zip params [0..]) : env) True body
+      return $ [LDF l] ++ [RTN | isTail]
 
 mapAddr :: (a -> b) -> GInst a -> GInst b
 mapAddr _ (LDC n)      = LDC n
