@@ -653,7 +653,10 @@ As mentioned above, if an instruction causes an error then execution halts. If p
 
 # Lambda-Man CPU
 
-We have been able to recover some documentation about the programming environment used by the Lambda-Man AI team, including their processor ISA and some bits of assembly code. We also know that the Lambda-Man AI team, being LISP fanatics, used some form of LISP but unfortunately we have not been able to find any of their LISP code, nor their compiler.
+我々はλマンAIチームが使っていたプログラミング環境についてのいくつかの文書を復元することができた.
+それはプロセッサISAと少しばかりのアセンブリコードとを含んでいた．
+λマンAIチームがLISPにとりつかれていて,あるLISP形式を使っていたことは知っていたが，
+残念なことに彼等のLISPコードやコンパイラについてはいかなるものもついに発見することはできなかった．
 
 The LamCo "General Compute Coprocessor" (GCC) is a rather unconventional and—for its time—sophisticated coprocessor. It appears to have been designed as a target for a LISP compiler. Rather than a set of orthogonal instructions, it has a fair number of somewhat specialised instructions that (we presume) must have been useful for a compiler. We did however find a handwritten note by one of the engineers indicating that someone had written a compiler from a variant of Pascal, albeit with some limitations.
 
