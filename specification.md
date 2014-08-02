@@ -658,7 +658,13 @@ As mentioned above, if an instruction causes an error then execution halts. If p
 λマンAIチームがLISPにとりつかれていて,あるLISP形式を使っていたことは知っていたが，
 残念なことに彼等のLISPコードやコンパイラについてはいかなるものもついに発見することはできなかった．
 
-The LamCo "General Compute Coprocessor" (GCC) is a rather unconventional and—for its time—sophisticated coprocessor. It appears to have been designed as a target for a LISP compiler. Rather than a set of orthogonal instructions, it has a fair number of somewhat specialised instructions that (we presume) must have been useful for a compiler. We did however find a handwritten note by one of the engineers indicating that someone had written a compiler from a variant of Pascal, albeit with some limitations.
+LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新で洗練されたコプロセッサだった．
+それはLISPコンパイラをターゲットとして設計されているように思われた．
+直交する命令セットではなく,コンパイラにとって有用であったに違いないと(思われる)
+かなりの数のいくぶん特殊化された命令を持っていた.
+我々はそれでも一人のエンジニアによる手書きのノートを見つけた.
+そこには誰かがPascalの変種でコンパイラを書いたことが示されたいた.
+いくつか制限付きではあったが．
 
 Fortunately we do have the original documentation of the processor which describes the instructions and operation in detail, though sadly not very much on how it was intended to be used by a compiler.
 
