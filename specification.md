@@ -683,12 +683,12 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 
 ## CPUレジスタ
 
-There are 4 programmer visible machine registers, all of which are for special purposes:
+プログラマから見えるマシンレジスタは4つあり,これら全ては特殊目的用だ.
 
-- %c: control register (program counter / instruction pointer)
-- %s: data stack register
-- %d: control stack register
-- %e: environment frame register
+- %c: 制御レジスタ (プログラムカウンタ / 命令ポインタ)
+- %s: データスタックレジスタ
+- %d: 制御スタックレジスタ
+- %e: 環境フレームレジスタ
 
 ## Memory stacks
 
