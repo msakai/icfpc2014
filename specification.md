@@ -708,11 +708,12 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 
 ## データスタックおよびレジスタ
 
-The data stack is used to save intermediate data values during calculations, and to return results from function calls.
+データスタックは計算の過程にある中間データの値を保存したり,関数呼び出しから結果を返すのに使われる.
 
-It is a logically contiguous stack. The %s register points to the top of the stack.
-
-Many of the instructions simply pop and push values on the data stack. For example the ADD instruction pops two integer values off the stack and pushes back their sum.
+これは論理的に近接したスタックになる.
+%sレジスタはこのスタックの天辺を指している.
+大抵の命令はデータスタックに値を押し込んだり取り出したりするだけだ.
+例えばADD命令は2つの整数値をスタックから取り出してそれらの和をスタックに押し込む.
 
 # Control stack and register
 
