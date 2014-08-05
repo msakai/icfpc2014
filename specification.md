@@ -666,7 +666,8 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 そこには誰かがPascalの変種でコンパイラを書いたことが示されたいた.
 いくつか制限付きではあったが．
 
-Fortunately we do have the original documentation of the processor which describes the instructions and operation in detail, though sadly not very much on how it was intended to be used by a compiler.
+幸運にも我々はプロセッサの原文を持っており,そこには命令と操作が詳細に記されている.
+だが実に悲しいことにコンパイラからどのように使うつもりであったかについては十分ではなかった.
 
 The sections below include excerpts from the original documentation along with our own comments.
 
