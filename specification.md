@@ -717,11 +717,11 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 
 # 制御スタックおよびレジスタ
 
-The control stack is used to save return information in function calls. It saves return address and environment frame pointers.
-
-It is a logically contiguous stack.
-
-Only the complex control flow instructions affect the control stack and register. See SEL/JOIN and AP/RAP/RTN for details.
+制御スタックは関数呼び出し中から返す情報を保持すのに使われる.
+この情報というのは戻り先のアドレスと環境フレームのポインタだ.
+これは論理的には近接したスタックになる.
+複雑な制御フロー命令だけが制御スタックとレジスタに影響を及ぼす.
+詳しくはSEL/JOINやAP/RAP/RTNを参照せよ.
 
 ## Environment frames and register
 
