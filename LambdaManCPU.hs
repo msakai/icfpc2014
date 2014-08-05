@@ -46,7 +46,7 @@ data GInst addr
   | ST Int Int -- ^ store to environment
   | DBUG -- ^ printf debugging
   | BRK -- ^ breakpoint debugging
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Read)
 
 showInstSeq :: [Inst] -> String
 showInstSeq is = unlines $ map show is
@@ -63,6 +63,18 @@ instance Show Value where
     showString "CONS _ _"
   showsPrec d (VClosure i _) = showParen (d > 10) $
     showString "CLOSURE " . shows i . showString " _"
+
+showValue :: Value -> IO String
+showValue v = liftM ($ "") $ f 0 v
+  where
+    f :: Int -> Value -> IO ShowS
+    f d (VInt i) = return $ showsPrec d i
+    f d (VCons car cdr) = do
+      a <- f 11 =<< readIORef car
+      b <- f 11 =<< readIORef cdr
+      return $ showParen (d > 10) $ showString "CONS " . a . showChar ' ' . b
+    f d (VClosure i _) = return $ showParen (d > 10) $
+      showString "CLOSURE " . shows i . showString " _"
 
 data Frame
   = Frame
