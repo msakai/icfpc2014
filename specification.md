@@ -723,7 +723,7 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 複雑な制御フロー命令だけが制御スタックとレジスタに影響を及ぼす.
 詳しくはSEL/JOINやAP/RAP/RTNを参照せよ.
 
-## Environment frames and register
+## 環境フレームおよびレジスタ
 
 The environment is used for storing local variables, including function parameters. There is an instruction for loading values from the environment onto the top of the data stack. The environment consists of a chain of frames, which is used to implement nested variable scopes within higher level languages, such as local blocks with extra local variables and functions.
 
