@@ -355,7 +355,6 @@ step Machine{ mC, mS, mD, mE, mProg } = do
 
 run :: Machine -> IO ()
 run m = do
-  print =<< readIORef (mS m)
   b <- step m
   if b then
     run m
