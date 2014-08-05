@@ -706,7 +706,7 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 プログラムコードは低アドレスから高アドレスへと配置される.
 大抵の命令はこの命令ポインタを単純にひとつ進める.
 
-## Data stack and register
+## データスタックおよびレジスタ
 
 The data stack is used to save intermediate data values during calculations, and to return results from function calls.
 
