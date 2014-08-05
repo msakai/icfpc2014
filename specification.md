@@ -690,7 +690,7 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 - %d: 制御スタックレジスタ
 - %e: 環境フレームレジスタ
 
-## Memory stacks
+## メモリスタック
 
 Three of the registers point into special data structures in memory:
 
