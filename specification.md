@@ -681,7 +681,7 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 このため汎用のメモリアクセス命令は存在しない.
 全てのメモリアクセスはこれらスタックかゴミ集めされたヒープかになる.
 
-## CPU Registers
+## CPUレジスタ
 
 There are 4 programmer visible machine registers, all of which are for special purposes:
 
