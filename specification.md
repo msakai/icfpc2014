@@ -673,7 +673,13 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 
 ## 全体構成
 
-The machine is stack based, with three different stacks used for different purposes. It has—for its time—a relatively large memory. The way the memory is accessed and organised is quite unusual: apart from the stacks that live in memory, the rest of the memory is used for a garbage collected heap, with the GC implemented by the hardware. Because of this there are no general purpose memory access instructions: all memory access is in one of these stacks or in the GC'd heap.
+このマシンはスタックマシンで,3つのスタックをそれぞれ異なる目的のために使う.
+こいつは相対的に(必要に応じて)大きなメモリを持つ.
+メモリへのアクセス方法や構成方法はまったく普通とは違っている.
+メモリで生きているスタックは別として,残りのメモリはゴミ集めされたヒープのために使われる.
+このゴミ集め機構はハードウェアによって実装されている.
+このため汎用のメモリアクセス命令は存在しない.
+全てのメモリアクセスはこれらスタックかゴミ集めされたヒープかになる.
 
 ## CPU Registers
 
