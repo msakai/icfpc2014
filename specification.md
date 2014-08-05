@@ -692,12 +692,12 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 
 ## メモリスタック
 
-Three of the registers point into special data structures in memory:
+3つのレジスタはメモリ中の特別なデータ構造の中を指している.
 
-- Data stack
-- Control stack
-- Environment frame chain
-- The remainder of the memory is dedicated to the data heap.
+- データスタック
+- 制御スタック
+- 環境フレームチェーン
+- メモリの残りの部分はデータヒープに捧げられる
 
 ## Control register and program code layout
 
