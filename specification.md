@@ -669,7 +669,7 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 幸運にも我々はプロセッサの原文を持っており,そこには命令と操作が詳細に記されている.
 だが実に悲しいことにコンパイラからどのように使うつもりであったかについては十分ではなかった.
 
-The sections below include excerpts from the original documentation along with our own comments.
+以降の節は原文からの抜粋に我々がコメントを添えたものだ．
 
 ## General architecture
 
