@@ -331,6 +331,7 @@ step Machine{ mC, mS, mD, mE, mProg } = do
             writeArray (frameValues fp) i y
             g (i-1)
       g (n-1)
+      writeIORef (frameIsDUM fp) False
       writeIORef mE fp
       writeIORef mC f
       return True
