@@ -127,7 +127,7 @@ parseEPrimOpN :: Parser Expr
 parseEPrimOpN = pPrimOpN <*> many pExpr
 
 pPrimOpN :: Parser ([Expr] -> Expr)
-pPrimOpN = choice [ try (string name >> spaces1) >> return op | (name, op) <- M.toList opNTable ]
+pPrimOpN = choice [ try (string name >> spaces) >> return op | (name, op) <- M.toList opNTable ]
 
 parseECall :: Parser Expr
 parseECall = ECall <$> pExpr <*> many pExpr
