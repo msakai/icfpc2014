@@ -699,7 +699,7 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 - 環境フレームチェーン
 - メモリの残りの部分はデータヒープに捧げられる
 
-## Control register and program code layout
+## 制御レジスタおよびプログラムコード配置
 
 The machine has logically separate address spaces for code versus data.
 The %c register is an instruction pointer, pointing to the next instruction to be executed. 
