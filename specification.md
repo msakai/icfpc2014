@@ -653,60 +653,77 @@ As mentioned above, if an instruction causes an error then execution halts. If p
 
 # Lambda-Man CPU
 
-We have been able to recover some documentation about the programming environment used by the Lambda-Man AI team, including their processor ISA and some bits of assembly code. We also know that the Lambda-Man AI team, being LISP fanatics, used some form of LISP but unfortunately we have not been able to find any of their LISP code, nor their compiler.
+我々はλマンAIチームが使っていたプログラミング環境についてのいくつかの文書を復元することができた.
+それはプロセッサISAと少しばかりのアセンブリコードとを含んでいた．
+λマンAIチームがLISPにとりつかれていて,あるLISP形式を使っていたことは知っていたが，
+残念なことに彼等のLISPコードやコンパイラについてはいかなるものもついに発見することはできなかった．
 
-The LamCo "General Compute Coprocessor" (GCC) is a rather unconventional and—for its time—sophisticated coprocessor. It appears to have been designed as a target for a LISP compiler. Rather than a set of orthogonal instructions, it has a fair number of somewhat specialised instructions that (we presume) must have been useful for a compiler. We did however find a handwritten note by one of the engineers indicating that someone had written a compiler from a variant of Pascal, albeit with some limitations.
+LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新で洗練されたコプロセッサだった．
+それはLISPコンパイラをターゲットとして設計されているように思われた．
+直交する命令セットではなく,コンパイラにとって有用であったに違いないと(思われる)
+かなりの数のいくぶん特殊化された命令を持っていた.
+我々はそれでも一人のエンジニアによる手書きのノートを見つけた.
+そこには誰かがPascalの変種でコンパイラを書いたことが示されたいた.
+いくつか制限付きではあったが．
 
-Fortunately we do have the original documentation of the processor which describes the instructions and operation in detail, though sadly not very much on how it was intended to be used by a compiler.
+幸運にも我々はプロセッサの原文を持っており,そこには命令と操作が詳細に記されている.
+だが実に悲しいことにコンパイラからどのように使うつもりであったかについては十分ではなかった.
 
-The sections below include excerpts from the original documentation along with our own comments.
+以降の節は原文からの抜粋に我々がコメントを添えたものだ．
 
-## General architecture
+## 全体構成
 
-The machine is stack based, with three different stacks used for different purposes. It has—for its time—a relatively large memory. The way the memory is accessed and organised is quite unusual: apart from the stacks that live in memory, the rest of the memory is used for a garbage collected heap, with the GC implemented by the hardware. Because of this there are no general purpose memory access instructions: all memory access is in one of these stacks or in the GC'd heap.
+このマシンはスタックマシンで,3つのスタックをそれぞれ異なる目的のために使う.
+こいつは相対的に(必要に応じて)大きなメモリを持つ.
+メモリへのアクセス方法や構成方法はまったく普通とは違っている.
+メモリで生きているスタックは別として,残りのメモリはゴミ集めされたヒープのために使われる.
+このゴミ集め機構はハードウェアによって実装されている.
+このため汎用のメモリアクセス命令は存在しない.
+全てのメモリアクセスはこれらスタックかゴミ集めされたヒープかになる.
 
-## CPU Registers
+## CPUレジスタ
 
-There are 4 programmer visible machine registers, all of which are for special purposes:
+プログラマから見えるマシンレジスタは4つあり,これら全ては特殊目的用だ.
 
-- %c: control register (program counter / instruction pointer)
-- %s: data stack register
-- %d: control stack register
-- %e: environment frame register
+- %c: 制御レジスタ (プログラムカウンタ / 命令ポインタ)
+- %s: データスタックレジスタ
+- %d: 制御スタックレジスタ
+- %e: 環境フレームレジスタ
 
-## Memory stacks
+## メモリスタック
 
-Three of the registers point into special data structures in memory:
+3つのレジスタはメモリ中の特別なデータ構造の中を指している.
 
-- Data stack
-- Control stack
-- Environment frame chain
-- The remainder of the memory is dedicated to the data heap.
+- データスタック
+- 制御スタック
+- 環境フレームチェーン
+- メモリの残りの部分はデータヒープに捧げられる
 
-## Control register and program code layout
+## 制御レジスタおよびプログラムコード配置
 
-The machine has logically separate address spaces for code versus data.
-The %c register is an instruction pointer, pointing to the next instruction to be executed. 
-Programs are laid out from low addresses to high. 
-The effect of most instructions on the instruction pointer is simply to increment its value by one.
+このマシンはコードとデータのアドレス空間を論理的に分離している.
+%cレジスタは次に実行される命令を指し示す命令ポインタだ.
+プログラムコードは低アドレスから高アドレスへと配置される.
+大抵の命令はこの命令ポインタを単純にひとつ進める.
 
-## Data stack and register
+## データスタックおよびレジスタ
 
-The data stack is used to save intermediate data values during calculations, and to return results from function calls.
+データスタックは計算の過程にある中間データの値を保存したり,関数呼び出しから結果を返すのに使われる.
 
-It is a logically contiguous stack. The %s register points to the top of the stack.
+これは論理的に近接したスタックになる.
+%sレジスタはこのスタックの天辺を指している.
+大抵の命令はデータスタックに値を押し込んだり取り出したりするだけだ.
+例えばADD命令は2つの整数値をスタックから取り出してそれらの和をスタックに押し込む.
 
-Many of the instructions simply pop and push values on the data stack. For example the ADD instruction pops two integer values off the stack and pushes back their sum.
+# 制御スタックおよびレジスタ
 
-# Control stack and register
+制御スタックは関数呼び出し中から返す情報を保持すのに使われる.
+この情報というのは戻り先のアドレスと環境フレームのポインタだ.
+これは論理的には近接したスタックになる.
+複雑な制御フロー命令だけが制御スタックとレジスタに影響を及ぼす.
+詳しくはSEL/JOINやAP/RAP/RTNを参照せよ.
 
-The control stack is used to save return information in function calls. It saves return address and environment frame pointers.
-
-It is a logically contiguous stack.
-
-Only the complex control flow instructions affect the control stack and register. See SEL/JOIN and AP/RAP/RTN for details.
-
-## Environment frames and register
+## 環境フレームおよびレジスタ
 
 The environment is used for storing local variables, including function parameters. There is an instruction for loading values from the environment onto the top of the data stack. The environment consists of a chain of frames, which is used to implement nested variable scopes within higher level languages, such as local blocks with extra local variables and functions.
 
