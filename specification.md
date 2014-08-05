@@ -715,7 +715,7 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 大抵の命令はデータスタックに値を押し込んだり取り出したりするだけだ.
 例えばADD命令は2つの整数値をスタックから取り出してそれらの和をスタックに押し込む.
 
-# Control stack and register
+# 制御スタックおよびレジスタ
 
 The control stack is used to save return information in function calls. It saves return address and environment frame pointers.
 
