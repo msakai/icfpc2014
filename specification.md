@@ -701,10 +701,10 @@ LamCo "General Compute Coprocessor" (GCC) は当時としてはかなり斬新�
 
 ## 制御レジスタおよびプログラムコード配置
 
-The machine has logically separate address spaces for code versus data.
-The %c register is an instruction pointer, pointing to the next instruction to be executed. 
-Programs are laid out from low addresses to high. 
-The effect of most instructions on the instruction pointer is simply to increment its value by one.
+このマシンはコードとデータのアドレス空間を論理的に分離している.
+%cレジスタは次に実行される命令を指し示す命令ポインタだ.
+プログラムコードは低アドレスから高アドレスへと配置される.
+大抵の命令はこの命令ポインタを単純にひとつ進める.
 
 ## Data stack and register
 
