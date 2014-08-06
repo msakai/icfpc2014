@@ -13,7 +13,7 @@ maintainer:          masahiro.sakai@gmail.com
 -- copyright:           
 category:            Language
 build-type:          Simple
-extra-source-files:  README.md, specification.md, AI01.hs, AI02.hs, AI02.scm, GHostCPU.hs, Sim.hs, TestLambdaManCPU.hs, test_fact.scm, test_fact.gcc, test_fact_iter.scm, test_fact_iter.gcc
+extra-source-files:  README.md, specification.md, AI01.hs, AI02.hs, AI02.scm, AI03.scm, AI04.scm, GHostCPU.hs, Sim.hs, TestLambdaManCPU.hs, test_fact.scm, test_fact.gcc, test_fact_iter.scm, test_fact_iter.gcc
 cabal-version:       >=1.10
 
 executable ulambda
